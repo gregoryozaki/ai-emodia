@@ -1,19 +1,25 @@
 .app-footer {
   border-top: 1px solid var(--color-border);
-  padding: 2rem 0;
-  color: var(--color-text-muted);
-  background: rgba(11, 16, 32, 0.58);
+  padding: 2.8rem 0;
+  background: rgba(7, 10, 24, 0.85);
 
-  .footer-brand {
-    color: var(--color-text);
-    font-weight: 850;
-
-    span {
-      color: var(--color-secondary);
-    }
+  .footer-box {
+    text-align: center;
   }
 
-  p {
-    margin: 0;
+  .footer-tagline {
+    color: var(--color-text);
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+  }
+
+  .footer-copy,
+  .footer-help {
+    color: var(--color-text-muted);
+    margin-bottom: 0.4rem;
+  }
+
+  .footer-help {
+    font-size: 0.95rem;
   }
 }

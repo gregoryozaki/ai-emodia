@@ -9,7 +9,7 @@ const renderHomePage = (req: Request, res: Response) => {
 
 const renderAnalysisPage = (req: Request, res: Response) => {
   res.render("analyses", {
-    title: "Emodia | Análises"
+    title: "Emodia | Área de análises"
   })
 }
 

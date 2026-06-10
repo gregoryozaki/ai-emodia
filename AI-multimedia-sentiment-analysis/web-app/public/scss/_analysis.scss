@@ -1,56 +1,83 @@
 .analysis-page {
-  padding: 5rem 0;
+  padding: 4.5rem 0 5rem;
+}
 
-  .analysis-panel {
-    padding: clamp(1.5rem, 4vw, 2.5rem);
+.analysis-hero,
+.analysis-lock-card,
+.analysis-feature-card,
+.analysis-note {
+  padding: 1.6rem;
+}
+
+.analysis-hero h1 {
+  font-size: clamp(2.2rem, 5vw, 4rem);
+  line-height: 1;
+  letter-spacing: -0.07em;
+  font-weight: 900;
+  margin-bottom: 1rem;
+}
+
+.analysis-lock-card {
+  height: 100%;
+  text-align: center;
+}
+
+.analysis-lock-icon {
+  width: 74px;
+  height: 74px;
+  display: grid;
+  place-items: center;
+  margin: 0 auto 1rem;
+  border-radius: 50%;
+  background: linear-gradient(
+    135deg,
+    var(--color-primary),
+    var(--color-accent)
+  );
+  color: #ffffff;
+  font-size: 2rem;
+}
+
+.analysis-lock-card h2,
+.analysis-note h2 {
+  font-size: 1.25rem;
+  margin-bottom: 0.75rem;
+}
+
+.analysis-lock-card p,
+.analysis-feature-card p,
+.analysis-note p {
+  color: var(--color-text-muted);
+  line-height: 1.7;
+  margin: 0;
+}
+
+.analysis-feature-card {
+  height: 100%;
+  transition:
+    transform 180ms ease,
+    border-color 180ms ease,
+    background-color 180ms ease;
+
+  &:hover {
+    transform: translateY(-4px);
+    border-color: rgba(255, 255, 255, 0.24);
+    background: rgba(21, 31, 58, 0.88);
   }
 
-  .analysis-locked {
-    text-align: center;
-
-    .lock-icon {
-      width: 72px;
-      height: 72px;
-      display: grid;
-      place-items: center;
-      margin: 0 auto 1.25rem;
-      border-radius: 50%;
-      background: linear-gradient(
-        135deg,
-        var(--color-primary),
-        var(--color-accent)
-      );
-      font-size: 2rem;
-    }
-
-    h1 {
-      font-weight: 900;
-      letter-spacing: -0.06em;
-      margin-bottom: 1rem;
-    }
-
-    p {
-      max-width: 640px;
-      margin: 0 auto 2rem;
-      color: var(--color-text-muted);
-      line-height: 1.7;
-    }
+  h3 {
+    font-size: 1.08rem;
+    margin-bottom: 0.65rem;
   }
+}
 
-  .analysis-preview-card {
-    height: 100%;
-    padding: 1.25rem;
+.analysis-list {
+  margin: 0;
+  padding-left: 1.2rem;
+  color: var(--color-text-muted);
 
-    h3 {
-      font-size: 1rem;
-      margin-bottom: 0.5rem;
-    }
-
-    p {
-      color: var(--color-text-muted);
-      font-size: 0.95rem;
-      line-height: 1.6;
-      margin: 0;
-    }
+  li {
+    margin-bottom: 0.65rem;
+    line-height: 1.6;
   }
 }

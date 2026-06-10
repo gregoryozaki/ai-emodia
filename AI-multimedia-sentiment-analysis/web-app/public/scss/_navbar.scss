@@ -1,20 +1,55 @@
 .app-navbar {
-  border-bottom: 1px solid var(--color-border);
-  background: rgba(11, 16, 32, 0.82);
-  backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(6, 11, 29, 0.88);
+  backdrop-filter: blur(16px);
+  min-height: 88px;
+
+  .container-page {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
 
   .navbar-brand {
     color: var(--color-text);
     font-weight: 850;
-    letter-spacing: -0.05em;
-    font-size: 1.35rem;
-
-    span {
-      color: var(--color-secondary);
-    }
+    letter-spacing: -0.04em;
 
     &:hover {
       color: var(--color-text);
+    }
+  }
+
+  .brand-wrap {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.85rem;
+  }
+
+  .brand-logo-box {
+    width: 44px;
+    height: 44px;
+    display: grid;
+    place-items: center;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.06);
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  .brand-logo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .brand-name {
+    font-size: 1.9rem;
+    font-weight: 850;
+    line-height: 1;
+
+    span {
+      color: var(--color-secondary);
     }
   }
 
@@ -30,9 +65,14 @@
     filter: invert(1);
   }
 
+  .navbar-nav {
+    align-items: center;
+  }
+
   .nav-link {
     color: var(--color-text-muted);
-    font-weight: 600;
+    font-weight: 650;
+    padding-inline: 1rem;
 
     &:hover,
     &.active {
@@ -41,6 +81,29 @@
   }
 
   .navbar-actions {
+    align-items: center;
     gap: 0.75rem;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .app-navbar {
+    .navbar-collapse {
+      padding-top: 1rem;
+      padding-bottom: 1rem;
+    }
+
+    .navbar-nav {
+      align-items: flex-start;
+      margin-bottom: 1rem;
+    }
+
+    .navbar-actions {
+      align-items: stretch;
+    }
+
+    .brand-name {
+      font-size: 1.55rem;
+    }
   }
 }
