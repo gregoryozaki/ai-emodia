@@ -29,18 +29,37 @@
       <div
         class="navbar-nav align-items-lg-center gap-lg-2 me-lg-4 my-3 my-lg-0"
       >
-        <a class="nav-link app-nav-link" href="/">Início</a>
-        <a class="nav-link app-nav-link" href="/sobre">Sobre</a>
+        <a class="nav-link app-nav-link" href="/">
+          Início
+        </a>
+
+        <a class="nav-link app-nav-link" href="/sobre">
+          Sobre
+        </a>
+
+        {{#if isAuthenticated}}
+          <a class="nav-link app-nav-link" href="/analises">
+            Análises
+          </a>
+        {{/if}}
       </div>
 
       <div class="navbar-actions d-flex flex-column flex-lg-row">
-        <a class="btn-emodia-ghost" href="/login">
-          Entrar
-        </a>
+        {{#if isAuthenticated}}
+          <form action="/logout" method="post" class="m-0">
+            <button type="submit" class="btn-emodia-ghost">
+              Sair
+            </button>
+          </form>
+        {{else}}
+          <a class="btn-emodia-ghost" href="/login">
+            Entrar
+          </a>
 
-        <a class="btn-emodia-primary" href="/cadastro">
-          Criar conta
-        </a>
+          <a class="btn-emodia-primary" href="/cadastro">
+            Criar conta
+          </a>
+        {{/if}}
       </div>
     </div>
   </div>

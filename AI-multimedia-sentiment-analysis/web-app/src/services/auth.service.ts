@@ -11,6 +11,11 @@ type RegisterUserInput = {
   consentTerm?: string
 }
 
+type LoginUserInput = {
+  email: string
+  password: string
+}
+
 const PASSWORD_REGEX = {
   minLength: /.{8,}/,
   uppercase: /[A-Z]/,
@@ -91,4 +96,33 @@ const registerUser = async (input: RegisterUserInput) => {
   })
 }
 
-export { registerUser }
+const loginUser = async (input: LoginUserInput) => {
+  const email = input.email.trim().toLowerCase()
+
+  if (!email || !input.password) {
+    throw new Error("Informe e-mail e senha.")
+  }
+
+  const user = await findUserByEmail(email)
+
+  if (!user) {
+    throw new Error("E-mail ou senha inválidos.")
+  }
+
+  const passwordMatches = await bcrypt.compare(
+    input.password,
+    user.passwordHash
+  )
+
+  if (!passwordMatches) {
+    throw new Error("E-mail ou senha inválidos.")
+  }
+
+  return {
+    id: user.id,
+    fullName: user.fullName,
+    email: user.email
+  }
+}
+
+export { registerUser, loginUser }

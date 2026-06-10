@@ -1,4 +1,7 @@
 import { Router } from "express"
+
+import { ensureAuthenticated } from "../middlewares/auth.middleware.js"
+
 import {
   renderAboutPage,
   renderAnalysisPage,
@@ -8,7 +11,7 @@ import {
 const webRoutes = Router()
 
 webRoutes.get("/", renderHomePage)
-webRoutes.get("/analises", renderAnalysisPage)
 webRoutes.get("/sobre", renderAboutPage)
+webRoutes.get("/analises", ensureAuthenticated, renderAnalysisPage)
 
 export default webRoutes
