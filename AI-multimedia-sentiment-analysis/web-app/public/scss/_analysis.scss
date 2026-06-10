@@ -1,0 +1,56 @@
+.analysis-page {
+  padding: 5rem 0;
+
+  .analysis-panel {
+    padding: clamp(1.5rem, 4vw, 2.5rem);
+  }
+
+  .analysis-locked {
+    text-align: center;
+
+    .lock-icon {
+      width: 72px;
+      height: 72px;
+      display: grid;
+      place-items: center;
+      margin: 0 auto 1.25rem;
+      border-radius: 50%;
+      background: linear-gradient(
+        135deg,
+        var(--color-primary),
+        var(--color-accent)
+      );
+      font-size: 2rem;
+    }
+
+    h1 {
+      font-weight: 900;
+      letter-spacing: -0.06em;
+      margin-bottom: 1rem;
+    }
+
+    p {
+      max-width: 640px;
+      margin: 0 auto 2rem;
+      color: var(--color-text-muted);
+      line-height: 1.7;
+    }
+  }
+
+  .analysis-preview-card {
+    height: 100%;
+    padding: 1.25rem;
+
+    h3 {
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    p {
+      color: var(--color-text-muted);
+      font-size: 0.95rem;
+      line-height: 1.6;
+      margin: 0;
+    }
+  }
+}

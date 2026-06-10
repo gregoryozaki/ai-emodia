@@ -1,0 +1,19 @@
+.app-footer {
+  border-top: 1px solid var(--color-border);
+  padding: 2rem 0;
+  color: var(--color-text-muted);
+  background: rgba(11, 16, 32, 0.58);
+
+  .footer-brand {
+    color: var(--color-text);
+    font-weight: 850;
+
+    span {
+      color: var(--color-secondary);
+    }
+  }
+
+  p {
+    margin: 0;
+  }
+}

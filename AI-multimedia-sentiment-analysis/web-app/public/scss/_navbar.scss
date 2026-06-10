@@ -1,0 +1,46 @@
+.app-navbar {
+  border-bottom: 1px solid var(--color-border);
+  background: rgba(11, 16, 32, 0.82);
+  backdrop-filter: blur(14px);
+
+  .navbar-brand {
+    color: var(--color-text);
+    font-weight: 850;
+    letter-spacing: -0.05em;
+    font-size: 1.35rem;
+
+    span {
+      color: var(--color-secondary);
+    }
+
+    &:hover {
+      color: var(--color-text);
+    }
+  }
+
+  .navbar-toggler {
+    box-shadow: none;
+
+    &:focus {
+      box-shadow: none;
+    }
+  }
+
+  .navbar-toggler-icon {
+    filter: invert(1);
+  }
+
+  .nav-link {
+    color: var(--color-text-muted);
+    font-weight: 600;
+
+    &:hover,
+    &.active {
+      color: var(--color-text);
+    }
+  }
+
+  .navbar-actions {
+    gap: 0.75rem;
+  }
+}

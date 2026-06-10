@@ -1,0 +1,24 @@
+@keyframes floatGlow {
+  from {
+    transform: translate3d(-4%, -2%, 0) rotate(0deg);
+  }
+
+  to {
+    transform: translate3d(4%, 2%, 0) rotate(12deg);
+  }
+}
+
+@keyframes floatGlow {
+  from {
+    transform: translate3d(-4%, -2%, 0) rotate(0deg);
+  }
+
+  to {
+    transform: translate3d(4%, 2%, 0) rotate(12deg);
+  }
+}
+
+.needle-rotate {
+  transition: transform 700ms ease-in-out;
+  transform-origin: 200px 200px;
+}
