@@ -22,6 +22,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const confirmPasswordInput = document.getElementById("confirmPassword")
   const feedback = document.getElementById("registerFeedback")
 
+  const openTermsButton = document.getElementById("openTerms")
+  const termsModal = document.getElementById("termsModal")
+  const closeTermsElements = document.querySelectorAll("[data-close-terms]")
+
   if (
     !(form instanceof HTMLFormElement) ||
     !(birthDateInput instanceof HTMLInputElement) ||
@@ -75,7 +79,35 @@ document.addEventListener("DOMContentLoaded", () => {
     feedback.classList.add("d-none")
   }
 
+  const openTermsModal = () => {
+    if (!(termsModal instanceof HTMLElement)) return
+
+    termsModal.classList.add("open")
+    termsModal.setAttribute("aria-hidden", "false")
+  }
+
+  const closeTermsModal = () => {
+    if (!(termsModal instanceof HTMLElement)) return
+
+    termsModal.classList.remove("open")
+    termsModal.setAttribute("aria-hidden", "true")
+  }
+
   passwordInput.addEventListener("input", updatePasswordRules)
+
+  if (openTermsButton) {
+    openTermsButton.addEventListener("click", openTermsModal)
+  }
+
+  closeTermsElements.forEach((element) => {
+    element.addEventListener("click", closeTermsModal)
+  })
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      closeTermsModal()
+    }
+  })
 
   form.addEventListener("submit", (event) => {
     hideFeedback()

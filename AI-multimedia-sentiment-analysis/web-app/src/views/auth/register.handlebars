@@ -4,37 +4,58 @@
       ← Voltar
     </a>
 
-    <div class="row justify-content-center">
-      <div class="col-12 col-lg-8 col-xl-7">
-        <article class="auth-card surface-card">
-          <div class="auth-logo-wrap">
-            <img
-              src="/img/logo-emodia.png"
-              alt="Logo Emodia"
-              class="auth-logo"
-            />
+    <div class="auth-shell auth-shell-register">
+      <aside class="auth-aside">
+        <div class="auth-logo-wrap auth-logo-aside">
+          <img src="/img/logo-emodia.png" alt="Logo Emodia" class="auth-logo" />
+        </div>
+
+        <span class="page-badge">Cadastro de usuário</span>
+
+        <h1>Crie sua conta no Emodia</h1>
+
+        <p>
+          Registre emoções por texto, áudio, imagem ou vídeo e acompanhe seus
+          padrões emocionais com mais clareza.
+        </p>
+
+        <div class="auth-aside-list">
+          <div>
+            <strong>Uso para maiores de 18 anos</strong>
+            <span>Critério necessário para segurança e conformidade do sistema.</span>
           </div>
 
-          <span class="page-badge">
-            Cadastro de usuário
-          </span>
+          <div>
+            <strong>Consentimento LGPD</strong>
+            <span>O uso depende da aceitação dos termos e política de privacidade.</span>
+          </div>
 
-          <h1>Crie sua conta</h1>
+          <div>
+            <strong>Não é diagnóstico</strong>
+            <span>O Emodia apoia o autocuidado, mas não substitui ajuda profissional.</span>
+          </div>
+        </div>
+      </aside>
 
-          <p class="auth-subtitle">
-            Comece a registrar suas emoções e acompanhar sua evolução emocional.
-          </p>
+      <article class="auth-card auth-form-card">
+        <h2>Dados da conta</h2>
 
-          <form
-            id="registerForm"
-            class="auth-form"
-            action="/cadastro"
-            method="post"
-            autocomplete="off"
-          >
-            <div class="row g-3">
-              <div class="col-12 col-md-6">
+        <p class="auth-subtitle">
+          Preencha os campos obrigatórios para continuar.
+        </p>
+
+        {{#if error}}
+          <div class="auth-alert auth-alert-error">
+            {{error}}
+          </div>
+        {{/if}}
+
+        <form id="registerForm" class="auth-form" action="/cadastro" method="post" autocomplete="off">
+          <div class="row g-3">
+            <div class="col-12 col-md-6">
+              <div class="auth-field">
                 <label for="fullName" class="form-label">Nome completo *</label>
+
                 <input
                   type="text"
                   class="form-control auth-input"
@@ -44,9 +65,12 @@
                   required
                 />
               </div>
+            </div>
 
-              <div class="col-12 col-md-6">
+            <div class="col-12 col-md-6">
+              <div class="auth-field">
                 <label for="birthDate" class="form-label">Data de nascimento *</label>
+
                 <input
                   type="date"
                   class="form-control auth-input"
@@ -59,20 +83,25 @@
                   Você precisa ter 18 anos ou mais.
                 </small>
               </div>
+            </div>
 
-              <div class="col-12">
+            <div class="col-12">
+              <div class="auth-field">
                 <label for="registerEmail" class="form-label">E-mail *</label>
+
                 <input
                   type="email"
                   class="form-control auth-input"
                   id="registerEmail"
                   name="email"
-                  placeholder="seu@email.com"
+                  placeholder="seuemail@gmail.com"
                   required
                 />
               </div>
+            </div>
 
-              <div class="col-12 col-md-6">
+            <div class="col-12 col-md-6">
+              <div class="auth-field">
                 <label for="registerPassword" class="form-label">Senha *</label>
 
                 <div class="password-field">
@@ -81,7 +110,7 @@
                     class="form-control auth-input"
                     id="registerPassword"
                     name="password"
-                    placeholder="Crie uma senha"
+                    placeholder="Sua senha"
                     required
                   />
 
@@ -95,10 +124,11 @@
                   </button>
                 </div>
               </div>
+            </div>
 
-              <div class="col-12 col-md-6">
-                <label for="confirmPassword" class="form-label">Confirmar senha
-                  *</label>
+            <div class="col-12 col-md-6">
+              <div class="auth-field">
+                <label for="confirmPassword" class="form-label">Confirmar senha *</label>
 
                 <div class="password-field">
                   <input
@@ -106,7 +136,7 @@
                     class="form-control auth-input"
                     id="confirmPassword"
                     name="confirmPassword"
-                    placeholder="Repita a senha"
+                    placeholder="Repita sua senha"
                     required
                   />
 
@@ -120,53 +150,89 @@
                   </button>
                 </div>
               </div>
+            </div>
 
-              <div class="col-12">
-                <div class="password-rules">
-                  <p>A senha deve conter:</p>
+            <div class="col-12">
+              <div class="password-rules">
+                <p>A senha deve conter:</p>
 
-                  <ul>
-                    <li id="ruleLength">Mínimo 8 caracteres</li>
-                    <li id="ruleUppercase">Uma letra maiúscula</li>
-                    <li id="ruleLowercase">Uma letra minúscula</li>
-                    <li id="ruleNumber">Um número</li>
-                    <li id="ruleSpecial">Um caractere especial</li>
-                  </ul>
-                </div>
-              </div>
+                <div class="row g-2">
+                  <div class="col-12 col-sm-6">
+                    <ul>
+                      <li id="ruleLength">Mínimo 8 caracteres</li>
+                      <li id="ruleUppercase">Uma letra maiúscula</li>
+                      <li id="ruleLowercase">Uma letra minúscula</li>
+                    </ul>
+                  </div>
 
-              <div class="col-12">
-                <div class="form-check auth-check">
-                  <input
-                    class="form-check-input"
-                    type="checkbox"
-                    value="true"
-                    id="consentTerm"
-                    name="consentTerm"
-                    required
-                  />
-
-                  <label class="form-check-label" for="consentTerm">
-                    Declaro que sou maior de 18 anos e aceito os termos de uso,
-                    a política de privacidade e o tratamento dos dados conforme
-                    a LGPD.
-                  </label>
+                  <div class="col-12 col-sm-6">
+                    <ul>
+                      <li id="ruleNumber">Um número</li>
+                      <li id="ruleSpecial">Um caractere especial</li>
+                    </ul>
+                  </div>
                 </div>
               </div>
             </div>
 
-            <div id="registerFeedback" class="auth-feedback d-none"></div>
+            <div class="col-12">
+              <div class="terms-area">
+                <label class="terms-label" for="consentTerm">
+                  <input
+                    type="checkbox"
+                    id="consentTerm"
+                    name="consentTerm"
+                    value="true"
+                    required
+                  />
 
-            <button type="submit" class="btn-emodia-primary w-100 mt-4">
-              Criar conta
-            </button>
-          </form>
+                  <span>
+                    Eu li e aceito os
+                    <button type="button" id="openTerms" class="terms-button">
+                      Termos de Uso e Política de Privacidade — LGPD
+                    </button>
+                    *
+                  </span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div id="registerFeedback" class="auth-alert auth-alert-error d-none"></div>
+
+          <button type="submit" class="btn-emodia-primary w-100 mt-3">
+            Criar conta
+          </button>
 
           <p class="auth-bottom-text">
-            Já possui conta?
-            <a href="/login" class="auth-link">Entrar</a>
+            Já tem uma conta?
+            <a href="/login" class="auth-link">Fazer login</a>
           </p>
-        </article>
+        </form>
+      </article>
+    </div>
+  </div>
+
+  <div id="termsModal" class="auth-modal" aria-hidden="true">
+    <div class="auth-modal-backdrop" data-close-terms></div>
+
+    <div class="auth-modal-content" role="dialog" aria-modal="true" aria-labelledby="termsModalTitle">
+      <div class="auth-modal-header">
+        <h2 id="termsModalTitle">Termos de Uso e LGPD</h2>
+
+        <button type="button" class="auth-modal-close" data-close-terms aria-label="Fechar modal">
+          ×
+        </button>
+      </div>
+
+      <div class="auth-modal-body">
+        {{> terms-lgpd}}
+      </div>
+
+      <div class="auth-modal-footer">
+        <button type="button" class="btn-emodia-primary w-100" data-close-terms>
+          Entendi
+        </button>
       </div>
     </div>
   </div>
