@@ -1,108 +1,207 @@
 <section class="analysis-page">
   <div class="container-page">
-    <div class="analysis-hero surface-card">
-      <div class="row align-items-center g-4">
+    <section class="analysis-dashboard-hero">
+      <div class="row g-4 align-items-stretch">
         <div class="col-12 col-lg-7">
-          <span class="page-badge">
-            Área protegida
-          </span>
+          <article class="analysis-welcome-card surface-card">
+            <span class="page-badge">
+              Área emocional
+            </span>
 
-          <h1>
-            Faça login para acessar sua
-            <span class="text-gradient">área de análises emocionais</span>.
-          </h1>
+            <h1>
+              Bem-vindo à sua área de
+              <span class="text-gradient">acompanhamento emocional</span>.
+            </h1>
 
-          <p class="page-description">
-            No Emodia, o acompanhamento emocional envolve dados pessoais e
-            sensíveis. Por isso, a área de análises só pode ser acessada por
-            usuários autenticados.
-          </p>
+            <p>
+              Registre suas emoções, acompanhe padrões ao longo do tempo e
+              visualize relatórios que ajudam no seu autoconhecimento emocional.
+            </p>
 
-          <div class="analysis-actions d-flex flex-column flex-sm-row gap-3">
-            <a href="/login" class="btn-emodia-primary">
-              Entrar
-            </a>
+            <div class="d-flex flex-column flex-sm-row gap-3 mt-4">
+              <a href="#new-record" class="btn-emodia-primary">
+                Registrar emoção
+              </a>
 
-            <a href="/cadastro" class="btn-emodia-outline">
-              Criar conta
-            </a>
-          </div>
+              <a href="#reports" class="btn-emodia-outline">
+                Ver relatórios
+              </a>
+            </div>
+          </article>
         </div>
 
         <div class="col-12 col-lg-5">
-          <div class="analysis-lock-card surface-card">
-            <div class="analysis-lock-icon">🔐</div>
-            <h2>Proteção e privacidade</h2>
+          <article class="analysis-summary-card surface-card">
+            <div class="summary-icon">
+              🧠
+            </div>
+
+            <h2>Status da área</h2>
+
             <p>
-              Seus registros emocionais, relatórios e histórico devem estar
-              disponíveis apenas para você, com acesso controlado.
+              Seu dashboard ainda está em fase inicial. Os próximos recursos
+              irão incluir histórico emocional, gráficos e análise por IA.
             </p>
-          </div>
+
+            <div class="summary-status">
+              <span class="status-dot"></span>
+              Sessão autenticada
+            </div>
+          </article>
         </div>
       </div>
-    </div>
+    </section>
 
-    <div class="row g-4 mt-1">
-      <div class="col-12 col-md-6 col-lg-3">
-        <article class="analysis-feature-card surface-card">
-          <h3>Texto</h3>
-          <p>
-            Registre sentimentos por meio de textos curtos ou relatos mais
-            completos.
-          </p>
-        </article>
+    <section id="new-record" class="analysis-section">
+      <div class="section-header text-start">
+        <h2>Registrar nova emoção</h2>
+
+        <p>
+          Escolha o tipo de entrada emocional que deseja registrar. Nesta etapa,
+          os cards ainda são estruturais; a gravação e o processamento serão
+          implementados depois.
+        </p>
       </div>
 
-      <div class="col-12 col-md-6 col-lg-3">
-        <article class="analysis-feature-card surface-card">
-          <h3>Áudio</h3>
-          <p>
-            Grave sua voz e permita análises emocionais por entonação e fala.
-          </p>
-        </article>
-      </div>
+      <div class="row g-4">
+        <div class="col-12 col-md-6 col-xl-3">
+          <article class="analysis-action-card surface-card">
+            <div class="analysis-action-icon">T</div>
 
-      <div class="col-12 col-md-6 col-lg-3">
-        <article class="analysis-feature-card surface-card">
-          <h3>Imagem</h3>
-          <p>
-            Envie imagens para apoiar a identificação de emoções e expressões.
-          </p>
-        </article>
-      </div>
+            <h3>Texto</h3>
 
-      <div class="col-12 col-md-6 col-lg-3">
-        <article class="analysis-feature-card surface-card">
-          <h3>Vídeo</h3>
-          <p>
-            Use gravações para uma análise multimodal mais rica e contextual.
-          </p>
-        </article>
-      </div>
-    </div>
+            <p>
+              Escreva um relato sobre como você está se sentindo.
+            </p>
 
-    <div class="analysis-note surface-card mt-4">
-      <h2>O que você encontrará após entrar</h2>
-
-      <div class="row g-4 mt-1">
-        <div class="col-12 col-md-6">
-          <ul class="analysis-list">
-            <li>Registro emocional multimodal</li>
-            <li>Classificação de emoções</li>
-            <li>Possíveis gatilhos e causas</li>
-            <li>Indicadores de intensidade e polaridade</li>
-          </ul>
+            <button type="button" class="btn-emodia-outline w-100" disabled>
+              Em breve
+            </button>
+          </article>
         </div>
 
-        <div class="col-12 col-md-6">
-          <ul class="analysis-list">
-            <li>Gráficos diários, semanais e mensais</li>
-            <li>Histórico emocional do usuário</li>
-            <li>Alertas de acompanhamento</li>
-            <li>Orientações para busca de ajuda profissional</li>
-          </ul>
+        <div class="col-12 col-md-6 col-xl-3">
+          <article class="analysis-action-card surface-card">
+            <div class="analysis-action-icon">A</div>
+
+            <h3>Áudio</h3>
+
+            <p>
+              Registre sua voz para futura análise emocional por fala.
+            </p>
+
+            <button type="button" class="btn-emodia-outline w-100" disabled>
+              Em breve
+            </button>
+          </article>
+        </div>
+
+        <div class="col-12 col-md-6 col-xl-3">
+          <article class="analysis-action-card surface-card">
+            <div class="analysis-action-icon">I</div>
+
+            <h3>Imagem</h3>
+
+            <p>
+              Envie uma imagem para apoiar a identificação emocional.
+            </p>
+
+            <button type="button" class="btn-emodia-outline w-100" disabled>
+              Em breve
+            </button>
+          </article>
+        </div>
+
+        <div class="col-12 col-md-6 col-xl-3">
+          <article class="analysis-action-card surface-card">
+            <div class="analysis-action-icon">V</div>
+
+            <h3>Vídeo</h3>
+
+            <p>
+              Use vídeo para uma futura análise multimodal mais completa.
+            </p>
+
+            <button type="button" class="btn-emodia-outline w-100" disabled>
+              Em breve
+            </button>
+          </article>
         </div>
       </div>
-    </div>
+    </section>
+
+    <section class="analysis-section">
+      <div class="row g-4 align-items-stretch">
+        <div class="col-12 col-lg-7">
+          <article class="analysis-panel surface-card">
+            <div class="analysis-panel-header">
+              <div>
+                <h2>Histórico recente</h2>
+                <p>
+                  Seus registros emocionais aparecerão aqui após a implementação
+                  do módulo de registros.
+                </p>
+              </div>
+            </div>
+
+            <div class="empty-state">
+              <div class="empty-state-icon">📭</div>
+
+              <h3>Nenhum registro encontrado</h3>
+
+              <p>
+                Quando você registrar suas emoções, elas serão exibidas nesta
+                área.
+              </p>
+            </div>
+          </article>
+        </div>
+
+        <div class="col-12 col-lg-5">
+          <article id="reports" class="analysis-panel surface-card">
+            <div class="analysis-panel-header">
+              <div>
+                <h2>Relatórios</h2>
+                <p>
+                  Visualizações diárias, semanais e mensais serão exibidas aqui.
+                </p>
+              </div>
+            </div>
+
+            <div class="report-placeholder">
+              <div class="report-bars">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+
+              <p>
+                Gráficos emocionais em desenvolvimento.
+              </p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="analysis-section">
+      <article class="analysis-warning-card surface-card">
+        <div class="warning-icon">
+          ⚠️
+        </div>
+
+        <div>
+          <h2>Uso responsável</h2>
+
+          <p>
+            O Emodia é uma ferramenta de apoio ao autoconhecimento emocional.
+            Ele não realiza diagnóstico médico, psicológico ou psiquiátrico.
+            Caso emoções negativas persistam ou exista situação de crise,
+            procure ajuda profissional. Em caso de crise, ligue CVV 188.
+          </p>
+        </div>
+      </article>
+    </section>
   </div>
 </section>
