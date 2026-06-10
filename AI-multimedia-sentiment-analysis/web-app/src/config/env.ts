@@ -10,5 +10,6 @@ export const env = cleanEnv(process.env, {
   }),
   PORT: port({
     default: 3000
-  })
+  }),
+  DATABASE_URL: str()
 })

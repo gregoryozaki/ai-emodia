@@ -1,73 +1,138 @@
 <section class="auth-page">
   <div class="container-page">
+    <a href="/" class="auth-back-link">
+      ← Voltar
+    </a>
+
     <div class="row justify-content-center">
       <div class="col-12 col-lg-8 col-xl-7">
         <article class="auth-card surface-card">
+          <div class="auth-logo-wrap">
+            <img
+              src="/img/logo-emodia.png"
+              alt="Logo Emodia"
+              class="auth-logo"
+            />
+          </div>
+
           <span class="page-badge">
             Cadastro de usuário
           </span>
 
-          <h1>Criar conta no Emodia</h1>
+          <h1>Crie sua conta</h1>
 
           <p class="auth-subtitle">
-            Preencha seus dados para começar a registrar e acompanhar suas
-            emoções.
+            Comece a registrar suas emoções e acompanhar sua evolução emocional.
           </p>
 
-          <form class="auth-form" action="#" method="post">
+          <form
+            id="registerForm"
+            class="auth-form"
+            action="/cadastro"
+            method="post"
+            autocomplete="off"
+          >
             <div class="row g-3">
               <div class="col-12 col-md-6">
-                <label for="fullName" class="form-label">Nome completo</label>
+                <label for="fullName" class="form-label">Nome completo *</label>
                 <input
                   type="text"
                   class="form-control auth-input"
                   id="fullName"
                   name="fullName"
                   placeholder="Seu nome completo"
+                  required
                 />
               </div>
 
               <div class="col-12 col-md-6">
-                <label for="birthDate" class="form-label">Data de nascimento</label>
+                <label for="birthDate" class="form-label">Data de nascimento *</label>
                 <input
                   type="date"
                   class="form-control auth-input"
                   id="birthDate"
                   name="birthDate"
+                  required
                 />
+
+                <small class="auth-help-text">
+                  Você precisa ter 18 anos ou mais.
+                </small>
               </div>
 
               <div class="col-12">
-                <label for="registerEmail" class="form-label">E-mail</label>
+                <label for="registerEmail" class="form-label">E-mail *</label>
                 <input
                   type="email"
                   class="form-control auth-input"
                   id="registerEmail"
                   name="email"
-                  placeholder="seuemail@exemplo.com"
+                  placeholder="seu@email.com"
+                  required
                 />
               </div>
 
               <div class="col-12 col-md-6">
-                <label for="registerPassword" class="form-label">Senha</label>
-                <input
-                  type="password"
-                  class="form-control auth-input"
-                  id="registerPassword"
-                  name="password"
-                  placeholder="Crie uma senha"
-                />
+                <label for="registerPassword" class="form-label">Senha *</label>
+
+                <div class="password-field">
+                  <input
+                    type="password"
+                    class="form-control auth-input"
+                    id="registerPassword"
+                    name="password"
+                    placeholder="Crie uma senha"
+                    required
+                  />
+
+                  <button
+                    type="button"
+                    class="password-toggle"
+                    data-toggle-password="registerPassword"
+                    aria-label="Mostrar ou esconder senha"
+                  >
+                    👁
+                  </button>
+                </div>
               </div>
 
               <div class="col-12 col-md-6">
-                <label for="confirmPassword" class="form-label">Confirmar senha</label>
-                <input
-                  type="password"
-                  class="form-control auth-input"
-                  id="confirmPassword"
-                  name="confirmPassword"
-                  placeholder="Repita a senha"
-                />
+                <label for="confirmPassword" class="form-label">Confirmar senha
+                  *</label>
+
+                <div class="password-field">
+                  <input
+                    type="password"
+                    class="form-control auth-input"
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    placeholder="Repita a senha"
+                    required
+                  />
+
+                  <button
+                    type="button"
+                    class="password-toggle"
+                    data-toggle-password="confirmPassword"
+                    aria-label="Mostrar ou esconder senha"
+                  >
+                    👁
+                  </button>
+                </div>
+              </div>
+
+              <div class="col-12">
+                <div class="password-rules">
+                  <p>A senha deve conter:</p>
+
+                  <ul>
+                    <li id="ruleLength">Mínimo 8 caracteres</li>
+                    <li id="ruleUppercase">Uma letra maiúscula</li>
+                    <li id="ruleLowercase">Uma letra minúscula</li>
+                    <li id="ruleNumber">Um número</li>
+                    <li id="ruleSpecial">Um caractere especial</li>
+                  </ul>
+                </div>
               </div>
 
               <div class="col-12">
@@ -78,15 +143,19 @@
                     value="true"
                     id="consentTerm"
                     name="consentTerm"
+                    required
                   />
 
                   <label class="form-check-label" for="consentTerm">
-                    Declaro que sou maior de 18 anos e aceito o termo de
-                    consentimento e as diretrizes de privacidade do Emodia.
+                    Declaro que sou maior de 18 anos e aceito os termos de uso,
+                    a política de privacidade e o tratamento dos dados conforme
+                    a LGPD.
                   </label>
                 </div>
               </div>
             </div>
+
+            <div id="registerFeedback" class="auth-feedback d-none"></div>
 
             <button type="submit" class="btn-emodia-primary w-100 mt-4">
               Criar conta
