@@ -117,7 +117,7 @@ svg {
   display: grid;
   place-items: center;
   border-radius: 14px;
-  background: rgba(255, 255, 255, 0.06);
+  background: rgba(6, 11, 29, 0.88);
   overflow: hidden;
   flex-shrink: 0;
 }
@@ -132,7 +132,7 @@ svg {
   line-height: 1;
 }
 .app-navbar .brand-name span {
-  color: var(--color-secondary);
+  color: var(--color-accent);
 }
 .app-navbar .navbar-toggler {
   box-shadow: none;
