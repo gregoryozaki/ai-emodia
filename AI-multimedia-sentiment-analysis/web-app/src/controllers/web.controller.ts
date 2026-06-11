@@ -4,7 +4,8 @@ import { listRecentEmotionRecords } from "../services/emotion-record.service.js"
 
 const renderHomePage = (req: Request, res: Response) => {
   res.render("home", {
-    title: "Emodia | Início"
+    title: "Emodia | Início",
+    useEmotionGauge: true
   })
 }
 
