@@ -17,16 +17,6 @@
               Registre suas emoções, acompanhe padrões ao longo do tempo e
               visualize relatórios que ajudam no seu autoconhecimento emocional.
             </p>
-
-            <div class="d-flex flex-column flex-sm-row gap-3 mt-4">
-              <a href="#new-record" class="btn-emodia-primary">
-                Registrar emoção
-              </a>
-
-              <a href="#reports" class="btn-emodia-outline">
-                Ver relatórios
-              </a>
-            </div>
           </article>
         </div>
 
@@ -39,8 +29,8 @@
             <h2>Status da área</h2>
 
             <p>
-              Seu dashboard ainda está em fase inicial. Os próximos recursos
-              irão incluir histórico emocional, gráficos e análise por IA.
+              O registro textual já está ativo. Os próximos recursos irão
+              incluir áudio, imagem, vídeo, gráficos e análise por IA.
             </p>
 
             <div class="summary-status">
@@ -53,43 +43,189 @@
     </section>
 
     <section id="new-record" class="analysis-section">
-      <div class="section-header text-start">
-        <h2>Registrar nova emoção</h2>
+      <div class="row g-4 align-items-stretch">
+        <div class="col-12 col-lg-5">
+          <article class="analysis-form-card surface-card">
+            <div class="section-header text-start">
+              <h2>Registrar emoção por texto</h2>
 
-        <p>
-          Escolha o tipo de entrada emocional que deseja registrar. Nesta etapa,
-          os cards ainda são estruturais; a gravação e o processamento serão
-          implementados depois.
-        </p>
+              <p>
+                Descreva como você está se sentindo agora. Esse registro ficará
+                salvo no seu histórico emocional.
+              </p>
+            </div>
+
+            {{#if success}}
+              <div class="auth-alert auth-alert-success">
+                Emoção registrada com sucesso.
+              </div>
+            {{/if}}
+
+            {{#if error}}
+              <div class="auth-alert auth-alert-error">
+                {{error}}
+              </div>
+            {{/if}}
+
+            <form
+              action="/analises/registros"
+              method="post"
+              class="emotion-form"
+            >
+              <div class="auth-field">
+                <label for="emotion" class="form-label">
+                  Emoção principal
+                </label>
+
+                <select
+                  id="emotion"
+                  name="emotion"
+                  class="form-select auth-input"
+                  required
+                >
+                  <option value="">Selecione</option>
+                  <option value="ALEGRIA">Alegria</option>
+                  <option value="TRISTEZA">Tristeza</option>
+                  <option value="RAIVA">Raiva</option>
+                  <option value="MEDO">Medo</option>
+                  <option value="NOJO">Nojo</option>
+                  <option value="ANSIEDADE">Ansiedade</option>
+                </select>
+              </div>
+
+              <div class="auth-field">
+                <label for="intensity" class="form-label">
+                  Intensidade
+                </label>
+
+                <select
+                  id="intensity"
+                  name="intensity"
+                  class="form-select auth-input"
+                  required
+                >
+                  <option value="">Selecione</option>
+                  <option value="1">1 - Muito baixa</option>
+                  <option value="2">2 - Baixa</option>
+                  <option value="3">3 - Moderada</option>
+                  <option value="4">4 - Alta</option>
+                  <option value="5">5 - Muito alta</option>
+                </select>
+              </div>
+
+              <div class="auth-field">
+                <label for="trigger" class="form-label">
+                  Possível gatilho
+                </label>
+
+                <input
+                  type="text"
+                  id="trigger"
+                  name="trigger"
+                  class="form-control auth-input"
+                  placeholder="Ex.: trabalho, estudo, família, sono..."
+                  value="{{formData.trigger}}"
+                />
+              </div>
+
+              <div class="auth-field">
+                <label for="content" class="form-label">
+                  Relato
+                </label>
+
+                <textarea
+                  id="content"
+                  name="content"
+                  class="form-control auth-input emotion-textarea"
+                  placeholder="Escreva brevemente o que você está sentindo..."
+                  maxlength="2000"
+                  required
+                >{{formData.content}}</textarea>
+              </div>
+
+              <button type="submit" class="btn-emodia-primary w-100">
+                Salvar registro
+              </button>
+            </form>
+          </article>
+        </div>
+
+        <div class="col-12 col-lg-7">
+          <article id="history" class="analysis-panel surface-card">
+            <div class="analysis-panel-header">
+              <div>
+                <h2>Histórico recente</h2>
+
+                <p>
+                  Seus últimos registros emocionais aparecem aqui.
+                </p>
+              </div>
+            </div>
+
+            {{#if records}}
+              <div class="emotion-history-list">
+                {{#each records}}
+                  <article class="emotion-history-item">
+                    <div class="emotion-history-top">
+                      <div>
+                        <strong>{{emotion}}</strong>
+                        <span>{{inputMode}} · {{createdAt}}</span>
+                      </div>
+
+                      <span class="emotion-intensity">
+                        Intensidade
+                        {{intensity}}/5
+                      </span>
+                    </div>
+
+                    {{#if trigger}}
+                      <p class="emotion-trigger">
+                        Gatilho:
+                        {{trigger}}
+                      </p>
+                    {{/if}}
+
+                    <p class="emotion-content">
+                      {{content}}
+                    </p>
+                  </article>
+                {{/each}}
+              </div>
+            {{else}}
+              <div class="empty-state">
+                <div class="empty-state-icon">📭</div>
+
+                <h3>Nenhum registro encontrado</h3>
+
+                <p>
+                  Quando você registrar suas emoções, elas serão exibidas nesta
+                  área.
+                </p>
+              </div>
+            {{/if}}
+          </article>
+        </div>
       </div>
+    </section>
 
+    <section class="analysis-section">
       <div class="row g-4">
         <div class="col-12 col-md-6 col-xl-3">
           <article class="analysis-action-card surface-card">
             <div class="analysis-action-icon">T</div>
-
             <h3>Texto</h3>
-
-            <p>
-              Escreva um relato sobre como você está se sentindo.
-            </p>
-
-            <button type="button" class="btn-emodia-outline w-100" disabled>
-              Em breve
-            </button>
+            <p>Registro textual já disponível.</p>
+            <a href="#new-record" class="btn-emodia-outline w-100">
+              Registrar
+            </a>
           </article>
         </div>
 
         <div class="col-12 col-md-6 col-xl-3">
           <article class="analysis-action-card surface-card">
             <div class="analysis-action-icon">A</div>
-
             <h3>Áudio</h3>
-
-            <p>
-              Registre sua voz para futura análise emocional por fala.
-            </p>
-
+            <p>Registre sua voz para futura análise emocional por fala.</p>
             <button type="button" class="btn-emodia-outline w-100" disabled>
               Em breve
             </button>
@@ -99,13 +235,8 @@
         <div class="col-12 col-md-6 col-xl-3">
           <article class="analysis-action-card surface-card">
             <div class="analysis-action-icon">I</div>
-
             <h3>Imagem</h3>
-
-            <p>
-              Envie uma imagem para apoiar a identificação emocional.
-            </p>
-
+            <p>Envie uma imagem para apoiar a identificação emocional.</p>
             <button type="button" class="btn-emodia-outline w-100" disabled>
               Em breve
             </button>
@@ -115,71 +246,11 @@
         <div class="col-12 col-md-6 col-xl-3">
           <article class="analysis-action-card surface-card">
             <div class="analysis-action-icon">V</div>
-
             <h3>Vídeo</h3>
-
-            <p>
-              Use vídeo para uma futura análise multimodal mais completa.
-            </p>
-
+            <p>Use vídeo para uma futura análise multimodal mais completa.</p>
             <button type="button" class="btn-emodia-outline w-100" disabled>
               Em breve
             </button>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section class="analysis-section">
-      <div class="row g-4 align-items-stretch">
-        <div class="col-12 col-lg-7">
-          <article class="analysis-panel surface-card">
-            <div class="analysis-panel-header">
-              <div>
-                <h2>Histórico recente</h2>
-                <p>
-                  Seus registros emocionais aparecerão aqui após a implementação
-                  do módulo de registros.
-                </p>
-              </div>
-            </div>
-
-            <div class="empty-state">
-              <div class="empty-state-icon">📭</div>
-
-              <h3>Nenhum registro encontrado</h3>
-
-              <p>
-                Quando você registrar suas emoções, elas serão exibidas nesta
-                área.
-              </p>
-            </div>
-          </article>
-        </div>
-
-        <div class="col-12 col-lg-5">
-          <article id="reports" class="analysis-panel surface-card">
-            <div class="analysis-panel-header">
-              <div>
-                <h2>Relatórios</h2>
-                <p>
-                  Visualizações diárias, semanais e mensais serão exibidas aqui.
-                </p>
-              </div>
-            </div>
-
-            <div class="report-placeholder">
-              <div class="report-bars">
-                <span></span>
-                <span></span>
-                <span></span>
-                <span></span>
-              </div>
-
-              <p>
-                Gráficos emocionais em desenvolvimento.
-              </p>
-            </div>
           </article>
         </div>
       </div>

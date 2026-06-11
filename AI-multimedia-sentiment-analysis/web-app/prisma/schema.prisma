@@ -15,8 +15,54 @@ model User {
   passwordHash String
   consentTerm  Boolean  @default(false)
 
+  emotionRecords EmotionRecord[]
+
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
   @@map("users")
+}
+
+enum EmotionType {
+  ALEGRIA
+  TRISTEZA
+  RAIVA
+  MEDO
+  NOJO
+  ANSIEDADE
+}
+
+enum EmotionInputMode {
+  TEXT
+  AUDIO
+  IMAGE
+  VIDEO
+}
+
+model EmotionRecord {
+  id        String           @id @default(uuid())
+  userId    String
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  emotion   EmotionType
+  inputMode EmotionInputMode @default(TEXT)
+
+  content   String?
+  intensity Int?
+  trigger   String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId, createdAt])
+  @@map("emotion_records")
+}
+
+model Session {
+  sid    String   @id @db.VarChar
+  sess   Json
+  expire DateTime @db.Timestamp(6)
+
+  @@index([expire], map: "IDX_session_expire")
+  @@map("session")
 }

@@ -131,9 +131,31 @@ exports.Prisma.UserScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.EmotionRecordScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  emotion: 'emotion',
+  inputMode: 'inputMode',
+  content: 'content',
+  intensity: 'intensity',
+  trigger: 'trigger',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.SessionScalarFieldEnum = {
+  sid: 'sid',
+  sess: 'sess',
+  expire: 'expire'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
+};
+
+exports.Prisma.JsonNullValueInput = {
+  JsonNull: Prisma.JsonNull
 };
 
 exports.Prisma.QueryMode = {
@@ -141,9 +163,36 @@ exports.Prisma.QueryMode = {
   insensitive: 'insensitive'
 };
 
+exports.Prisma.NullsOrder = {
+  first: 'first',
+  last: 'last'
+};
+
+exports.Prisma.JsonNullValueFilter = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull,
+  AnyNull: Prisma.AnyNull
+};
+exports.EmotionType = exports.$Enums.EmotionType = {
+  ALEGRIA: 'ALEGRIA',
+  TRISTEZA: 'TRISTEZA',
+  RAIVA: 'RAIVA',
+  MEDO: 'MEDO',
+  NOJO: 'NOJO',
+  ANSIEDADE: 'ANSIEDADE'
+};
+
+exports.EmotionInputMode = exports.$Enums.EmotionInputMode = {
+  TEXT: 'TEXT',
+  AUDIO: 'AUDIO',
+  IMAGE: 'IMAGE',
+  VIDEO: 'VIDEO'
+};
 
 exports.Prisma.ModelName = {
-  User: 'User'
+  User: 'User',
+  EmotionRecord: 'EmotionRecord',
+  Session: 'Session'
 };
 
 /**
