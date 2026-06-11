@@ -1129,6 +1129,7 @@ export namespace Prisma {
     email: string | null
     passwordHash: string | null
     consentTerm: boolean | null
+    avatarPath: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -1140,6 +1141,7 @@ export namespace Prisma {
     email: string | null
     passwordHash: string | null
     consentTerm: boolean | null
+    avatarPath: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -1151,6 +1153,7 @@ export namespace Prisma {
     email: number
     passwordHash: number
     consentTerm: number
+    avatarPath: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -1164,6 +1167,7 @@ export namespace Prisma {
     email?: true
     passwordHash?: true
     consentTerm?: true
+    avatarPath?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -1175,6 +1179,7 @@ export namespace Prisma {
     email?: true
     passwordHash?: true
     consentTerm?: true
+    avatarPath?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -1186,6 +1191,7 @@ export namespace Prisma {
     email?: true
     passwordHash?: true
     consentTerm?: true
+    avatarPath?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -1270,6 +1276,7 @@ export namespace Prisma {
     email: string
     passwordHash: string
     consentTerm: boolean
+    avatarPath: string | null
     createdAt: Date
     updatedAt: Date
     _count: UserCountAggregateOutputType | null
@@ -1298,6 +1305,7 @@ export namespace Prisma {
     email?: boolean
     passwordHash?: boolean
     consentTerm?: boolean
+    avatarPath?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     emotionRecords?: boolean | User$emotionRecordsArgs<ExtArgs>
@@ -1311,6 +1319,7 @@ export namespace Prisma {
     email?: boolean
     passwordHash?: boolean
     consentTerm?: boolean
+    avatarPath?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["user"]>
@@ -1322,6 +1331,7 @@ export namespace Prisma {
     email?: boolean
     passwordHash?: boolean
     consentTerm?: boolean
+    avatarPath?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["user"]>
@@ -1333,11 +1343,12 @@ export namespace Prisma {
     email?: boolean
     passwordHash?: boolean
     consentTerm?: boolean
+    avatarPath?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "fullName" | "birthDate" | "email" | "passwordHash" | "consentTerm" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "fullName" | "birthDate" | "email" | "passwordHash" | "consentTerm" | "avatarPath" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     emotionRecords?: boolean | User$emotionRecordsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -1357,6 +1368,7 @@ export namespace Prisma {
       email: string
       passwordHash: string
       consentTerm: boolean
+      avatarPath: string | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["user"]>
@@ -1789,6 +1801,7 @@ export namespace Prisma {
     readonly email: FieldRef<"User", 'String'>
     readonly passwordHash: FieldRef<"User", 'String'>
     readonly consentTerm: FieldRef<"User", 'Boolean'>
+    readonly avatarPath: FieldRef<"User", 'String'>
     readonly createdAt: FieldRef<"User", 'DateTime'>
     readonly updatedAt: FieldRef<"User", 'DateTime'>
   }
@@ -4366,6 +4379,7 @@ export namespace Prisma {
     email: 'email',
     passwordHash: 'passwordHash',
     consentTerm: 'consentTerm',
+    avatarPath: 'avatarPath',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -4560,6 +4574,7 @@ export namespace Prisma {
     email?: StringFilter<"User"> | string
     passwordHash?: StringFilter<"User"> | string
     consentTerm?: BoolFilter<"User"> | boolean
+    avatarPath?: StringNullableFilter<"User"> | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
     emotionRecords?: EmotionRecordListRelationFilter
@@ -4572,6 +4587,7 @@ export namespace Prisma {
     email?: SortOrder
     passwordHash?: SortOrder
     consentTerm?: SortOrder
+    avatarPath?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     emotionRecords?: EmotionRecordOrderByRelationAggregateInput
@@ -4587,6 +4603,7 @@ export namespace Prisma {
     birthDate?: DateTimeFilter<"User"> | Date | string
     passwordHash?: StringFilter<"User"> | string
     consentTerm?: BoolFilter<"User"> | boolean
+    avatarPath?: StringNullableFilter<"User"> | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
     emotionRecords?: EmotionRecordListRelationFilter
@@ -4599,6 +4616,7 @@ export namespace Prisma {
     email?: SortOrder
     passwordHash?: SortOrder
     consentTerm?: SortOrder
+    avatarPath?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: UserCountOrderByAggregateInput
@@ -4616,6 +4634,7 @@ export namespace Prisma {
     email?: StringWithAggregatesFilter<"User"> | string
     passwordHash?: StringWithAggregatesFilter<"User"> | string
     consentTerm?: BoolWithAggregatesFilter<"User"> | boolean
+    avatarPath?: StringNullableWithAggregatesFilter<"User"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
   }
@@ -4746,6 +4765,7 @@ export namespace Prisma {
     email: string
     passwordHash: string
     consentTerm?: boolean
+    avatarPath?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     emotionRecords?: EmotionRecordCreateNestedManyWithoutUserInput
@@ -4758,6 +4778,7 @@ export namespace Prisma {
     email: string
     passwordHash: string
     consentTerm?: boolean
+    avatarPath?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     emotionRecords?: EmotionRecordUncheckedCreateNestedManyWithoutUserInput
@@ -4770,6 +4791,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     consentTerm?: BoolFieldUpdateOperationsInput | boolean
+    avatarPath?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     emotionRecords?: EmotionRecordUpdateManyWithoutUserNestedInput
@@ -4782,6 +4804,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     consentTerm?: BoolFieldUpdateOperationsInput | boolean
+    avatarPath?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     emotionRecords?: EmotionRecordUncheckedUpdateManyWithoutUserNestedInput
@@ -4794,6 +4817,7 @@ export namespace Prisma {
     email: string
     passwordHash: string
     consentTerm?: boolean
+    avatarPath?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -4805,6 +4829,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     consentTerm?: BoolFieldUpdateOperationsInput | boolean
+    avatarPath?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -4816,6 +4841,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     consentTerm?: BoolFieldUpdateOperationsInput | boolean
+    avatarPath?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -4976,10 +5002,30 @@ export namespace Prisma {
     not?: NestedBoolFilter<$PrismaModel> | boolean
   }
 
+  export type StringNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  }
+
   export type EmotionRecordListRelationFilter = {
     every?: EmotionRecordWhereInput
     some?: EmotionRecordWhereInput
     none?: EmotionRecordWhereInput
+  }
+
+  export type SortOrderInput = {
+    sort: SortOrder
+    nulls?: NullsOrder
   }
 
   export type EmotionRecordOrderByRelationAggregateInput = {
@@ -4993,6 +5039,7 @@ export namespace Prisma {
     email?: SortOrder
     passwordHash?: SortOrder
     consentTerm?: SortOrder
+    avatarPath?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -5004,6 +5051,7 @@ export namespace Prisma {
     email?: SortOrder
     passwordHash?: SortOrder
     consentTerm?: SortOrder
+    avatarPath?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -5015,6 +5063,7 @@ export namespace Prisma {
     email?: SortOrder
     passwordHash?: SortOrder
     consentTerm?: SortOrder
+    avatarPath?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -5059,6 +5108,24 @@ export namespace Prisma {
     _max?: NestedBoolFilter<$PrismaModel>
   }
 
+  export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedStringNullableFilter<$PrismaModel>
+    _max?: NestedStringNullableFilter<$PrismaModel>
+  }
+
   export type EnumEmotionTypeFilter<$PrismaModel = never> = {
     equals?: $Enums.EmotionType | EnumEmotionTypeFieldRefInput<$PrismaModel>
     in?: $Enums.EmotionType[] | ListEnumEmotionTypeFieldRefInput<$PrismaModel>
@@ -5071,21 +5138,6 @@ export namespace Prisma {
     in?: $Enums.EmotionInputMode[] | ListEnumEmotionInputModeFieldRefInput<$PrismaModel>
     notIn?: $Enums.EmotionInputMode[] | ListEnumEmotionInputModeFieldRefInput<$PrismaModel>
     not?: NestedEnumEmotionInputModeFilter<$PrismaModel> | $Enums.EmotionInputMode
-  }
-
-  export type StringNullableFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    mode?: QueryMode
-    not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
   export type IntNullableFilter<$PrismaModel = never> = {
@@ -5102,11 +5154,6 @@ export namespace Prisma {
   export type UserScalarRelationFilter = {
     is?: UserWhereInput
     isNot?: UserWhereInput
-  }
-
-  export type SortOrderInput = {
-    sort: SortOrder
-    nulls?: NullsOrder
   }
 
   export type EmotionRecordCountOrderByAggregateInput = {
@@ -5171,24 +5218,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumEmotionInputModeFilter<$PrismaModel>
     _max?: NestedEnumEmotionInputModeFilter<$PrismaModel>
-  }
-
-  export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    mode?: QueryMode
-    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedStringNullableFilter<$PrismaModel>
-    _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
   export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -5298,6 +5327,10 @@ export namespace Prisma {
     set?: boolean
   }
 
+  export type NullableStringFieldUpdateOperationsInput = {
+    set?: string | null
+  }
+
   export type EmotionRecordUpdateManyWithoutUserNestedInput = {
     create?: XOR<EmotionRecordCreateWithoutUserInput, EmotionRecordUncheckedCreateWithoutUserInput> | EmotionRecordCreateWithoutUserInput[] | EmotionRecordUncheckedCreateWithoutUserInput[]
     connectOrCreate?: EmotionRecordCreateOrConnectWithoutUserInput | EmotionRecordCreateOrConnectWithoutUserInput[]
@@ -5338,10 +5371,6 @@ export namespace Prisma {
 
   export type EnumEmotionInputModeFieldUpdateOperationsInput = {
     set?: $Enums.EmotionInputMode
-  }
-
-  export type NullableStringFieldUpdateOperationsInput = {
-    set?: string | null
   }
 
   export type NullableIntFieldUpdateOperationsInput = {
@@ -5388,6 +5417,20 @@ export namespace Prisma {
   export type NestedBoolFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel>
     not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
+  export type NestedStringNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
   export type NestedStringWithAggregatesFilter<$PrismaModel = never> = {
@@ -5440,6 +5483,34 @@ export namespace Prisma {
     _max?: NestedBoolFilter<$PrismaModel>
   }
 
+  export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedStringNullableFilter<$PrismaModel>
+    _max?: NestedStringNullableFilter<$PrismaModel>
+  }
+
+  export type NestedIntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
   export type NestedEnumEmotionTypeFilter<$PrismaModel = never> = {
     equals?: $Enums.EmotionType | EnumEmotionTypeFieldRefInput<$PrismaModel>
     in?: $Enums.EmotionType[] | ListEnumEmotionTypeFieldRefInput<$PrismaModel>
@@ -5452,31 +5523,6 @@ export namespace Prisma {
     in?: $Enums.EmotionInputMode[] | ListEnumEmotionInputModeFieldRefInput<$PrismaModel>
     notIn?: $Enums.EmotionInputMode[] | ListEnumEmotionInputModeFieldRefInput<$PrismaModel>
     not?: NestedEnumEmotionInputModeFilter<$PrismaModel> | $Enums.EmotionInputMode
-  }
-
-  export type NestedStringNullableFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    not?: NestedStringNullableFilter<$PrismaModel> | string | null
-  }
-
-  export type NestedIntNullableFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableFilter<$PrismaModel> | number | null
   }
 
   export type NestedEnumEmotionTypeWithAggregatesFilter<$PrismaModel = never> = {
@@ -5497,23 +5543,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumEmotionInputModeFilter<$PrismaModel>
     _max?: NestedEnumEmotionInputModeFilter<$PrismaModel>
-  }
-
-  export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedStringNullableFilter<$PrismaModel>
-    _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
   export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -5636,6 +5665,7 @@ export namespace Prisma {
     email: string
     passwordHash: string
     consentTerm?: boolean
+    avatarPath?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -5647,6 +5677,7 @@ export namespace Prisma {
     email: string
     passwordHash: string
     consentTerm?: boolean
+    avatarPath?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -5674,6 +5705,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     consentTerm?: BoolFieldUpdateOperationsInput | boolean
+    avatarPath?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -5685,6 +5717,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     consentTerm?: BoolFieldUpdateOperationsInput | boolean
+    avatarPath?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

@@ -72,6 +72,7 @@ app.use("/js", [
   express.static(`${process.cwd()}/public/js`),
   express.static(`${process.cwd()}/node_modules/bootstrap/dist/js`)
 ])
+app.use("/uploads", express.static(`${process.cwd()}/public/uploads`))
 
 app.use(routes)
 
