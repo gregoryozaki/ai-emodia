@@ -1132,6 +1132,203 @@ svg {
     text-align: left;
   }
 }
+.analysis-app-layout {
+  display: grid;
+  grid-template-columns: 280px minmax(0, 1fr);
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.analysis-sidebar {
+  position: sticky;
+  top: 110px;
+  padding: 1.4rem;
+}
+
+.analysis-sidebar-header {
+  margin-bottom: 1.4rem;
+}
+.analysis-sidebar-header h2 {
+  margin: 0.75rem 0 0.4rem;
+  font-size: 1.55rem;
+  letter-spacing: -0.05em;
+  font-weight: 900;
+}
+.analysis-sidebar-header p {
+  color: var(--color-text-muted);
+  line-height: 1.5;
+  margin: 0;
+  font-size: 0.92rem;
+}
+
+.analysis-sidebar-nav {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.analysis-sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  border: 1px solid transparent;
+  border-radius: 1rem;
+  padding: 0.8rem 0.9rem;
+  color: var(--color-text-muted);
+  font-weight: 800;
+  text-decoration: none;
+  transition: color 160ms ease, background-color 160ms ease, border-color 160ms ease, transform 160ms ease;
+}
+.analysis-sidebar-link span {
+  width: 1.45rem;
+  display: inline-grid;
+  place-items: center;
+}
+.analysis-sidebar-link:hover {
+  color: #ffffff;
+  border-color: rgba(6, 182, 212, 0.28);
+  background: linear-gradient(135deg, rgba(6, 182, 212, 0.1), rgba(124, 58, 237, 0.12));
+  transform: translateX(2px);
+}
+
+.analysis-main-content {
+  min-width: 0;
+}
+
+.analysis-internal-section {
+  scroll-margin-top: 120px;
+  margin-bottom: 3rem;
+}
+
+.analysis-section-title {
+  margin-bottom: 1.4rem;
+}
+.analysis-section-title h1,
+.analysis-section-title h2 {
+  max-width: 820px;
+  margin: 0.75rem 0 0.75rem;
+  font-size: clamp(2rem, 4vw, 3.4rem);
+  line-height: 1;
+  letter-spacing: -0.07em;
+  font-weight: 900;
+}
+.analysis-section-title p {
+  max-width: 760px;
+  color: var(--color-text-muted);
+  line-height: 1.7;
+  margin: 0;
+}
+
+.analysis-flow-card,
+.analysis-report-card,
+.analysis-profile-card {
+  padding: clamp(1.3rem, 2.5vw, 1.8rem);
+}
+
+.analysis-flow-card h3 {
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+}
+
+.analysis-flow-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+.analysis-flow-grid div {
+  border: 1px solid var(--color-border);
+  border-radius: 1rem;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.035);
+}
+.analysis-flow-grid strong {
+  display: block;
+  margin-bottom: 0.4rem;
+  color: var(--color-text);
+}
+.analysis-flow-grid span {
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.analysis-report-card {
+  height: 100%;
+}
+.analysis-report-card h3 {
+  font-size: 1.25rem;
+  margin-bottom: 0.65rem;
+}
+.analysis-report-card p {
+  color: var(--color-text-muted);
+  line-height: 1.65;
+  margin-bottom: 1.2rem;
+}
+
+.report-placeholder.compact {
+  min-height: 170px;
+}
+
+.analysis-profile-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.analysis-profile-card .profile-avatar {
+  width: 64px;
+  height: 64px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  border-radius: 20px;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+  font-size: 1.7rem;
+}
+.analysis-profile-card h3 {
+  font-size: 1.25rem;
+  margin-bottom: 0.4rem;
+}
+.analysis-profile-card p {
+  color: var(--color-text-muted);
+  line-height: 1.6;
+  margin: 0;
+}
+
+@media (max-width: 1199.98px) {
+  .analysis-app-layout {
+    grid-template-columns: 1fr;
+  }
+  .analysis-sidebar {
+    position: static;
+  }
+  .analysis-sidebar-nav {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  .analysis-sidebar-link {
+    justify-content: center;
+  }
+}
+@media (max-width: 767.98px) {
+  .analysis-sidebar-nav {
+    grid-template-columns: 1fr 1fr;
+  }
+  .analysis-flow-grid {
+    grid-template-columns: 1fr;
+  }
+  .analysis-profile-card {
+    align-items: flex-start;
+  }
+}
+@media (max-width: 575.98px) {
+  .analysis-sidebar-nav {
+    grid-template-columns: 1fr;
+  }
+  .analysis-sidebar-link {
+    justify-content: flex-start;
+  }
+  .analysis-profile-card {
+    flex-direction: column;
+  }
+}
 .auth-page {
   min-height: calc(100vh - 88px);
   padding: 3rem 0 5rem;

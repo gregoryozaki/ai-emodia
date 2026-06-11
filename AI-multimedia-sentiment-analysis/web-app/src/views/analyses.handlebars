@@ -1,294 +1,432 @@
 <section class="analysis-page">
   <div class="container-page">
-    <section class="analysis-dashboard-hero">
-      <div class="row g-4 align-items-stretch">
-        <div class="col-12 col-lg-7">
-          <article class="analysis-welcome-card surface-card">
-            <span class="page-badge">
-              Área emocional inteligente
-            </span>
+    <div class="analysis-app-layout">
+      <aside class="analysis-sidebar surface-card">
+        <div class="analysis-sidebar-header">
+          <span class="page-badge">Área logada</span>
+          <h2>Emodia</h2>
+          <p>Acompanhamento emocional inteligente.</p>
+        </div>
+
+        <nav class="analysis-sidebar-nav" aria-label="Navegação interna">
+          <a href="#dashboard" class="analysis-sidebar-link">
+            <span>📊</span>
+            Dashboard
+          </a>
+
+          <a href="#nova-analise" class="analysis-sidebar-link">
+            <span>➕</span>
+            Nova análise
+          </a>
+
+          <a href="#relatorios" class="analysis-sidebar-link">
+            <span>📅</span>
+            Relatórios
+          </a>
+
+          <a href="#perfil" class="analysis-sidebar-link">
+            <span>👤</span>
+            Perfil
+          </a>
+        </nav>
+      </aside>
+
+      <main class="analysis-main-content">
+        <section id="dashboard" class="analysis-internal-section">
+          <div class="analysis-section-title">
+            <span class="page-badge">Dashboard</span>
 
             <h1>
-              Entenda seus relatos com
-              <span class="text-gradient">análise emocional automática</span>.
+              Visão geral do seu
+              <span class="text-gradient">estado emocional</span>.
             </h1>
 
             <p>
-              Escreva, grave áudio ou use vídeo em tempo real para que o Emodia
-              identifique emoções, intensidade e possíveis gatilhos emocionais.
-            </p>
-          </article>
-        </div>
-
-        <div class="col-12 col-lg-5">
-          <article class="analysis-summary-card surface-card">
-            <div class="summary-icon">
-              🧠
-            </div>
-
-            <h2>Status da área</h2>
-
-            <p>
-              A análise textual inicial já está ativa. Os próximos recursos irão
-              incluir gravação de áudio, vídeo em tempo real, gráficos e análise
-              por IA.
-            </p>
-
-            <div class="summary-status">
-              <span class="status-dot"></span>
-              Sessão autenticada
-            </div>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section class="analysis-section">
-      <div class="row g-4">
-        <div class="col-12 col-md-6 col-xl-3">
-          <article class="analysis-metric-card surface-card">
-            <span>Total de relatos</span>
-            <strong>{{summary.totalRecords}}</strong>
-            <p>Registros emocionais analisados.</p>
-          </article>
-        </div>
-
-        <div class="col-12 col-md-6 col-xl-3">
-          <article class="analysis-metric-card surface-card">
-            <span>Emoção mais frequente</span>
-            <strong>{{summary.mostFrequentEmotion}}</strong>
-            <p>Predominância nos relatos salvos.</p>
-          </article>
-        </div>
-
-        <div class="col-12 col-md-6 col-xl-3">
-          <article class="analysis-metric-card surface-card">
-            <span>Intensidade média</span>
-            <strong>{{summary.averageIntensity}}/5</strong>
-            <p>Média estimada pelo sistema.</p>
-          </article>
-        </div>
-
-        <div class="col-12 col-md-6 col-xl-3">
-          <article class="analysis-metric-card surface-card">
-            <span>Gatilhos recorrentes</span>
-            <strong>{{summary.mainTriggers}}</strong>
-            <p>Possíveis padrões detectados.</p>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section class="analysis-section">
-      <article class="analysis-chart-card surface-card">
-        <div class="analysis-panel-header">
-          <div>
-            <h2>Frequência emocional</h2>
-
-            <p>
-              Distribuição das emoções predominantes detectadas nos seus
-              relatos.
+              Acompanhe emoções predominantes, intensidade média, gatilhos
+              recorrentes e registros recentes analisados pelo sistema.
             </p>
           </div>
-        </div>
 
-        <div class="emotion-chart-list">
-          {{#each summary.emotionChart}}
-            <div class="emotion-chart-row">
-              <div class="emotion-chart-info">
-                <strong>{{emotion}}</strong>
-                <span>{{count}} registro(s)</span>
-              </div>
-
-              <div class="emotion-chart-track">
-                <div
-                  class="emotion-chart-bar"
-                  style="width: {{percentage}}%;"
-                ></div>
-              </div>
-
-              <span class="emotion-chart-percent">
-                {{percentage}}%
-              </span>
-            </div>
-          {{/each}}
-        </div>
-      </article>
-    </section>
-
-    <section id="new-record" class="analysis-section">
-      <div class="row g-4 align-items-stretch">
-        <div class="col-12 col-lg-5">
-          <article class="analysis-form-card surface-card">
-            <div class="section-header text-start">
-              <h2>Analisar relato por texto</h2>
-
-              <p>
-                Escreva seu relato livremente. O sistema irá estimar a emoção
-                predominante, intensidade e possíveis gatilhos a partir do
-                texto.
-              </p>
+          <div class="row g-4">
+            <div class="col-12 col-md-6 col-xl-3">
+              <article class="analysis-metric-card surface-card">
+                <span>Total de relatos</span>
+                <strong>{{summary.totalRecords}}</strong>
+                <p>Registros emocionais analisados.</p>
+              </article>
             </div>
 
-            {{#if success}}
-              <div class="auth-alert auth-alert-success">
-                Relato analisado e salvo com sucesso.
-              </div>
-            {{/if}}
-
-            {{#if error}}
-              <div class="auth-alert auth-alert-error">
-                {{error}}
-              </div>
-            {{/if}}
-
-            <form
-              action="/analises/registros"
-              method="post"
-              class="emotion-form"
-            >
-              <div class="auth-field">
-                <label for="content" class="form-label">
-                  Conte como você está se sentindo
-                </label>
-
-                <textarea
-                  id="content"
-                  name="content"
-                  class="form-control auth-input emotion-textarea"
-                  placeholder="Desabafe livremente. O Emodia irá analisar o texto e identificar emoções e possíveis gatilhos automaticamente..."
-                  maxlength="3000"
-                  required
-                >{{formData.content}}</textarea>
-              </div>
-
-              <button type="submit" class="btn-emodia-primary w-100">
-                Analisar e salvar registro
-              </button>
-            </form>
-          </article>
-        </div>
-
-        <div class="col-12 col-lg-7">
-          <article id="history" class="analysis-panel surface-card">
-            <div class="analysis-panel-header">
-              <div>
-                <h2>Histórico analisado</h2>
-
-                <p>
-                  Seus últimos relatos aparecem aqui com a análise emocional
-                  estimada pelo sistema.
-                </p>
-              </div>
+            <div class="col-12 col-md-6 col-xl-3">
+              <article class="analysis-metric-card surface-card">
+                <span>Emoção mais frequente</span>
+                <strong>{{summary.mostFrequentEmotion}}</strong>
+                <p>Predominância nos relatos salvos.</p>
+              </article>
             </div>
 
-            {{#if records}}
-              <div class="emotion-history-list">
-                {{#each records}}
-                  <article class="emotion-history-item">
-                    <div class="emotion-history-top">
-                      <div>
+            <div class="col-12 col-md-6 col-xl-3">
+              <article class="analysis-metric-card surface-card">
+                <span>Intensidade média</span>
+                <strong>{{summary.averageIntensity}}/5</strong>
+                <p>Média estimada pelo sistema.</p>
+              </article>
+            </div>
+
+            <div class="col-12 col-md-6 col-xl-3">
+              <article class="analysis-metric-card surface-card">
+                <span>Gatilhos recorrentes</span>
+                <strong>{{summary.mainTriggers}}</strong>
+                <p>Possíveis padrões detectados.</p>
+              </article>
+            </div>
+          </div>
+
+          <div class="row g-4 mt-1">
+            <div class="col-12 col-xl-7">
+              <article class="analysis-chart-card surface-card">
+                <div class="analysis-panel-header">
+                  <div>
+                    <h2>Frequência emocional</h2>
+
+                    <p>
+                      Distribuição das emoções predominantes detectadas nos seus
+                      relatos.
+                    </p>
+                  </div>
+                </div>
+
+                <div class="emotion-chart-list">
+                  {{#each summary.emotionChart}}
+                    <div class="emotion-chart-row">
+                      <div class="emotion-chart-info">
                         <strong>{{emotion}}</strong>
-                        <span>{{inputMode}} · {{createdAt}}</span>
+                        <span>{{count}} registro(s)</span>
                       </div>
 
-                      <span class="emotion-intensity">
-                        Intensidade estimada
-                        {{intensity}}/5
+                      <div class="emotion-chart-track">
+                        <div
+                          class="emotion-chart-bar"
+                          style="width: {{percentage}}%;"
+                        ></div>
+                      </div>
+
+                      <span class="emotion-chart-percent">
+                        {{percentage}}%
                       </span>
                     </div>
+                  {{/each}}
+                </div>
+              </article>
+            </div>
 
-                    {{#if trigger}}
-                      <p class="emotion-trigger">
-                        Gatilhos possíveis:
-                        {{trigger}}
-                      </p>
-                    {{/if}}
+            <div class="col-12 col-xl-5">
+              <article id="history" class="analysis-panel surface-card">
+                <div class="analysis-panel-header">
+                  <div>
+                    <h2>Registros recentes</h2>
 
-                    <p class="emotion-content">
-                      {{content}}
+                    <p>
+                      Últimos relatos com análise emocional estimada.
                     </p>
-                  </article>
-                {{/each}}
-              </div>
-            {{else}}
-              <div class="empty-state">
-                <div class="empty-state-icon">📭</div>
+                  </div>
+                </div>
 
-                <h3>Nenhum relato analisado</h3>
+                {{#if records}}
+                  <div class="emotion-history-list">
+                    {{#each records}}
+                      <article class="emotion-history-item">
+                        <div class="emotion-history-top">
+                          <div>
+                            <strong>{{emotion}}</strong>
+                            <span>{{inputMode}} · {{createdAt}}</span>
+                          </div>
+
+                          <span class="emotion-intensity">
+                            {{intensity}}/5
+                          </span>
+                        </div>
+
+                        {{#if trigger}}
+                          <p class="emotion-trigger">
+                            Gatilhos possíveis:
+                            {{trigger}}
+                          </p>
+                        {{/if}}
+
+                        <p class="emotion-content">
+                          {{content}}
+                        </p>
+                      </article>
+                    {{/each}}
+                  </div>
+                {{else}}
+                  <div class="empty-state">
+                    <div class="empty-state-icon">📭</div>
+
+                    <h3>Nenhum relato analisado</h3>
+
+                    <p>
+                      Quando você escrever um relato, o resultado da análise
+                      emocional será exibido aqui.
+                    </p>
+                  </div>
+                {{/if}}
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <section id="nova-analise" class="analysis-internal-section">
+          <div class="analysis-section-title">
+            <span class="page-badge">Nova análise</span>
+
+            <h2>
+              Registre uma nova
+              <span class="text-gradient">entrada emocional</span>.
+            </h2>
+
+            <p>
+              Escolha entre texto, áudio ou vídeo em tempo real. Nesta etapa, a
+              análise textual já está ativa.
+            </p>
+          </div>
+
+          <div class="row g-4 align-items-stretch">
+            <div class="col-12 col-lg-5">
+              <article class="analysis-form-card surface-card">
+                <div class="section-header text-start">
+                  <h3>Analisar relato por texto</h3>
+
+                  <p>
+                    Escreva seu relato livremente. O sistema irá estimar emoção,
+                    intensidade e possíveis gatilhos.
+                  </p>
+                </div>
+
+                {{#if success}}
+                  <div class="auth-alert auth-alert-success">
+                    Relato analisado e salvo com sucesso.
+                  </div>
+                {{/if}}
+
+                {{#if error}}
+                  <div class="auth-alert auth-alert-error">
+                    {{error}}
+                  </div>
+                {{/if}}
+
+                <form
+                  action="/analises/registros"
+                  method="post"
+                  class="emotion-form"
+                >
+                  <div class="auth-field">
+                    <label for="content" class="form-label">
+                      Conte como você está se sentindo
+                    </label>
+
+                    <textarea
+                      id="content"
+                      name="content"
+                      class="form-control auth-input emotion-textarea"
+                      placeholder="Desabafe livremente. O Emodia irá analisar o texto e identificar emoções e possíveis gatilhos automaticamente..."
+                      maxlength="3000"
+                      required
+                    >{{formData.content}}</textarea>
+                  </div>
+
+                  <button type="submit" class="btn-emodia-primary w-100">
+                    Analisar e salvar registro
+                  </button>
+                </form>
+              </article>
+            </div>
+
+            <div class="col-12 col-lg-7">
+              <div class="row g-4">
+                <div class="col-12 col-md-4">
+                  <article class="analysis-action-card surface-card">
+                    <div class="analysis-action-icon">T</div>
+                    <h3>Texto</h3>
+                    <p>
+                      Escreva um relato para o sistema identificar emoções e
+                      gatilhos.
+                    </p>
+                    <a href="#nova-analise" class="btn-emodia-outline w-100">
+                      Disponível
+                    </a>
+                  </article>
+                </div>
+
+                <div class="col-12 col-md-4">
+                  <article class="analysis-action-card surface-card">
+                    <div class="analysis-action-icon">A</div>
+                    <h3>Áudio</h3>
+                    <p>
+                      Grave sua voz para transcrição e análise emocional por
+                      NLP.
+                    </p>
+                    <button
+                      type="button"
+                      class="btn-emodia-outline w-100"
+                      disabled
+                    >
+                      Em breve
+                    </button>
+                  </article>
+                </div>
+
+                <div class="col-12 col-md-4">
+                  <article class="analysis-action-card surface-card">
+                    <div class="analysis-action-icon">V</div>
+                    <h3>Vídeo</h3>
+                    <p>
+                      Use a câmera para análise facial e transcrição da fala.
+                    </p>
+                    <button
+                      type="button"
+                      class="btn-emodia-outline w-100"
+                      disabled
+                    >
+                      Em breve
+                    </button>
+                  </article>
+                </div>
+              </div>
+
+              <article class="analysis-flow-card surface-card mt-4">
+                <h3>Fluxo multimodal planejado</h3>
+
+                <div class="analysis-flow-grid">
+                  <div>
+                    <strong>Texto</strong>
+                    <span>NLP direto no relato.</span>
+                  </div>
+
+                  <div>
+                    <strong>Áudio</strong>
+                    <span>Transcrição + NLP + sinais da fala.</span>
+                  </div>
+
+                  <div>
+                    <strong>Vídeo</strong>
+                    <span>Visão computacional + fala transcrita.</span>
+                  </div>
+                </div>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <section id="relatorios" class="analysis-internal-section">
+          <div class="analysis-section-title">
+            <span class="page-badge">Relatórios</span>
+
+            <h2>
+              Relatórios semanais e
+              <span class="text-gradient">mensais</span>.
+            </h2>
+
+            <p>
+              Esta área vai resumir evolução emocional, gatilhos recorrentes e
+              possíveis sinais de melhora ao longo do tempo.
+            </p>
+          </div>
+
+          <div class="row g-4">
+            <div class="col-12 col-lg-6">
+              <article class="analysis-report-card surface-card">
+                <h3>Resumo semanal</h3>
 
                 <p>
-                  Quando você escrever um relato, o resultado da análise
-                  emocional será exibido nesta área.
+                  Em breve: comparação dos relatos da semana, emoção
+                  predominante, intensidade média e gatilhos mais citados.
                 </p>
-              </div>
-            {{/if}}
-          </article>
-        </div>
-      </div>
-    </section>
 
-    <section class="analysis-section">
-      <div class="row g-4">
-        <div class="col-12 col-md-4">
-          <article class="analysis-action-card surface-card">
-            <div class="analysis-action-icon">T</div>
-            <h3>Texto</h3>
+                <div class="report-placeholder compact">
+                  <div class="report-bars">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                  </div>
+                </div>
+              </article>
+            </div>
+
+            <div class="col-12 col-lg-6">
+              <article class="analysis-report-card surface-card">
+                <h3>Resumo mensal</h3>
+
+                <p>
+                  Em breve: tendências emocionais, evolução temporal e
+                  comparações entre semanas.
+                </p>
+
+                <div class="report-placeholder compact">
+                  <div class="report-bars">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                  </div>
+                </div>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <section id="perfil" class="analysis-internal-section">
+          <div class="analysis-section-title">
+            <span class="page-badge">Perfil</span>
+
+            <h2>
+              Conta e
+              <span class="text-gradient">preferências</span>.
+            </h2>
+
             <p>
-              Escreva um relato para o sistema identificar emoções e gatilhos.
+              Em breve esta área exibirá dados da conta, preferências de
+              privacidade e configurações do usuário.
             </p>
-            <a href="#new-record" class="btn-emodia-outline w-100">
-              Analisar texto
-            </a>
+          </div>
+
+          <article class="analysis-profile-card surface-card">
+            <div class="profile-avatar">
+              👤
+            </div>
+
+            <div>
+              <h3>Perfil do usuário</h3>
+
+              <p>
+                Dados da conta serão exibidos aqui depois que criarmos o serviço
+                de perfil.
+              </p>
+            </div>
           </article>
-        </div>
+        </section>
 
-        <div class="col-12 col-md-4">
-          <article class="analysis-action-card surface-card">
-            <div class="analysis-action-icon">A</div>
-            <h3>Áudio</h3>
-            <p>
-              Grave sua voz para futura análise emocional por fala e
-              transcrição.
-            </p>
-            <button type="button" class="btn-emodia-outline w-100" disabled>
-              Em breve
-            </button>
+        <section class="analysis-internal-section">
+          <article class="analysis-warning-card surface-card">
+            <div class="warning-icon">
+              ⚠️
+            </div>
+
+            <div>
+              <h2>Uso responsável</h2>
+
+              <p>
+                O Emodia é uma ferramenta de apoio ao autoconhecimento
+                emocional. Ele não realiza diagnóstico médico, psicológico ou
+                psiquiátrico. Caso emoções negativas persistam ou exista
+                situação de crise, procure ajuda profissional. Em caso de crise,
+                ligue CVV 188.
+              </p>
+            </div>
           </article>
-        </div>
-
-        <div class="col-12 col-md-4">
-          <article class="analysis-action-card surface-card">
-            <div class="analysis-action-icon">V</div>
-            <h3>Vídeo em tempo real</h3>
-            <p>
-              Use a câmera para analisar expressões enquanto você desabafa.
-            </p>
-            <button type="button" class="btn-emodia-outline w-100" disabled>
-              Em breve
-            </button>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section class="analysis-section">
-      <article class="analysis-warning-card surface-card">
-        <div class="warning-icon">
-          ⚠️
-        </div>
-
-        <div>
-          <h2>Uso responsável</h2>
-
-          <p>
-            O Emodia é uma ferramenta de apoio ao autoconhecimento emocional.
-            Ele não realiza diagnóstico médico, psicológico ou psiquiátrico.
-            Caso emoções negativas persistam ou exista situação de crise,
-            procure ajuda profissional. Em caso de crise, ligue CVV 188.
-          </p>
-        </div>
-      </article>
-    </section>
+        </section>
+      </main>
+    </div>
   </div>
 </section>
