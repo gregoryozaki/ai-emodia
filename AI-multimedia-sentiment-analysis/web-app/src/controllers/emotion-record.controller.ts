@@ -22,14 +22,14 @@ const createTextEmotionRecordController = async (
       content: req.body.content
     })
 
-    res.redirect("/analises?created=1#history")
+    res.redirect("/dashboard?created=1")
   } catch (error) {
     const records = await listRecentEmotionRecords(userId)
 
     const message =
       error instanceof Error ? error.message : "Erro ao registrar emoção."
 
-    res.status(400).render("analyses", {
+    res.status(400).render("app/new-analysis", {
       title: "Emodia | Análises",
       error: message,
       records,

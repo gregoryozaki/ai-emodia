@@ -1,0 +1,63 @@
+<div class="app-menu-trigger">
+  <button
+    class="btn-emodia-outline app-menu-button"
+    type="button"
+    data-bs-toggle="offcanvas"
+    data-bs-target="#appSidebar"
+    aria-controls="appSidebar"
+  >
+    ☰ Menu da área
+  </button>
+</div>
+
+<aside
+  class="offcanvas offcanvas-start app-sidebar-drawer"
+  tabindex="-1"
+  id="appSidebar"
+  aria-labelledby="appSidebarLabel"
+>
+  <div class="app-sidebar-header">
+    <div>
+      <span class="page-badge">Área logada</span>
+
+      <h2 id="appSidebarLabel">
+        Emodia
+      </h2>
+
+      <p>
+        Acompanhamento emocional inteligente.
+      </p>
+    </div>
+
+    <button
+      type="button"
+      class="app-sidebar-close"
+      data-bs-dismiss="offcanvas"
+      aria-label="Fechar menu"
+    >
+      ×
+    </button>
+  </div>
+
+  <nav class="app-sidebar-nav" aria-label="Navegação interna">
+    <a href="/dashboard" class="app-sidebar-link">
+      <span>📊</span>
+      Dashboard
+    </a>
+
+    <a href="/analises/nova" class="app-sidebar-link">
+      <span>➕</span>
+      Nova análise
+    </a>
+
+    <a href="/relatorios" class="app-sidebar-link">
+      <span>📅</span>
+      Relatórios
+    </a>
+
+    <a href="/perfil" class="app-sidebar-link">
+      <span>👤</span>
+      Perfil
+    </a>
+  </nav>
+</aside>

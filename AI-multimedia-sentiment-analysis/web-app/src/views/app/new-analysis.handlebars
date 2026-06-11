@@ -1,0 +1,161 @@
+<section class="analysis-page">
+  <div class="container-page">
+    <div class="analysis-app-layout">
+      {{> app-sidebar}}
+
+      <main class="analysis-main-content">
+        <section class="analysis-internal-section">
+          <div class="analysis-section-title">
+            <span class="page-badge">Nova análise</span>
+
+            <h1>
+              Registre uma nova
+              <span class="text-gradient">entrada emocional</span>.
+            </h1>
+
+            <p>
+              Escolha entre texto, áudio ou vídeo em tempo real. Nesta etapa, a
+              análise textual já está ativa.
+            </p>
+          </div>
+
+          <div class="row g-4 new-analysis-grid">
+            <div class="col-12 col-xl-5">
+              <article class="analysis-form-card surface-card">
+                <div class="section-header text-start">
+                  <h2>Analisar relato por texto</h2>
+
+                  <p>
+                    Escreva seu relato livremente. O sistema irá estimar emoção,
+                    intensidade e possíveis gatilhos.
+                  </p>
+                </div>
+
+                {{#if error}}
+                  <div class="auth-alert auth-alert-error">
+                    {{error}}
+                  </div>
+                {{/if}}
+
+                <form
+                  action="/analises/registros"
+                  method="post"
+                  class="emotion-form"
+                >
+                  <div class="auth-field">
+                    <label for="content" class="form-label">
+                      Conte como você está se sentindo
+                    </label>
+
+                    <textarea
+                      id="content"
+                      name="content"
+                      class="form-control auth-input emotion-textarea"
+                      placeholder="Desabafe livremente. O Emodia irá analisar o texto e identificar emoções e possíveis gatilhos automaticamente..."
+                      maxlength="3000"
+                      required
+                    >{{formData.content}}</textarea>
+                  </div>
+
+                  <button type="submit" class="btn-emodia-primary w-100">
+                    Analisar e salvar registro
+                  </button>
+                </form>
+              </article>
+            </div>
+
+            <div class="col-12 col-xl-7">
+              <div class="analysis-options-list">
+                <article class="analysis-action-card surface-card">
+                  <div class="analysis-action-icon">
+                    T
+                  </div>
+
+                  <div>
+                    <h3>Texto</h3>
+
+                    <p>
+                      Escreva um relato para o sistema identificar emoções,
+                      intensidade e possíveis gatilhos.
+                    </p>
+                  </div>
+
+                  <a href="#content" class="btn-emodia-outline">
+                    Disponível
+                  </a>
+                </article>
+
+                <article class="analysis-action-card surface-card">
+                  <div class="analysis-action-icon">
+                    A
+                  </div>
+
+                  <div>
+                    <h3>Áudio</h3>
+
+                    <p>
+                      Grave sua voz para transcrição e análise emocional por NLP.
+                    </p>
+                  </div>
+
+                  <button type="button" class="btn-emodia-outline" disabled>
+                    Em breve
+                  </button>
+                </article>
+
+                <article class="analysis-action-card surface-card">
+                  <div class="analysis-action-icon">
+                    V
+                  </div>
+
+                  <div>
+                    <h3>Vídeo em tempo real</h3>
+
+                    <p>
+                      Use a câmera para análise facial, transcrição da fala e
+                      combinação multimodal dos sinais emocionais.
+                    </p>
+                  </div>
+
+                  <button type="button" class="btn-emodia-outline" disabled>
+                    Em breve
+                  </button>
+                </article>
+              </div>
+
+              <article class="analysis-flow-card surface-card">
+                <h3>Fluxo multimodal planejado</h3>
+
+                <div class="analysis-flow-grid">
+                  <div>
+                    <strong>Texto</strong>
+
+                    <span>
+                      NLP direto no relato escrito pelo usuário.
+                    </span>
+                  </div>
+
+                  <div>
+                    <strong>Áudio</strong>
+
+                    <span>
+                      Transcrição da fala + NLP + sinais da voz.
+                    </span>
+                  </div>
+
+                  <div>
+                    <strong>Vídeo</strong>
+
+                    <span>
+                      Visão computacional + áudio transcrito.
+                    </span>
+                  </div>
+                </div>
+              </article>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+</section>

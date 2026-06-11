@@ -18,7 +18,11 @@ const renderAboutPage = (req: Request, res: Response) => {
   })
 }
 
-const renderAnalysisPage = async (req: Request, res: Response) => {
+const redirectAnalysisPage = (req: Request, res: Response) => {
+  res.redirect("/dashboard")
+}
+
+const renderDashboardPage = async (req: Request, res: Response) => {
   const userId = req.session.userId
 
   if (!userId) {
@@ -29,12 +33,38 @@ const renderAnalysisPage = async (req: Request, res: Response) => {
   const records = await listRecentEmotionRecords(userId)
   const summary = await getEmotionDashboardSummary(userId)
 
-  res.render("analyses", {
-    title: "Emodia | Análises",
+  res.render("app/dashboard", {
+    title: "Emodia | Dashboard",
     records,
     summary,
     success: req.query.created === "1"
   })
 }
 
-export { renderHomePage, renderAboutPage, renderAnalysisPage }
+const renderNewAnalysisPage = (req: Request, res: Response) => {
+  res.render("app/new-analysis", {
+    title: "Emodia | Nova análise"
+  })
+}
+
+const renderReportsPage = (req: Request, res: Response) => {
+  res.render("app/reports", {
+    title: "Emodia | Relatórios"
+  })
+}
+
+const renderProfilePage = (req: Request, res: Response) => {
+  res.render("app/profile", {
+    title: "Emodia | Perfil"
+  })
+}
+
+export {
+  renderHomePage,
+  renderAboutPage,
+  redirectAnalysisPage,
+  renderDashboardPage,
+  renderNewAnalysisPage,
+  renderReportsPage,
+  renderProfilePage
+}
