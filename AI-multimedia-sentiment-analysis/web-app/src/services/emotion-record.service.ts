@@ -72,12 +72,22 @@ const listRecentEmotionRecords = async (userId: string) => {
 const getEmotionDashboardSummary = async (userId: string) => {
   const records = await listAllEmotionRecordsByUserId(userId)
 
+  const emptyEmotionChart = [
+    { emotion: "Alegria", count: 0, percentage: 0 },
+    { emotion: "Tristeza", count: 0, percentage: 0 },
+    { emotion: "Raiva", count: 0, percentage: 0 },
+    { emotion: "Medo", count: 0, percentage: 0 },
+    { emotion: "Nojo", count: 0, percentage: 0 },
+    { emotion: "Ansiedade", count: 0, percentage: 0 }
+  ]
+
   if (records.length === 0) {
     return {
       totalRecords: 0,
       mostFrequentEmotion: "Sem dados",
       averageIntensity: "0.0",
-      mainTriggers: "Sem dados"
+      mainTriggers: "Sem dados",
+      emotionChart: emptyEmotionChart
     }
   }
 
@@ -125,13 +135,26 @@ const getEmotionDashboardSummary = async (userId: string) => {
     .map(([trigger]) => trigger)
     .join(", ")
 
+  const emotionChart = Object.entries(emotionLabels).map(
+    ([emotionKey, label]) => {
+      const count = emotionCount[emotionKey] || 0
+
+      return {
+        emotion: label,
+        count,
+        percentage: Math.round((count / records.length) * 100)
+      }
+    }
+  )
+
   return {
     totalRecords: records.length,
     mostFrequentEmotion: mostFrequentEmotionKey
       ? emotionLabels[mostFrequentEmotionKey as EmotionType]
       : "Sem dados",
     averageIntensity,
-    mainTriggers: mainTriggers || "Sem gatilhos claros"
+    mainTriggers: mainTriggers || "Sem gatilhos claros",
+    emotionChart
   }
 }
 

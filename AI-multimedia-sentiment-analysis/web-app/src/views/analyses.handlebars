@@ -79,6 +79,43 @@
       </div>
     </section>
 
+    <section class="analysis-section">
+      <article class="analysis-chart-card surface-card">
+        <div class="analysis-panel-header">
+          <div>
+            <h2>Frequência emocional</h2>
+
+            <p>
+              Distribuição das emoções predominantes detectadas nos seus
+              relatos.
+            </p>
+          </div>
+        </div>
+
+        <div class="emotion-chart-list">
+          {{#each summary.emotionChart}}
+            <div class="emotion-chart-row">
+              <div class="emotion-chart-info">
+                <strong>{{emotion}}</strong>
+                <span>{{count}} registro(s)</span>
+              </div>
+
+              <div class="emotion-chart-track">
+                <div
+                  class="emotion-chart-bar"
+                  style="width: {{percentage}}%;"
+                ></div>
+              </div>
+
+              <span class="emotion-chart-percent">
+                {{percentage}}%
+              </span>
+            </div>
+          {{/each}}
+        </div>
+      </article>
+    </section>
+
     <section id="new-record" class="analysis-section">
       <div class="row g-4 align-items-stretch">
         <div class="col-12 col-lg-5">
