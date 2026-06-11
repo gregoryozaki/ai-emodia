@@ -67,7 +67,17 @@ const renderProfilePage = async (req: Request, res: Response) => {
 
   res.render("app/profile", {
     title: "Emodia | Perfil",
-    profile
+    profile,
+    usePasswordToggle: true,
+    useAvatarPreview: true,
+    success:
+      req.query.updated === "1"
+        ? "Dados pessoais atualizados com sucesso."
+        : req.query.avatar === "1"
+          ? "Foto de perfil atualizada com sucesso."
+          : req.query.password === "1"
+            ? "Senha alterada com sucesso."
+            : undefined
   })
 }
 

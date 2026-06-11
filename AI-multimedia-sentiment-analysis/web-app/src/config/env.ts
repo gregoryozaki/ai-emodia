@@ -12,5 +12,15 @@ export const env = cleanEnv(process.env, {
     default: 3000
   }),
   DATABASE_URL: str(),
-  SESSION_SECRET: str()
+  SESSION_SECRET: str(),
+
+  SMTP_HOST: str(),
+  SMTP_PORT: port(),
+  SMTP_USER: str(),
+  SMTP_PASS: str(),
+  SMTP_FROM: str(),
+
+  APP_URL: str({
+    default: "http://localhost:3000"
+  })
 })

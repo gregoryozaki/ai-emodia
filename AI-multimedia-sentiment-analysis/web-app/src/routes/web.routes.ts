@@ -11,6 +11,13 @@ import {
   renderReportsPage
 } from "../controllers/web.controller.js"
 import { ensureAuthenticated } from "../middlewares/auth.middleware.js"
+import {
+  deleteProfileController,
+  updateAvatarController,
+  updatePasswordController,
+  updatePersonalDataController
+} from "../controllers/profile.controller.js"
+import { uploadAvatar } from "../middlewares/upload.middleware.js"
 
 const webRoutes = Router()
 
@@ -27,5 +34,20 @@ webRoutes.post(
 )
 webRoutes.get("/relatorios", ensureAuthenticated, renderReportsPage)
 webRoutes.get("/perfil", ensureAuthenticated, renderProfilePage)
+webRoutes.post(
+  "/perfil/dados",
+  ensureAuthenticated,
+  updatePersonalDataController
+)
+webRoutes.post("/perfil/senha", ensureAuthenticated, updatePasswordController)
+
+webRoutes.post(
+  "/perfil/avatar",
+  ensureAuthenticated,
+  uploadAvatar.single("avatar"),
+  updateAvatarController
+)
+
+webRoutes.post("/perfil/excluir", ensureAuthenticated, deleteProfileController)
 
 export default webRoutes

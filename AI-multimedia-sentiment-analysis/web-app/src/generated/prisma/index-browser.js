@@ -150,6 +150,15 @@ exports.Prisma.SessionScalarFieldEnum = {
   expire: 'expire'
 };
 
+exports.Prisma.PasswordResetTokenScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  tokenHash: 'tokenHash',
+  expiresAt: 'expiresAt',
+  usedAt: 'usedAt',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -192,7 +201,8 @@ exports.EmotionInputMode = exports.$Enums.EmotionInputMode = {
 exports.Prisma.ModelName = {
   User: 'User',
   EmotionRecord: 'EmotionRecord',
-  Session: 'Session'
+  Session: 'Session',
+  PasswordResetToken: 'PasswordResetToken'
 };
 
 /**

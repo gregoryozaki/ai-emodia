@@ -64,6 +64,7 @@ app.use(
 app.use(setViewLocals)
 
 app.use("/img", express.static(`${process.cwd()}/public/img`))
+app.use("/uploads", express.static(`${process.cwd()}/public/uploads`))
 app.use("/css", [
   express.static(`${process.cwd()}/public/css`),
   express.static(`${process.cwd()}/node_modules/bootstrap/dist/css`)
@@ -72,7 +73,6 @@ app.use("/js", [
   express.static(`${process.cwd()}/public/js`),
   express.static(`${process.cwd()}/node_modules/bootstrap/dist/js`)
 ])
-app.use("/uploads", express.static(`${process.cwd()}/public/uploads`))
 
 app.use(routes)
 
