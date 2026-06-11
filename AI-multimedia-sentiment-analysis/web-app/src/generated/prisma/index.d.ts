@@ -48,7 +48,6 @@ export type EmotionType = (typeof EmotionType)[keyof typeof EmotionType]
 export const EmotionInputMode: {
   TEXT: 'TEXT',
   AUDIO: 'AUDIO',
-  IMAGE: 'IMAGE',
   VIDEO: 'VIDEO'
 };
 

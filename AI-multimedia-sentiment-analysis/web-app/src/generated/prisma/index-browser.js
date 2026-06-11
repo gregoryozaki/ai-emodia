@@ -185,7 +185,6 @@ exports.EmotionType = exports.$Enums.EmotionType = {
 exports.EmotionInputMode = exports.$Enums.EmotionInputMode = {
   TEXT: 'TEXT',
   AUDIO: 'AUDIO',
-  IMAGE: 'IMAGE',
   VIDEO: 'VIDEO'
 };
 

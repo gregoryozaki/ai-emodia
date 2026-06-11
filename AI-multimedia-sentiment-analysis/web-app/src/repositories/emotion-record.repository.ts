@@ -8,7 +8,7 @@ type EmotionType =
   | "NOJO"
   | "ANSIEDADE"
 
-type EmotionInputMode = "TEXT" | "AUDIO" | "IMAGE" | "VIDEO"
+type EmotionInputMode = "TEXT" | "AUDIO" | "VIDEO"
 
 type CreateEmotionRecordData = {
   userId: string

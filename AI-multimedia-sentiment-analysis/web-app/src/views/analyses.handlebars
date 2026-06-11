@@ -5,17 +5,17 @@
         <div class="col-12 col-lg-7">
           <article class="analysis-welcome-card surface-card">
             <span class="page-badge">
-              Área emocional
+              Área emocional inteligente
             </span>
 
             <h1>
-              Bem-vindo à sua área de
-              <span class="text-gradient">acompanhamento emocional</span>.
+              Entenda seus relatos com
+              <span class="text-gradient">análise emocional automática</span>.
             </h1>
 
             <p>
-              Registre suas emoções, acompanhe padrões ao longo do tempo e
-              visualize relatórios que ajudam no seu autoconhecimento emocional.
+              Escreva, grave áudio ou use vídeo em tempo real para que o Emodia
+              identifique emoções, intensidade e possíveis gatilhos emocionais.
             </p>
           </article>
         </div>
@@ -29,8 +29,9 @@
             <h2>Status da área</h2>
 
             <p>
-              O registro textual já está ativo. Os próximos recursos irão
-              incluir áudio, imagem, vídeo, gráficos e análise por IA.
+              A análise textual inicial já está ativa. Os próximos recursos irão
+              incluir gravação de áudio, vídeo em tempo real, gráficos e análise
+              por IA.
             </p>
 
             <div class="summary-status">
@@ -47,17 +48,18 @@
         <div class="col-12 col-lg-5">
           <article class="analysis-form-card surface-card">
             <div class="section-header text-start">
-              <h2>Registrar emoção por texto</h2>
+              <h2>Analisar relato por texto</h2>
 
               <p>
-                Descreva como você está se sentindo agora. Esse registro ficará
-                salvo no seu histórico emocional.
+                Escreva seu relato livremente. O sistema irá estimar a emoção
+                predominante, intensidade e possíveis gatilhos a partir do
+                texto.
               </p>
             </div>
 
             {{#if success}}
               <div class="auth-alert auth-alert-success">
-                Emoção registrada com sucesso.
+                Relato analisado e salvo com sucesso.
               </div>
             {{/if}}
 
@@ -73,78 +75,22 @@
               class="emotion-form"
             >
               <div class="auth-field">
-                <label for="emotion" class="form-label">
-                  Emoção principal
-                </label>
-
-                <select
-                  id="emotion"
-                  name="emotion"
-                  class="form-select auth-input"
-                  required
-                >
-                  <option value="">Selecione</option>
-                  <option value="ALEGRIA">Alegria</option>
-                  <option value="TRISTEZA">Tristeza</option>
-                  <option value="RAIVA">Raiva</option>
-                  <option value="MEDO">Medo</option>
-                  <option value="NOJO">Nojo</option>
-                  <option value="ANSIEDADE">Ansiedade</option>
-                </select>
-              </div>
-
-              <div class="auth-field">
-                <label for="intensity" class="form-label">
-                  Intensidade
-                </label>
-
-                <select
-                  id="intensity"
-                  name="intensity"
-                  class="form-select auth-input"
-                  required
-                >
-                  <option value="">Selecione</option>
-                  <option value="1">1 - Muito baixa</option>
-                  <option value="2">2 - Baixa</option>
-                  <option value="3">3 - Moderada</option>
-                  <option value="4">4 - Alta</option>
-                  <option value="5">5 - Muito alta</option>
-                </select>
-              </div>
-
-              <div class="auth-field">
-                <label for="trigger" class="form-label">
-                  Possível gatilho
-                </label>
-
-                <input
-                  type="text"
-                  id="trigger"
-                  name="trigger"
-                  class="form-control auth-input"
-                  placeholder="Ex.: trabalho, estudo, família, sono..."
-                  value="{{formData.trigger}}"
-                />
-              </div>
-
-              <div class="auth-field">
                 <label for="content" class="form-label">
-                  Relato
+                  Conte como você está se sentindo
                 </label>
 
                 <textarea
                   id="content"
                   name="content"
                   class="form-control auth-input emotion-textarea"
-                  placeholder="Escreva brevemente o que você está sentindo..."
-                  maxlength="2000"
+                  placeholder="Desabafe livremente. O Emodia irá analisar o texto e identificar emoções e possíveis gatilhos automaticamente..."
+                  maxlength="3000"
                   required
                 >{{formData.content}}</textarea>
               </div>
 
               <button type="submit" class="btn-emodia-primary w-100">
-                Salvar registro
+                Analisar e salvar registro
               </button>
             </form>
           </article>
@@ -154,10 +100,11 @@
           <article id="history" class="analysis-panel surface-card">
             <div class="analysis-panel-header">
               <div>
-                <h2>Histórico recente</h2>
+                <h2>Histórico analisado</h2>
 
                 <p>
-                  Seus últimos registros emocionais aparecem aqui.
+                  Seus últimos relatos aparecem aqui com a análise emocional
+                  estimada pelo sistema.
                 </p>
               </div>
             </div>
@@ -173,14 +120,14 @@
                       </div>
 
                       <span class="emotion-intensity">
-                        Intensidade
+                        Intensidade estimada
                         {{intensity}}/5
                       </span>
                     </div>
 
                     {{#if trigger}}
                       <p class="emotion-trigger">
-                        Gatilho:
+                        Gatilhos possíveis:
                         {{trigger}}
                       </p>
                     {{/if}}
@@ -195,11 +142,11 @@
               <div class="empty-state">
                 <div class="empty-state-icon">📭</div>
 
-                <h3>Nenhum registro encontrado</h3>
+                <h3>Nenhum relato analisado</h3>
 
                 <p>
-                  Quando você registrar suas emoções, elas serão exibidas nesta
-                  área.
+                  Quando você escrever um relato, o resultado da análise
+                  emocional será exibido nesta área.
                 </p>
               </div>
             {{/if}}
@@ -210,44 +157,40 @@
 
     <section class="analysis-section">
       <div class="row g-4">
-        <div class="col-12 col-md-6 col-xl-3">
+        <div class="col-12 col-md-4">
           <article class="analysis-action-card surface-card">
             <div class="analysis-action-icon">T</div>
             <h3>Texto</h3>
-            <p>Registro textual já disponível.</p>
+            <p>
+              Escreva um relato para o sistema identificar emoções e gatilhos.
+            </p>
             <a href="#new-record" class="btn-emodia-outline w-100">
-              Registrar
+              Analisar texto
             </a>
           </article>
         </div>
 
-        <div class="col-12 col-md-6 col-xl-3">
+        <div class="col-12 col-md-4">
           <article class="analysis-action-card surface-card">
             <div class="analysis-action-icon">A</div>
             <h3>Áudio</h3>
-            <p>Registre sua voz para futura análise emocional por fala.</p>
+            <p>
+              Grave sua voz para futura análise emocional por fala e
+              transcrição.
+            </p>
             <button type="button" class="btn-emodia-outline w-100" disabled>
               Em breve
             </button>
           </article>
         </div>
 
-        <div class="col-12 col-md-6 col-xl-3">
-          <article class="analysis-action-card surface-card">
-            <div class="analysis-action-icon">I</div>
-            <h3>Imagem</h3>
-            <p>Envie uma imagem para apoiar a identificação emocional.</p>
-            <button type="button" class="btn-emodia-outline w-100" disabled>
-              Em breve
-            </button>
-          </article>
-        </div>
-
-        <div class="col-12 col-md-6 col-xl-3">
+        <div class="col-12 col-md-4">
           <article class="analysis-action-card surface-card">
             <div class="analysis-action-icon">V</div>
-            <h3>Vídeo</h3>
-            <p>Use vídeo para uma futura análise multimodal mais completa.</p>
+            <h3>Vídeo em tempo real</h3>
+            <p>
+              Use a câmera para analisar expressões enquanto você desabafa.
+            </p>
             <button type="button" class="btn-emodia-outline w-100" disabled>
               Em breve
             </button>

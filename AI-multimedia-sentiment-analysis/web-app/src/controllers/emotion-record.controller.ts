@@ -19,10 +19,7 @@ const createTextEmotionRecordController = async (
   try {
     await createTextEmotionRecord({
       userId,
-      emotion: req.body.emotion,
-      content: req.body.content,
-      intensity: req.body.intensity,
-      trigger: req.body.trigger
+      content: req.body.content
     })
 
     res.redirect("/analises?created=1#history")
