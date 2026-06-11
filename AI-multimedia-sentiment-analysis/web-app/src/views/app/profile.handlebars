@@ -10,29 +10,101 @@
 
             <h1>
               Conta e
-              <span class="text-gradient">preferências</span>.
+              <span class="text-gradient">privacidade</span>.
             </h1>
 
             <p>
-              Em breve esta área exibirá dados da conta, preferências de
-              privacidade e configurações do usuário.
+              Veja seus dados básicos de conta e informações relacionadas ao uso
+              seguro do Emodia.
             </p>
           </div>
 
-          <article class="analysis-profile-card surface-card">
-            <div class="profile-avatar">
-              👤
+          <div class="row g-4">
+            <div class="col-12 col-lg-5">
+              <article class="analysis-profile-card surface-card profile-main-card">
+                <div class="profile-avatar">
+                  👤
+                </div>
+
+                <div>
+                  <h2>{{profile.fullName}}</h2>
+
+                  <p>
+                    Conta ativa no Emodia.
+                  </p>
+                </div>
+              </article>
             </div>
 
-            <div>
-              <h2>Perfil do usuário</h2>
+            <div class="col-12 col-lg-7">
+              <article class="profile-details-card surface-card">
+                <h2>Dados da conta</h2>
 
-              <p>
-                Dados da conta serão exibidos aqui depois que criarmos o serviço
-                de perfil.
-              </p>
+                <div class="profile-details-list">
+                  <div class="profile-detail-item">
+                    <span>Nome completo</span>
+                    <strong>{{profile.fullName}}</strong>
+                  </div>
+
+                  <div class="profile-detail-item">
+                    <span>E-mail</span>
+                    <strong>{{profile.email}}</strong>
+                  </div>
+
+                  <div class="profile-detail-item">
+                    <span>Data de nascimento</span>
+                    <strong>{{profile.birthDate}}</strong>
+                  </div>
+
+                  <div class="profile-detail-item">
+                    <span>Idade</span>
+                    <strong>{{profile.age}} anos</strong>
+                  </div>
+
+                  <div class="profile-detail-item">
+                    <span>Conta criada em</span>
+                    <strong>{{profile.createdAt}}</strong>
+                  </div>
+
+                  <div class="profile-detail-item">
+                    <span>Termo LGPD</span>
+                    <strong>{{profile.consentTerm}}</strong>
+                  </div>
+                </div>
+              </article>
             </div>
-          </article>
+          </div>
+
+          <div class="row g-4 mt-1">
+            <div class="col-12 col-lg-6">
+              <article class="profile-security-card surface-card">
+                <h2>Privacidade</h2>
+
+                <p>
+                  Seus registros emocionais são associados apenas à sua conta.
+                  O Emodia deve ser usado como ferramenta de apoio ao
+                  autoconhecimento, não como diagnóstico médico ou psicológico.
+                </p>
+              </article>
+            </div>
+
+            <div class="col-12 col-lg-6">
+              <article class="profile-security-card surface-card">
+                <h2>Sessão</h2>
+
+                <p>
+                  Encerre sua sessão ao usar computadores compartilhados ou
+                  dispositivos de terceiros.
+                </p>
+
+                <form action="/logout" method="post">
+                  <button type="submit" class="btn-emodia-outline">
+                    Sair da conta
+                  </button>
+                </form>
+              </article>
+            </div>
+          </div>
         </section>
       </main>
     </div>

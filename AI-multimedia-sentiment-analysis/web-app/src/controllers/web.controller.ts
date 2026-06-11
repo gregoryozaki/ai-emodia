@@ -5,6 +5,8 @@ import {
   listRecentEmotionRecords
 } from "../services/emotion-record.service.js"
 
+import { getUserProfile } from "../services/user.service.js"
+
 const renderHomePage = (req: Request, res: Response) => {
   res.render("home", {
     title: "Emodia | Início",
@@ -53,9 +55,19 @@ const renderReportsPage = (req: Request, res: Response) => {
   })
 }
 
-const renderProfilePage = (req: Request, res: Response) => {
+const renderProfilePage = async (req: Request, res: Response) => {
+  const userId = req.session.userId
+
+  if (!userId) {
+    res.redirect("/login")
+    return
+  }
+
+  const profile = await getUserProfile(userId)
+
   res.render("app/profile", {
-    title: "Emodia | Perfil"
+    title: "Emodia | Perfil",
+    profile
   })
 }
 

@@ -16,10 +16,27 @@ const findUserByEmail = async (email: string) => {
   })
 }
 
+const findUserById = async (id: string) => {
+  return prisma.user.findUnique({
+    where: {
+      id
+    },
+    select: {
+      id: true,
+      fullName: true,
+      email: true,
+      birthDate: true,
+      consentTerm: true,
+      createdAt: true,
+      updatedAt: true
+    }
+  })
+}
+
 const createUser = async (data: CreateUserData) => {
   return prisma.user.create({
     data
   })
 }
 
-export { findUserByEmail, createUser }
+export { createUser, findUserByEmail, findUserById }
