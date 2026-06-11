@@ -1048,6 +1048,32 @@ svg {
     width: fit-content;
   }
 }
+.analysis-metric-card {
+  height: 100%;
+  padding: clamp(1.25rem, 2.5vw, 1.6rem);
+}
+.analysis-metric-card span {
+  display: block;
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+}
+.analysis-metric-card strong {
+  display: block;
+  color: var(--color-text);
+  font-size: clamp(1.6rem, 3vw, 2.15rem);
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+  margin-bottom: 0.65rem;
+}
+.analysis-metric-card p {
+  color: var(--color-text-muted);
+  line-height: 1.55;
+  margin: 0;
+  font-size: 0.92rem;
+}
+
 .auth-page {
   min-height: calc(100vh - 88px);
   padding: 3rem 0 5rem;

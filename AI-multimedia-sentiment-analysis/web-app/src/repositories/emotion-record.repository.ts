@@ -37,6 +37,20 @@ const listRecentEmotionRecordsByUserId = async (userId: string, limit = 5) => {
   })
 }
 
-export { createEmotionRecord, listRecentEmotionRecordsByUserId }
+const listAllEmotionRecordsByUserId = async (userId: string) => {
+  return prisma.emotionRecord.findMany({
+    where: {
+      userId
+    },
+    orderBy: {
+      createdAt: "desc"
+    }
+  })
+}
 
+export {
+  createEmotionRecord,
+  listRecentEmotionRecordsByUserId,
+  listAllEmotionRecordsByUserId
+}
 export type { EmotionType, EmotionInputMode }

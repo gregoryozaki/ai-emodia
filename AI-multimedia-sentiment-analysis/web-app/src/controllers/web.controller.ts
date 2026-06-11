@@ -1,6 +1,9 @@
 import type { Request, Response } from "express"
 
-import { listRecentEmotionRecords } from "../services/emotion-record.service.js"
+import {
+  getEmotionDashboardSummary,
+  listRecentEmotionRecords
+} from "../services/emotion-record.service.js"
 
 const renderHomePage = (req: Request, res: Response) => {
   res.render("home", {
@@ -24,10 +27,12 @@ const renderAnalysisPage = async (req: Request, res: Response) => {
   }
 
   const records = await listRecentEmotionRecords(userId)
+  const summary = await getEmotionDashboardSummary(userId)
 
   res.render("analyses", {
     title: "Emodia | Análises",
     records,
+    summary,
     success: req.query.created === "1"
   })
 }

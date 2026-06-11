@@ -43,6 +43,42 @@
       </div>
     </section>
 
+    <section class="analysis-section">
+      <div class="row g-4">
+        <div class="col-12 col-md-6 col-xl-3">
+          <article class="analysis-metric-card surface-card">
+            <span>Total de relatos</span>
+            <strong>{{summary.totalRecords}}</strong>
+            <p>Registros emocionais analisados.</p>
+          </article>
+        </div>
+
+        <div class="col-12 col-md-6 col-xl-3">
+          <article class="analysis-metric-card surface-card">
+            <span>Emoção mais frequente</span>
+            <strong>{{summary.mostFrequentEmotion}}</strong>
+            <p>Predominância nos relatos salvos.</p>
+          </article>
+        </div>
+
+        <div class="col-12 col-md-6 col-xl-3">
+          <article class="analysis-metric-card surface-card">
+            <span>Intensidade média</span>
+            <strong>{{summary.averageIntensity}}/5</strong>
+            <p>Média estimada pelo sistema.</p>
+          </article>
+        </div>
+
+        <div class="col-12 col-md-6 col-xl-3">
+          <article class="analysis-metric-card surface-card">
+            <span>Gatilhos recorrentes</span>
+            <strong>{{summary.mainTriggers}}</strong>
+            <p>Possíveis padrões detectados.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
     <section id="new-record" class="analysis-section">
       <div class="row g-4 align-items-stretch">
         <div class="col-12 col-lg-5">
