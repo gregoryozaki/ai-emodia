@@ -36,12 +36,14 @@ const PASSWORD_REGEX = {
 
 const formatDate = (date: Date) => {
   return new Intl.DateTimeFormat("pt-BR", {
+    timeZone: "UTC",
     dateStyle: "short"
   }).format(date)
 }
 
 const formatDateInput = (date: Date) => {
-  return date.toISOString().split("T")[0]
+  const [formattedDate] = date.toISOString().split("T")
+  return formattedDate ?? ""
 }
 
 const calculateAge = (birthDate: Date) => {

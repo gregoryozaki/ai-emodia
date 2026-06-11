@@ -1448,6 +1448,93 @@ svg {
   font-size: 3rem;
 }
 
+/* Ajustes finais do perfil */
+.profile-hero-card {
+  align-items: center;
+}
+
+.profile-hero-left {
+  min-width: 0;
+  flex: 1;
+}
+
+.profile-hero-left > div {
+  min-width: 0;
+}
+
+.profile-hero-left h2 {
+  max-width: 520px;
+  overflow-wrap: anywhere;
+  line-height: 1.05;
+}
+
+.profile-hero-left p {
+  overflow-wrap: anywhere;
+}
+
+.profile-hero-actions {
+  flex: 0 0 430px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.85rem;
+}
+
+.profile-hero-actions .btn-emodia-primary,
+.profile-hero-actions .btn-emodia-outline {
+  width: 100%;
+  min-height: 56px;
+  justify-content: center;
+  text-align: center;
+}
+
+.profile-hero-actions button:first-child {
+  grid-column: 1/-1;
+}
+
+@media (max-width: 1199.98px) {
+  .profile-hero-actions {
+    flex: 0 0 360px;
+  }
+}
+@media (max-width: 991.98px) {
+  .profile-hero-actions {
+    width: 100%;
+    flex: initial;
+  }
+  .profile-hero-left h2 {
+    max-width: 100%;
+  }
+}
+@media (max-width: 575.98px) {
+  .profile-hero-actions {
+    grid-template-columns: 1fr;
+  }
+  .profile-hero-actions button:first-child {
+    grid-column: auto;
+  }
+}
+/* Barra secundária da área logada */
+.app-secondary-nav {
+  border-bottom: 1px solid var(--color-border);
+  background: rgba(15, 23, 42, 0.72);
+  backdrop-filter: blur(12px);
+}
+
+.app-secondary-nav-inner {
+  min-height: 64px;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.app-secondary-nav-inner span {
+  color: var(--color-text-muted);
+  font-weight: 700;
+}
+
+.app-menu-trigger {
+  display: none;
+}
+
 .auth-page {
   min-height: calc(100vh - 88px);
   padding: 3rem 0 5rem;
@@ -1852,6 +1939,80 @@ svg {
   }
   .auth-modal-body {
     max-height: 58vh;
+  }
+}
+/* Recuperação de senha */
+.auth-success-message,
+.auth-alert-success {
+  background: rgba(34, 197, 94, 0.16);
+  border: 1px solid rgba(34, 197, 94, 0.32);
+  color: #bbf7d0;
+}
+
+[data-flash-message] {
+  transition: opacity 220ms ease, transform 220ms ease;
+}
+
+.flash-message-hidden {
+  opacity: 0;
+  transform: translateY(-6px);
+}
+
+.auth-recovery-card {
+  align-self: center;
+}
+
+.auth-recovery-actions {
+  display: grid;
+  gap: 0.85rem;
+  margin-top: 1rem;
+}
+
+.auth-recovery-footer {
+  margin-top: 1.2rem;
+  margin-bottom: 0;
+  color: var(--color-text-muted);
+  text-align: center;
+}
+.auth-recovery-footer a {
+  color: var(--color-secondary);
+  font-weight: 700;
+  text-decoration: none;
+}
+.auth-recovery-footer a:hover {
+  color: var(--color-text);
+}
+
+/* Ajuste fino das telas de recuperação de senha */
+.auth-shell-recovery {
+  grid-template-columns: minmax(420px, 1fr) minmax(420px, 1fr);
+  max-width: 1080px;
+  margin-inline: auto;
+  align-items: center;
+}
+
+.auth-shell-recovery .auth-aside,
+.auth-shell-recovery .auth-card {
+  min-height: 560px;
+}
+
+.auth-shell-recovery .auth-form-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.auth-shell-recovery .auth-aside h1 {
+  font-size: clamp(2.6rem, 4.4vw, 4rem);
+}
+
+@media (max-width: 991.98px) {
+  .auth-shell-recovery {
+    grid-template-columns: 1fr;
+  }
+  .auth-shell-recovery .auth-aside,
+  .auth-shell-recovery .auth-card {
+    min-height: auto;
   }
 }
 .app-footer {
