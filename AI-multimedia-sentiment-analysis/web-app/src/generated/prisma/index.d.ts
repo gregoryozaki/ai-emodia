@@ -58,6 +58,17 @@ export const EmotionInputMode: {
 
 export type EmotionInputMode = (typeof EmotionInputMode)[keyof typeof EmotionInputMode]
 
+
+export const RiskLevel: {
+  NONE: 'NONE',
+  LOW: 'LOW',
+  MEDIUM: 'MEDIUM',
+  HIGH: 'HIGH',
+  CRITICAL: 'CRITICAL'
+};
+
+export type RiskLevel = (typeof RiskLevel)[keyof typeof RiskLevel]
+
 }
 
 export type EmotionType = $Enums.EmotionType
@@ -67,6 +78,10 @@ export const EmotionType: typeof $Enums.EmotionType
 export type EmotionInputMode = $Enums.EmotionInputMode
 
 export const EmotionInputMode: typeof $Enums.EmotionInputMode
+
+export type RiskLevel = $Enums.RiskLevel
+
+export const RiskLevel: typeof $Enums.RiskLevel
 
 /**
  * ##  Prisma Client ʲˢ
@@ -2393,8 +2408,12 @@ export namespace Prisma {
     emotion: $Enums.EmotionType | null
     inputMode: $Enums.EmotionInputMode | null
     content: string | null
+    transcript: string | null
     intensity: number | null
     trigger: string | null
+    riskLevel: $Enums.RiskLevel | null
+    riskMessage: string | null
+    riskTerms: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -2405,8 +2424,12 @@ export namespace Prisma {
     emotion: $Enums.EmotionType | null
     inputMode: $Enums.EmotionInputMode | null
     content: string | null
+    transcript: string | null
     intensity: number | null
     trigger: string | null
+    riskLevel: $Enums.RiskLevel | null
+    riskMessage: string | null
+    riskTerms: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -2417,8 +2440,12 @@ export namespace Prisma {
     emotion: number
     inputMode: number
     content: number
+    transcript: number
     intensity: number
     trigger: number
+    riskLevel: number
+    riskMessage: number
+    riskTerms: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -2439,8 +2466,12 @@ export namespace Prisma {
     emotion?: true
     inputMode?: true
     content?: true
+    transcript?: true
     intensity?: true
     trigger?: true
+    riskLevel?: true
+    riskMessage?: true
+    riskTerms?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -2451,8 +2482,12 @@ export namespace Prisma {
     emotion?: true
     inputMode?: true
     content?: true
+    transcript?: true
     intensity?: true
     trigger?: true
+    riskLevel?: true
+    riskMessage?: true
+    riskTerms?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -2463,8 +2498,12 @@ export namespace Prisma {
     emotion?: true
     inputMode?: true
     content?: true
+    transcript?: true
     intensity?: true
     trigger?: true
+    riskLevel?: true
+    riskMessage?: true
+    riskTerms?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -2562,8 +2601,12 @@ export namespace Prisma {
     emotion: $Enums.EmotionType
     inputMode: $Enums.EmotionInputMode
     content: string | null
+    transcript: string | null
     intensity: number | null
     trigger: string | null
+    riskLevel: $Enums.RiskLevel
+    riskMessage: string | null
+    riskTerms: string | null
     createdAt: Date
     updatedAt: Date
     _count: EmotionRecordCountAggregateOutputType | null
@@ -2593,8 +2636,12 @@ export namespace Prisma {
     emotion?: boolean
     inputMode?: boolean
     content?: boolean
+    transcript?: boolean
     intensity?: boolean
     trigger?: boolean
+    riskLevel?: boolean
+    riskMessage?: boolean
+    riskTerms?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -2606,8 +2653,12 @@ export namespace Prisma {
     emotion?: boolean
     inputMode?: boolean
     content?: boolean
+    transcript?: boolean
     intensity?: boolean
     trigger?: boolean
+    riskLevel?: boolean
+    riskMessage?: boolean
+    riskTerms?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -2619,8 +2670,12 @@ export namespace Prisma {
     emotion?: boolean
     inputMode?: boolean
     content?: boolean
+    transcript?: boolean
     intensity?: boolean
     trigger?: boolean
+    riskLevel?: boolean
+    riskMessage?: boolean
+    riskTerms?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -2632,13 +2687,17 @@ export namespace Prisma {
     emotion?: boolean
     inputMode?: boolean
     content?: boolean
+    transcript?: boolean
     intensity?: boolean
     trigger?: boolean
+    riskLevel?: boolean
+    riskMessage?: boolean
+    riskTerms?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type EmotionRecordOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "emotion" | "inputMode" | "content" | "intensity" | "trigger" | "createdAt" | "updatedAt", ExtArgs["result"]["emotionRecord"]>
+  export type EmotionRecordOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "emotion" | "inputMode" | "content" | "transcript" | "intensity" | "trigger" | "riskLevel" | "riskMessage" | "riskTerms" | "createdAt" | "updatedAt", ExtArgs["result"]["emotionRecord"]>
   export type EmotionRecordInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
   }
@@ -2660,8 +2719,12 @@ export namespace Prisma {
       emotion: $Enums.EmotionType
       inputMode: $Enums.EmotionInputMode
       content: string | null
+      transcript: string | null
       intensity: number | null
       trigger: string | null
+      riskLevel: $Enums.RiskLevel
+      riskMessage: string | null
+      riskTerms: string | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["emotionRecord"]>
@@ -3093,8 +3156,12 @@ export namespace Prisma {
     readonly emotion: FieldRef<"EmotionRecord", 'EmotionType'>
     readonly inputMode: FieldRef<"EmotionRecord", 'EmotionInputMode'>
     readonly content: FieldRef<"EmotionRecord", 'String'>
+    readonly transcript: FieldRef<"EmotionRecord", 'String'>
     readonly intensity: FieldRef<"EmotionRecord", 'Int'>
     readonly trigger: FieldRef<"EmotionRecord", 'String'>
+    readonly riskLevel: FieldRef<"EmotionRecord", 'RiskLevel'>
+    readonly riskMessage: FieldRef<"EmotionRecord", 'String'>
+    readonly riskTerms: FieldRef<"EmotionRecord", 'String'>
     readonly createdAt: FieldRef<"EmotionRecord", 'DateTime'>
     readonly updatedAt: FieldRef<"EmotionRecord", 'DateTime'>
   }
@@ -5597,8 +5664,12 @@ export namespace Prisma {
     emotion: 'emotion',
     inputMode: 'inputMode',
     content: 'content',
+    transcript: 'transcript',
     intensity: 'intensity',
     trigger: 'trigger',
+    riskLevel: 'riskLevel',
+    riskMessage: 'riskMessage',
+    riskTerms: 'riskTerms',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -5750,6 +5821,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'RiskLevel'
+   */
+  export type EnumRiskLevelFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RiskLevel'>
+    
+
+
+  /**
+   * Reference to a field of type 'RiskLevel[]'
+   */
+  export type ListEnumRiskLevelFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RiskLevel[]'>
+    
+
+
+  /**
    * Reference to a field of type 'Json'
    */
   export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
@@ -5867,8 +5952,12 @@ export namespace Prisma {
     emotion?: EnumEmotionTypeFilter<"EmotionRecord"> | $Enums.EmotionType
     inputMode?: EnumEmotionInputModeFilter<"EmotionRecord"> | $Enums.EmotionInputMode
     content?: StringNullableFilter<"EmotionRecord"> | string | null
+    transcript?: StringNullableFilter<"EmotionRecord"> | string | null
     intensity?: IntNullableFilter<"EmotionRecord"> | number | null
     trigger?: StringNullableFilter<"EmotionRecord"> | string | null
+    riskLevel?: EnumRiskLevelFilter<"EmotionRecord"> | $Enums.RiskLevel
+    riskMessage?: StringNullableFilter<"EmotionRecord"> | string | null
+    riskTerms?: StringNullableFilter<"EmotionRecord"> | string | null
     createdAt?: DateTimeFilter<"EmotionRecord"> | Date | string
     updatedAt?: DateTimeFilter<"EmotionRecord"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -5880,8 +5969,12 @@ export namespace Prisma {
     emotion?: SortOrder
     inputMode?: SortOrder
     content?: SortOrderInput | SortOrder
+    transcript?: SortOrderInput | SortOrder
     intensity?: SortOrderInput | SortOrder
     trigger?: SortOrderInput | SortOrder
+    riskLevel?: SortOrder
+    riskMessage?: SortOrderInput | SortOrder
+    riskTerms?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     user?: UserOrderByWithRelationInput
@@ -5896,8 +5989,12 @@ export namespace Prisma {
     emotion?: EnumEmotionTypeFilter<"EmotionRecord"> | $Enums.EmotionType
     inputMode?: EnumEmotionInputModeFilter<"EmotionRecord"> | $Enums.EmotionInputMode
     content?: StringNullableFilter<"EmotionRecord"> | string | null
+    transcript?: StringNullableFilter<"EmotionRecord"> | string | null
     intensity?: IntNullableFilter<"EmotionRecord"> | number | null
     trigger?: StringNullableFilter<"EmotionRecord"> | string | null
+    riskLevel?: EnumRiskLevelFilter<"EmotionRecord"> | $Enums.RiskLevel
+    riskMessage?: StringNullableFilter<"EmotionRecord"> | string | null
+    riskTerms?: StringNullableFilter<"EmotionRecord"> | string | null
     createdAt?: DateTimeFilter<"EmotionRecord"> | Date | string
     updatedAt?: DateTimeFilter<"EmotionRecord"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -5909,8 +6006,12 @@ export namespace Prisma {
     emotion?: SortOrder
     inputMode?: SortOrder
     content?: SortOrderInput | SortOrder
+    transcript?: SortOrderInput | SortOrder
     intensity?: SortOrderInput | SortOrder
     trigger?: SortOrderInput | SortOrder
+    riskLevel?: SortOrder
+    riskMessage?: SortOrderInput | SortOrder
+    riskTerms?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: EmotionRecordCountOrderByAggregateInput
@@ -5929,8 +6030,12 @@ export namespace Prisma {
     emotion?: EnumEmotionTypeWithAggregatesFilter<"EmotionRecord"> | $Enums.EmotionType
     inputMode?: EnumEmotionInputModeWithAggregatesFilter<"EmotionRecord"> | $Enums.EmotionInputMode
     content?: StringNullableWithAggregatesFilter<"EmotionRecord"> | string | null
+    transcript?: StringNullableWithAggregatesFilter<"EmotionRecord"> | string | null
     intensity?: IntNullableWithAggregatesFilter<"EmotionRecord"> | number | null
     trigger?: StringNullableWithAggregatesFilter<"EmotionRecord"> | string | null
+    riskLevel?: EnumRiskLevelWithAggregatesFilter<"EmotionRecord"> | $Enums.RiskLevel
+    riskMessage?: StringNullableWithAggregatesFilter<"EmotionRecord"> | string | null
+    riskTerms?: StringNullableWithAggregatesFilter<"EmotionRecord"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"EmotionRecord"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"EmotionRecord"> | Date | string
   }
@@ -6134,8 +6239,12 @@ export namespace Prisma {
     emotion: $Enums.EmotionType
     inputMode?: $Enums.EmotionInputMode
     content?: string | null
+    transcript?: string | null
     intensity?: number | null
     trigger?: string | null
+    riskLevel?: $Enums.RiskLevel
+    riskMessage?: string | null
+    riskTerms?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     user: UserCreateNestedOneWithoutEmotionRecordsInput
@@ -6147,8 +6256,12 @@ export namespace Prisma {
     emotion: $Enums.EmotionType
     inputMode?: $Enums.EmotionInputMode
     content?: string | null
+    transcript?: string | null
     intensity?: number | null
     trigger?: string | null
+    riskLevel?: $Enums.RiskLevel
+    riskMessage?: string | null
+    riskTerms?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -6158,8 +6271,12 @@ export namespace Prisma {
     emotion?: EnumEmotionTypeFieldUpdateOperationsInput | $Enums.EmotionType
     inputMode?: EnumEmotionInputModeFieldUpdateOperationsInput | $Enums.EmotionInputMode
     content?: NullableStringFieldUpdateOperationsInput | string | null
+    transcript?: NullableStringFieldUpdateOperationsInput | string | null
     intensity?: NullableIntFieldUpdateOperationsInput | number | null
     trigger?: NullableStringFieldUpdateOperationsInput | string | null
+    riskLevel?: EnumRiskLevelFieldUpdateOperationsInput | $Enums.RiskLevel
+    riskMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    riskTerms?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutEmotionRecordsNestedInput
@@ -6171,8 +6288,12 @@ export namespace Prisma {
     emotion?: EnumEmotionTypeFieldUpdateOperationsInput | $Enums.EmotionType
     inputMode?: EnumEmotionInputModeFieldUpdateOperationsInput | $Enums.EmotionInputMode
     content?: NullableStringFieldUpdateOperationsInput | string | null
+    transcript?: NullableStringFieldUpdateOperationsInput | string | null
     intensity?: NullableIntFieldUpdateOperationsInput | number | null
     trigger?: NullableStringFieldUpdateOperationsInput | string | null
+    riskLevel?: EnumRiskLevelFieldUpdateOperationsInput | $Enums.RiskLevel
+    riskMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    riskTerms?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -6183,8 +6304,12 @@ export namespace Prisma {
     emotion: $Enums.EmotionType
     inputMode?: $Enums.EmotionInputMode
     content?: string | null
+    transcript?: string | null
     intensity?: number | null
     trigger?: string | null
+    riskLevel?: $Enums.RiskLevel
+    riskMessage?: string | null
+    riskTerms?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -6194,8 +6319,12 @@ export namespace Prisma {
     emotion?: EnumEmotionTypeFieldUpdateOperationsInput | $Enums.EmotionType
     inputMode?: EnumEmotionInputModeFieldUpdateOperationsInput | $Enums.EmotionInputMode
     content?: NullableStringFieldUpdateOperationsInput | string | null
+    transcript?: NullableStringFieldUpdateOperationsInput | string | null
     intensity?: NullableIntFieldUpdateOperationsInput | number | null
     trigger?: NullableStringFieldUpdateOperationsInput | string | null
+    riskLevel?: EnumRiskLevelFieldUpdateOperationsInput | $Enums.RiskLevel
+    riskMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    riskTerms?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -6206,8 +6335,12 @@ export namespace Prisma {
     emotion?: EnumEmotionTypeFieldUpdateOperationsInput | $Enums.EmotionType
     inputMode?: EnumEmotionInputModeFieldUpdateOperationsInput | $Enums.EmotionInputMode
     content?: NullableStringFieldUpdateOperationsInput | string | null
+    transcript?: NullableStringFieldUpdateOperationsInput | string | null
     intensity?: NullableIntFieldUpdateOperationsInput | number | null
     trigger?: NullableStringFieldUpdateOperationsInput | string | null
+    riskLevel?: EnumRiskLevelFieldUpdateOperationsInput | $Enums.RiskLevel
+    riskMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    riskTerms?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -6506,6 +6639,13 @@ export namespace Prisma {
     not?: NestedIntNullableFilter<$PrismaModel> | number | null
   }
 
+  export type EnumRiskLevelFilter<$PrismaModel = never> = {
+    equals?: $Enums.RiskLevel | EnumRiskLevelFieldRefInput<$PrismaModel>
+    in?: $Enums.RiskLevel[] | ListEnumRiskLevelFieldRefInput<$PrismaModel>
+    notIn?: $Enums.RiskLevel[] | ListEnumRiskLevelFieldRefInput<$PrismaModel>
+    not?: NestedEnumRiskLevelFilter<$PrismaModel> | $Enums.RiskLevel
+  }
+
   export type UserScalarRelationFilter = {
     is?: UserWhereInput
     isNot?: UserWhereInput
@@ -6517,8 +6657,12 @@ export namespace Prisma {
     emotion?: SortOrder
     inputMode?: SortOrder
     content?: SortOrder
+    transcript?: SortOrder
     intensity?: SortOrder
     trigger?: SortOrder
+    riskLevel?: SortOrder
+    riskMessage?: SortOrder
+    riskTerms?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -6533,8 +6677,12 @@ export namespace Prisma {
     emotion?: SortOrder
     inputMode?: SortOrder
     content?: SortOrder
+    transcript?: SortOrder
     intensity?: SortOrder
     trigger?: SortOrder
+    riskLevel?: SortOrder
+    riskMessage?: SortOrder
+    riskTerms?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -6545,8 +6693,12 @@ export namespace Prisma {
     emotion?: SortOrder
     inputMode?: SortOrder
     content?: SortOrder
+    transcript?: SortOrder
     intensity?: SortOrder
     trigger?: SortOrder
+    riskLevel?: SortOrder
+    riskMessage?: SortOrder
+    riskTerms?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -6589,6 +6741,16 @@ export namespace Prisma {
     _sum?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedIntNullableFilter<$PrismaModel>
     _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
+  export type EnumRiskLevelWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.RiskLevel | EnumRiskLevelFieldRefInput<$PrismaModel>
+    in?: $Enums.RiskLevel[] | ListEnumRiskLevelFieldRefInput<$PrismaModel>
+    notIn?: $Enums.RiskLevel[] | ListEnumRiskLevelFieldRefInput<$PrismaModel>
+    not?: NestedEnumRiskLevelWithAggregatesFilter<$PrismaModel> | $Enums.RiskLevel
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumRiskLevelFilter<$PrismaModel>
+    _max?: NestedEnumRiskLevelFilter<$PrismaModel>
   }
   export type JsonFilter<$PrismaModel = never> =
     | PatchUndefined<
@@ -6830,6 +6992,10 @@ export namespace Prisma {
     divide?: number
   }
 
+  export type EnumRiskLevelFieldUpdateOperationsInput = {
+    set?: $Enums.RiskLevel
+  }
+
   export type UserUpdateOneRequiredWithoutEmotionRecordsNestedInput = {
     create?: XOR<UserCreateWithoutEmotionRecordsInput, UserUncheckedCreateWithoutEmotionRecordsInput>
     connectOrCreate?: UserCreateOrConnectWithoutEmotionRecordsInput
@@ -6992,6 +7158,13 @@ export namespace Prisma {
     not?: NestedEnumEmotionInputModeFilter<$PrismaModel> | $Enums.EmotionInputMode
   }
 
+  export type NestedEnumRiskLevelFilter<$PrismaModel = never> = {
+    equals?: $Enums.RiskLevel | EnumRiskLevelFieldRefInput<$PrismaModel>
+    in?: $Enums.RiskLevel[] | ListEnumRiskLevelFieldRefInput<$PrismaModel>
+    notIn?: $Enums.RiskLevel[] | ListEnumRiskLevelFieldRefInput<$PrismaModel>
+    not?: NestedEnumRiskLevelFilter<$PrismaModel> | $Enums.RiskLevel
+  }
+
   export type NestedEnumEmotionTypeWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.EmotionType | EnumEmotionTypeFieldRefInput<$PrismaModel>
     in?: $Enums.EmotionType[] | ListEnumEmotionTypeFieldRefInput<$PrismaModel>
@@ -7037,6 +7210,16 @@ export namespace Prisma {
     gt?: number | FloatFieldRefInput<$PrismaModel>
     gte?: number | FloatFieldRefInput<$PrismaModel>
     not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type NestedEnumRiskLevelWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.RiskLevel | EnumRiskLevelFieldRefInput<$PrismaModel>
+    in?: $Enums.RiskLevel[] | ListEnumRiskLevelFieldRefInput<$PrismaModel>
+    notIn?: $Enums.RiskLevel[] | ListEnumRiskLevelFieldRefInput<$PrismaModel>
+    not?: NestedEnumRiskLevelWithAggregatesFilter<$PrismaModel> | $Enums.RiskLevel
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumRiskLevelFilter<$PrismaModel>
+    _max?: NestedEnumRiskLevelFilter<$PrismaModel>
   }
   export type NestedJsonFilter<$PrismaModel = never> =
     | PatchUndefined<
@@ -7092,8 +7275,12 @@ export namespace Prisma {
     emotion: $Enums.EmotionType
     inputMode?: $Enums.EmotionInputMode
     content?: string | null
+    transcript?: string | null
     intensity?: number | null
     trigger?: string | null
+    riskLevel?: $Enums.RiskLevel
+    riskMessage?: string | null
+    riskTerms?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -7103,8 +7290,12 @@ export namespace Prisma {
     emotion: $Enums.EmotionType
     inputMode?: $Enums.EmotionInputMode
     content?: string | null
+    transcript?: string | null
     intensity?: number | null
     trigger?: string | null
+    riskLevel?: $Enums.RiskLevel
+    riskMessage?: string | null
+    riskTerms?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -7170,8 +7361,12 @@ export namespace Prisma {
     emotion?: EnumEmotionTypeFilter<"EmotionRecord"> | $Enums.EmotionType
     inputMode?: EnumEmotionInputModeFilter<"EmotionRecord"> | $Enums.EmotionInputMode
     content?: StringNullableFilter<"EmotionRecord"> | string | null
+    transcript?: StringNullableFilter<"EmotionRecord"> | string | null
     intensity?: IntNullableFilter<"EmotionRecord"> | number | null
     trigger?: StringNullableFilter<"EmotionRecord"> | string | null
+    riskLevel?: EnumRiskLevelFilter<"EmotionRecord"> | $Enums.RiskLevel
+    riskMessage?: StringNullableFilter<"EmotionRecord"> | string | null
+    riskTerms?: StringNullableFilter<"EmotionRecord"> | string | null
     createdAt?: DateTimeFilter<"EmotionRecord"> | Date | string
     updatedAt?: DateTimeFilter<"EmotionRecord"> | Date | string
   }
@@ -7345,8 +7540,12 @@ export namespace Prisma {
     emotion: $Enums.EmotionType
     inputMode?: $Enums.EmotionInputMode
     content?: string | null
+    transcript?: string | null
     intensity?: number | null
     trigger?: string | null
+    riskLevel?: $Enums.RiskLevel
+    riskMessage?: string | null
+    riskTerms?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -7364,8 +7563,12 @@ export namespace Prisma {
     emotion?: EnumEmotionTypeFieldUpdateOperationsInput | $Enums.EmotionType
     inputMode?: EnumEmotionInputModeFieldUpdateOperationsInput | $Enums.EmotionInputMode
     content?: NullableStringFieldUpdateOperationsInput | string | null
+    transcript?: NullableStringFieldUpdateOperationsInput | string | null
     intensity?: NullableIntFieldUpdateOperationsInput | number | null
     trigger?: NullableStringFieldUpdateOperationsInput | string | null
+    riskLevel?: EnumRiskLevelFieldUpdateOperationsInput | $Enums.RiskLevel
+    riskMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    riskTerms?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -7375,8 +7578,12 @@ export namespace Prisma {
     emotion?: EnumEmotionTypeFieldUpdateOperationsInput | $Enums.EmotionType
     inputMode?: EnumEmotionInputModeFieldUpdateOperationsInput | $Enums.EmotionInputMode
     content?: NullableStringFieldUpdateOperationsInput | string | null
+    transcript?: NullableStringFieldUpdateOperationsInput | string | null
     intensity?: NullableIntFieldUpdateOperationsInput | number | null
     trigger?: NullableStringFieldUpdateOperationsInput | string | null
+    riskLevel?: EnumRiskLevelFieldUpdateOperationsInput | $Enums.RiskLevel
+    riskMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    riskTerms?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -7386,8 +7593,12 @@ export namespace Prisma {
     emotion?: EnumEmotionTypeFieldUpdateOperationsInput | $Enums.EmotionType
     inputMode?: EnumEmotionInputModeFieldUpdateOperationsInput | $Enums.EmotionInputMode
     content?: NullableStringFieldUpdateOperationsInput | string | null
+    transcript?: NullableStringFieldUpdateOperationsInput | string | null
     intensity?: NullableIntFieldUpdateOperationsInput | number | null
     trigger?: NullableStringFieldUpdateOperationsInput | string | null
+    riskLevel?: EnumRiskLevelFieldUpdateOperationsInput | $Enums.RiskLevel
+    riskMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    riskTerms?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

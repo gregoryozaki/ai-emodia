@@ -138,8 +138,12 @@ exports.Prisma.EmotionRecordScalarFieldEnum = {
   emotion: 'emotion',
   inputMode: 'inputMode',
   content: 'content',
+  transcript: 'transcript',
   intensity: 'intensity',
   trigger: 'trigger',
+  riskLevel: 'riskLevel',
+  riskMessage: 'riskMessage',
+  riskTerms: 'riskTerms',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -196,6 +200,14 @@ exports.EmotionInputMode = exports.$Enums.EmotionInputMode = {
   TEXT: 'TEXT',
   AUDIO: 'AUDIO',
   VIDEO: 'VIDEO'
+};
+
+exports.RiskLevel = exports.$Enums.RiskLevel = {
+  NONE: 'NONE',
+  LOW: 'LOW',
+  MEDIUM: 'MEDIUM',
+  HIGH: 'HIGH',
+  CRITICAL: 'CRITICAL'
 };
 
 exports.Prisma.ModelName = {

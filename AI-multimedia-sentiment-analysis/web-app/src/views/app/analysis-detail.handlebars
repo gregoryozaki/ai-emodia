@@ -14,7 +14,26 @@
               Análise
               <span class="text-gradient">emocional</span>.
             </h1>
+            {{#if record.hasRiskAlert}}
+              <div class="report-risk-box report-risk-critical">
+                <span>Sinal de atenção</span>
 
+                <h3>Atenção: termos sensíveis identificados</h3>
+
+                <p>
+                  {{record.riskMessage}}
+                </p>
+
+                {{#if record.riskTerms}}
+                  <div class="report-risk-list">
+                    <div class="report-risk-item">
+                      <strong>Termos identificados</strong>
+                      <small>{{record.riskTerms}}</small>
+                    </div>
+                  </div>
+                {{/if}}
+              </div>
+            {{/if}}
             <p>
               Veja os dados registrados nessa análise.
             </p>

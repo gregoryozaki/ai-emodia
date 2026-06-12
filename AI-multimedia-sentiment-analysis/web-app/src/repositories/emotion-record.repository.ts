@@ -10,13 +10,19 @@ type EmotionType =
 
 type EmotionInputMode = "TEXT" | "AUDIO" | "VIDEO"
 
+type RiskLevel = "NONE" | "LOW" | "MEDIUM" | "HIGH" | "CRITICAL"
+
 type CreateEmotionRecordData = {
   userId: string
   emotion: EmotionType
   inputMode: EmotionInputMode
   content?: string
+  transcript?: string
   intensity?: number
   trigger?: string
+  riskLevel?: RiskLevel
+  riskMessage?: string
+  riskTerms?: string
 }
 
 type EmotionRecordFilters = {
@@ -137,4 +143,4 @@ export {
   findRecentEmotionRecordsByUserId
 }
 
-export type { EmotionInputMode, EmotionType }
+export type { EmotionInputMode, EmotionType, RiskLevel }

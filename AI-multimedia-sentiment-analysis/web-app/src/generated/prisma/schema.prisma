@@ -40,6 +40,14 @@ enum EmotionInputMode {
   VIDEO
 }
 
+enum RiskLevel {
+  NONE
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
 model EmotionRecord {
   id     String @id @default(uuid())
   userId String
@@ -48,9 +56,15 @@ model EmotionRecord {
   emotion   EmotionType
   inputMode EmotionInputMode @default(TEXT)
 
-  content   String?
+  content    String?
+  transcript String?
+
   intensity Int?
   trigger   String?
+
+  riskLevel   RiskLevel @default(NONE)
+  riskMessage String?
+  riskTerms   String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

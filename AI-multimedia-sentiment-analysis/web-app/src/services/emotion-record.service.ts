@@ -5,13 +5,22 @@ import {
   findEmotionRecordsByUserId,
   findEmotionRecordsForDashboardByUserId,
   findRecentEmotionRecordsByUserId,
-  type EmotionType
+  type EmotionInputMode,
+  type EmotionType,
+  type RiskLevel
 } from "../repositories/emotion-record.repository.js"
+import { analyzeRiskSignals } from "./risk-analysis.service.js"
 import { analyzeTextEmotion } from "./text-emotion-analysis.service.js"
 
 type CreateTextEmotionRecordInput = {
   userId: string
   content: string
+}
+
+type CreateTranscriptEmotionRecordInput = {
+  userId: string
+  transcript: string
+  inputMode: Extract<EmotionInputMode, "AUDIO" | "VIDEO">
 }
 
 type EmotionHistoryQuery = {
@@ -29,9 +38,20 @@ type ReportSummaryRecord = {
   emotionLabel: string
   inputMode: string
   content: string | null
+  transcript: string | null
   intensity: number | null
   trigger: string | null
+  riskLevel: RiskLevel
+  riskMessage: string | null
+  riskTerms: string | null
   createdAt: string
+}
+
+type ReportRiskSignal = {
+  category: string
+  severity: Exclude<RiskLevel, "NONE">
+  occurrences: number
+  terms: string[]
 }
 
 const EMOTION_LABELS: Record<EmotionType, string> = {
@@ -43,85 +63,15 @@ const EMOTION_LABELS: Record<EmotionType, string> = {
   ANSIEDADE: "Ansiedade"
 }
 
-const RISK_TERMS = [
-  {
-    category: "Risco de autoagressão ou suicídio",
-    severity: "critical",
-    terms: [
-      "me matar",
-      "quero me matar",
-      "vou me matar",
-      "suicídio",
-      "suicidio",
-      "tirar minha vida",
-      "não quero mais viver",
-      "nao quero mais viver",
-      "queria morrer",
-      "vontade de morrer",
-      "acabar com tudo",
-      "sumir para sempre",
-      "automutilação",
-      "automutilacao",
-      "me cortar"
-    ]
-  },
-  {
-    category: "Violência, ameaça ou agressão",
-    severity: "high",
-    terms: [
-      "violência doméstica",
-      "violencia domestica",
-      "apanhei",
-      "me bateu",
-      "agressão",
-      "agressao",
-      "ameaça",
-      "ameaca",
-      "ameaçado",
-      "ameacado",
-      "medo de apanhar",
-      "fui atacado",
-      "fui atacada"
-    ]
-  },
-  {
-    category: "Abuso ou violência sexual",
-    severity: "critical",
-    terms: [
-      "abuso",
-      "abusado",
-      "abusada",
-      "assédio",
-      "assedio",
-      "estupro",
-      "violência sexual",
-      "violencia sexual",
-      "tocou em mim",
-      "me forçou",
-      "me forcou"
-    ]
-  },
-  {
-    category: "Sofrimento emocional intenso",
-    severity: "medium",
-    terms: [
-      "desespero",
-      "desesperado",
-      "desesperada",
-      "não aguento mais",
-      "nao aguento mais",
-      "não suporto mais",
-      "nao suporto mais",
-      "crise",
-      "pânico",
-      "panico",
-      "sem saída",
-      "sem saida"
-    ]
-  }
-]
-
 const VALID_EMOTIONS = Object.keys(EMOTION_LABELS) as EmotionType[]
+
+const RISK_PRIORITY: Record<RiskLevel, number> = {
+  NONE: 0,
+  LOW: 1,
+  MEDIUM: 2,
+  HIGH: 3,
+  CRITICAL: 4
+}
 
 const formatDate = (date: Date) => {
   return new Intl.DateTimeFormat("pt-BR", {
@@ -172,6 +122,43 @@ const normalizeEmotion = (emotion?: string) => {
   return normalizedEmotion
 }
 
+const getHighestRiskLevel = (levels: RiskLevel[]) => {
+  return levels.reduce<RiskLevel>((highest, current) => {
+    return RISK_PRIORITY[current] > RISK_PRIORITY[highest] ? current : highest
+  }, "NONE")
+}
+
+const buildPeriodRiskMessage = (riskLevel: RiskLevel) => {
+  if (riskLevel === "CRITICAL") {
+    return "Foram identificados termos associados a risco grave, autoagressão, abuso ou sofrimento intenso. Este relatório não confirma uma situação de risco, mas recomenda buscar apoio imediatamente caso esses registros representem uma situação real e atual."
+  }
+
+  if (riskLevel === "HIGH") {
+    return "Foram identificados termos associados a violência, ameaça ou sofrimento relevante. Considere procurar apoio de pessoas de confiança, serviços especializados ou autoridades competentes se houver risco à segurança."
+  }
+
+  if (riskLevel === "MEDIUM") {
+    return "Foram identificados termos de sofrimento emocional relevante. Observe se esses temas continuam aparecendo e considere buscar apoio caso estejam afetando sua rotina."
+  }
+
+  if (riskLevel === "LOW") {
+    return "Foram identificados sinais leves de atenção emocional. Continue acompanhando seus registros para entender melhor seus gatilhos e padrões."
+  }
+
+  return "Nenhum termo crítico foi identificado nos registros deste período."
+}
+
+const splitTriggers = (trigger?: string | null) => {
+  if (!trigger) {
+    return []
+  }
+
+  return trigger
+    .split(",")
+    .map((item) => item.trim())
+    .filter(Boolean)
+}
+
 const createTextEmotionRecord = async (input: CreateTextEmotionRecordInput) => {
   const content = input.content.trim()
 
@@ -180,6 +167,7 @@ const createTextEmotionRecord = async (input: CreateTextEmotionRecordInput) => {
   }
 
   const analysis = analyzeTextEmotion(content)
+  const riskAnalysis = analyzeRiskSignals(content)
 
   return createEmotionRecord({
     userId: input.userId,
@@ -187,7 +175,40 @@ const createTextEmotionRecord = async (input: CreateTextEmotionRecordInput) => {
     inputMode: "TEXT",
     content,
     intensity: analysis.intensity,
-    trigger: analysis.triggers.join(", ")
+    trigger: analysis.triggers.join(", "),
+    riskLevel: riskAnalysis.riskLevel,
+    ...(riskAnalysis.riskMessage
+      ? { riskMessage: riskAnalysis.riskMessage }
+      : {}),
+    ...(riskAnalysis.riskTerms ? { riskTerms: riskAnalysis.riskTerms } : {})
+  })
+}
+
+const createTranscriptEmotionRecord = async (
+  input: CreateTranscriptEmotionRecordInput
+) => {
+  const transcript = input.transcript.trim()
+
+  if (!transcript) {
+    throw new Error("Informe uma transcrição para análise.")
+  }
+
+  const analysis = analyzeTextEmotion(transcript)
+  const riskAnalysis = analyzeRiskSignals(transcript)
+
+  return createEmotionRecord({
+    userId: input.userId,
+    emotion: analysis.emotion,
+    inputMode: input.inputMode,
+    content: transcript,
+    transcript,
+    intensity: analysis.intensity,
+    trigger: analysis.triggers.join(", "),
+    riskLevel: riskAnalysis.riskLevel,
+    ...(riskAnalysis.riskMessage
+      ? { riskMessage: riskAnalysis.riskMessage }
+      : {}),
+    ...(riskAnalysis.riskTerms ? { riskTerms: riskAnalysis.riskTerms } : {})
   })
 }
 
@@ -215,14 +236,7 @@ const getEmotionDashboardSummary = async (userId: string) => {
       : 0
 
   const triggerCount = records.reduce<Record<string, number>>((acc, record) => {
-    if (!record.trigger) {
-      return acc
-    }
-
-    const triggers = record.trigger
-      .split(",")
-      .map((trigger) => trigger.trim())
-      .filter(Boolean)
+    const triggers = splitTriggers(record.trigger)
 
     triggers.forEach((trigger) => {
       acc[trigger] = (acc[trigger] ?? 0) + 1
@@ -262,12 +276,7 @@ const getEmotionDashboardSummary = async (userId: string) => {
     .slice()
     .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime())
     .map((record) => {
-      const triggers = record.trigger
-        ? record.trigger
-            .split(",")
-            .map((trigger) => trigger.trim())
-            .filter(Boolean)
-        : []
+      const triggers = splitTriggers(record.trigger)
 
       return {
         id: record.id,
@@ -316,8 +325,14 @@ const getEmotionDashboardSummary = async (userId: string) => {
         emotionLabel: EMOTION_LABELS[record.emotion],
         inputMode: record.inputMode,
         content: record.content,
+        transcript: record.transcript,
         intensity: record.intensity,
         trigger: record.trigger,
+        riskLevel: record.riskLevel,
+        riskMessage: record.riskMessage,
+        riskTerms: record.riskTerms,
+        hasRiskAlert:
+          record.riskLevel === "HIGH" || record.riskLevel === "CRITICAL",
         createdAt: formatDateTime(record.createdAt)
       }
     })
@@ -346,7 +361,6 @@ const getEmotionHistory = async (
   }
 
   const result = await findEmotionRecordsByUserId(filters)
-
   const totalPages = Math.max(Math.ceil(result.total / perPage), 1)
 
   return {
@@ -357,8 +371,14 @@ const getEmotionHistory = async (
         emotionLabel: EMOTION_LABELS[record.emotion],
         inputMode: record.inputMode,
         content: record.content,
+        transcript: record.transcript,
         intensity: record.intensity,
         trigger: record.trigger,
+        riskLevel: record.riskLevel,
+        riskMessage: record.riskMessage,
+        riskTerms: record.riskTerms,
+        hasRiskAlert:
+          record.riskLevel === "HIGH" || record.riskLevel === "CRITICAL",
         createdAt: formatDateTime(record.createdAt)
       }
     }),
@@ -397,22 +417,17 @@ const getEmotionRecordDetails = async (userId: string, recordId: string) => {
     emotionLabel: EMOTION_LABELS[record.emotion],
     inputMode: record.inputMode,
     content: record.content,
+    transcript: record.transcript,
     intensity: record.intensity,
     trigger: record.trigger,
+    riskLevel: record.riskLevel,
+    riskMessage: record.riskMessage,
+    riskTerms: record.riskTerms,
+    hasRiskAlert:
+      record.riskLevel === "HIGH" || record.riskLevel === "CRITICAL",
     createdAt: formatDateTime(record.createdAt),
     createdDateInput: formatDateInput(record.createdAt)
   }
-}
-
-const splitTriggers = (trigger?: string | null) => {
-  if (!trigger) {
-    return []
-  }
-
-  return trigger
-    .split(",")
-    .map((item) => item.trim())
-    .filter(Boolean)
 }
 
 const calculateAverageIntensity = (
@@ -514,11 +529,82 @@ const buildEmotionDistribution = (records: Array<{ emotion: EmotionType }>) => {
     })
 }
 
+const buildReportRiskAnalysis = (
+  records: Array<{
+    content: string | null
+    transcript: string | null
+    riskLevel: RiskLevel
+    riskMessage: string | null
+    riskTerms: string | null
+  }>
+) => {
+  const signalMap = new Map<string, ReportRiskSignal>()
+  const detectedLevels: RiskLevel[] = []
+
+  records.forEach((record) => {
+    const textToAnalyze = record.content ?? record.transcript ?? ""
+
+    if (!textToAnalyze.trim()) {
+      return
+    }
+
+    const analysis = analyzeRiskSignals(textToAnalyze)
+
+    if (analysis.riskLevel !== "NONE") {
+      detectedLevels.push(analysis.riskLevel)
+    }
+
+    analysis.signals.forEach((signal) => {
+      const existingSignal = signalMap.get(signal.category)
+
+      if (!existingSignal) {
+        signalMap.set(signal.category, {
+          category: signal.category,
+          severity: signal.severity,
+          occurrences: signal.occurrences,
+          terms: [...signal.terms]
+        })
+
+        return
+      }
+
+      existingSignal.occurrences += signal.occurrences
+
+      signal.terms.forEach((term) => {
+        if (!existingSignal.terms.includes(term)) {
+          existingSignal.terms.push(term)
+        }
+      })
+
+      if (
+        RISK_PRIORITY[signal.severity] > RISK_PRIORITY[existingSignal.severity]
+      ) {
+        existingSignal.severity = signal.severity
+      }
+    })
+  })
+
+  const riskLevel = getHighestRiskLevel(detectedLevels)
+  const signals = Array.from(signalMap.values()).sort((a, b) => {
+    return RISK_PRIORITY[b.severity] - RISK_PRIORITY[a.severity]
+  })
+
+  return {
+    hasRisk: riskLevel !== "NONE",
+    hasCriticalRisk: riskLevel === "CRITICAL",
+    hasHighRisk: riskLevel === "HIGH" || riskLevel === "CRITICAL",
+    alertMessage: buildPeriodRiskMessage(riskLevel),
+    signals
+  }
+}
+
 const buildReportAdvice = (params: {
   total: number
   averageIntensity: number
   mostFrequentEmotion: string
   intensityVariation: number
+  hasCriticalRisk: boolean
+  hasHighRisk: boolean
 }) => {
   if (params.total === 0) {
     return {
@@ -529,19 +615,26 @@ const buildReportAdvice = (params: {
     }
   }
 
-  const emotion = params.mostFrequentEmotion.toLowerCase()
-
-  if (
-    params.averageIntensity >= 7 &&
-    ["tristeza", "ansiedade", "medo"].includes(emotion)
-  ) {
+  if (params.hasCriticalRisk) {
     return {
-      title: "Atenção: sofrimento emocional elevado",
+      title: "Atenção: sinais críticos identificados",
       message:
-        "Os registros indicam intensidade emocional alta associada a emoções difíceis. Caso existam pensamentos de autoagressão, vontade de morrer, violência ou risco imediato, procure ajuda agora: converse com alguém de confiança, busque atendimento profissional ou acione um serviço de emergência. No Brasil, o CVV atende pelo 188.",
+        "Este período contém termos associados a risco grave, autoagressão, abuso ou sofrimento intenso. O Emodia não realiza diagnóstico, mas recomenda buscar apoio imediatamente caso esses registros representem uma situação real e atual. Converse com alguém de confiança, procure atendimento profissional ou acione um serviço de emergência. No Brasil, o CVV atende pelo 188.",
       alertLevel: "critical"
     }
   }
+
+  if (params.hasHighRisk) {
+    return {
+      title: "Atenção: sinais de risco identificados",
+      message:
+        "Este período contém termos associados a violência, ameaça ou sofrimento relevante. Caso exista risco à sua segurança, procure apoio de pessoas de confiança, serviços especializados ou autoridades competentes.",
+      alertLevel: "high"
+    }
+  }
+
+  const emotion = params.mostFrequentEmotion.toLowerCase()
+
   if (
     params.averageIntensity >= 7 &&
     ["tristeza", "ansiedade", "medo", "raiva"].includes(emotion)
@@ -575,7 +668,7 @@ const buildReportAdvice = (params: {
     }
   }
 
-  if (["alegria"].includes(emotion)) {
+  if (emotion === "alegria") {
     return {
       title: "Período positivo",
       message:
@@ -609,12 +702,16 @@ const buildSummary = (
 
   const intensityVariation = averageIntensity - previousAverageIntensity
   const totalVariation = total - previousTotal
-  const riskAnalysis = detectRiskSignals(records)
+
+  const riskAnalysis = buildReportRiskAnalysis(records)
+
   const advice = buildReportAdvice({
     total,
     averageIntensity,
     mostFrequentEmotion,
-    intensityVariation
+    intensityVariation,
+    hasCriticalRisk: riskAnalysis.hasCriticalRisk,
+    hasHighRisk: riskAnalysis.hasHighRisk
   })
 
   return {
@@ -636,8 +733,12 @@ const buildSummary = (
         emotionLabel: EMOTION_LABELS[record.emotion],
         inputMode: record.inputMode,
         content: record.content,
+        transcript: record.transcript,
         intensity: record.intensity,
         trigger: record.trigger,
+        riskLevel: record.riskLevel,
+        riskMessage: record.riskMessage,
+        riskTerms: record.riskTerms,
         createdAt: formatDateTime(record.createdAt)
       }
     })
@@ -706,79 +807,14 @@ const getEmotionReportByPeriod = async (
   return period === "monthly" ? reports.monthly : reports.weekly
 }
 
-const normalizeText = (text: string) => {
-  return text
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-}
-
-const detectRiskSignals = (records: Array<{ content: string | null }>) => {
-  const signals = RISK_TERMS.flatMap((riskGroup) => {
-    const matchedTerms = new Set<string>()
-    let occurrences = 0
-
-    records.forEach((record) => {
-      if (!record.content) {
-        return
-      }
-
-      const normalizedContent = normalizeText(record.content)
-
-      riskGroup.terms.forEach((term) => {
-        const normalizedTerm = normalizeText(term)
-
-        if (normalizedContent.includes(normalizedTerm)) {
-          matchedTerms.add(term)
-          occurrences += 1
-        }
-      })
-    })
-
-    if (occurrences === 0) {
-      return []
-    }
-
-    return {
-      category: riskGroup.category,
-      severity: riskGroup.severity,
-      occurrences,
-      terms: Array.from(matchedTerms)
-    }
-  })
-
-  const hasCriticalRisk = signals.some((signal) => {
-    return signal.severity === "critical"
-  })
-
-  const hasHighRisk = signals.some((signal) => {
-    return signal.severity === "high"
-  })
-
-  const alertMessage = hasCriticalRisk
-    ? "Foram identificados termos associados a risco grave ou sofrimento intenso. Este relatório não confirma uma situação de risco, mas recomenda buscar apoio imediatamente caso esses registros representem uma situação real e atual."
-    : hasHighRisk
-      ? "Foram identificados termos associados a violência, ameaça ou sofrimento relevante. Considere procurar apoio de pessoas de confiança, serviços especializados ou autoridades competentes se houver risco à segurança."
-      : signals.length > 0
-        ? "Foram identificados termos de atenção emocional. Observe se esses temas continuam aparecendo e considere buscar apoio caso estejam afetando sua rotina."
-        : "Nenhum termo crítico foi identificado nos registros deste período."
-
-  return {
-    hasRisk: signals.length > 0,
-    hasCriticalRisk,
-    hasHighRisk,
-    alertMessage,
-    signals
-  }
-}
-
 export {
+  createTextEmotionRecord,
+  createTranscriptEmotionRecord,
   getEmotionDashboardSummary,
   getEmotionHistory,
   getEmotionRecordDetails,
   getEmotionReportByPeriod,
-  getEmotionReports,
-  createTextEmotionRecord
+  getEmotionReports
 }
 
 export type { ReportPeriod }
