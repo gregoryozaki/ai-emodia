@@ -84,3 +84,18 @@ svg {
   background: var(--color-surface-soft);
   box-shadow: var(--shadow-card);
 }
+
+select {
+  color-scheme: dark;
+}
+
+select option {
+  background: #0f172a;
+  color: #f8fafc;
+}
+
+select option:checked,
+select option:hover {
+  background: #334155;
+  color: #ffffff;
+}

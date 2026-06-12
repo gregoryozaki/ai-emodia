@@ -38,6 +38,7 @@ const renderDashboardPage = async (req: Request, res: Response) => {
   res.render("app/dashboard", {
     title: "Emodia | Dashboard",
     dashboard,
+    useEmotionTemporalChart: true,
     success:
       req.query.created === "1"
         ? "Análise emocional registrada com sucesso."

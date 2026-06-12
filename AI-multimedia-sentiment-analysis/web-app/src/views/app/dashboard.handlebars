@@ -158,6 +158,99 @@
               {{/if}}
             </article>
 
+            <article class="dashboard-temporal-card surface-card">
+              <div class="temporal-chart-header-content">
+                <div>
+                  <h2>Evolução temporal emocional</h2>
+
+                  <p>
+                    Acompanhe como emoções, gatilhos e intensidade aparecem ao
+                    longo dos registros.
+                  </p>
+                </div>
+
+                <div class="temporal-chart-controls">
+                  <label>
+                    Visualizar
+                    <select id="temporalChartMode">
+                      <option value="emotions">Emoções</option>
+                      <option value="triggers">Gatilhos</option>
+                      <option value="combined">Emoções + gatilhos</option>
+                    </select>
+                  </label>
+
+                  <label>
+                    Emoção
+                    <select id="temporalChartEmotion">
+                      <option value="all">Todas</option>
+                      {{#each dashboard.temporalChart.emotionOptions}}
+                        <option value="{{value}}">{{label}}</option>
+                      {{/each}}
+                    </select>
+                  </label>
+
+                  <label>
+                    Gatilho
+                    <select id="temporalChartTrigger">
+                      <option value="all">Todos</option>
+                      {{#each dashboard.temporalChart.triggerOptions}}
+                        <option value="{{value}}">{{label}}</option>
+                      {{/each}}
+                    </select>
+                  </label>
+                </div>
+              </div>
+
+              {{#if dashboard.temporalChart.records.length}}
+                <div class="temporal-chart-shell">
+                  <svg
+                    id="emotionTemporalChart"
+                    class="emotion-temporal-chart"
+                    role="img"
+                    aria-label="Gráfico temporal de emoções e gatilhos"
+                  ></svg>
+                </div>
+
+                <div
+                  id="temporalChartLegend"
+                  class="temporal-chart-legend"
+                ></div>
+
+                <div
+                  id="temporalChartEmpty"
+                  class="empty-state-card temporal-chart-empty d-none"
+                >
+                  <h3>Nenhum dado encontrado</h3>
+                  <p>
+                    Altere os filtros para visualizar outros registros
+                    emocionais.
+                  </p>
+                </div>
+
+                <div id="temporalChartData" hidden>
+                  {{#each dashboard.temporalChart.records}}
+                    <div
+                      class="temporal-chart-point"
+                      data-date="{{date}}"
+                      data-date-label="{{dateLabel}}"
+                      data-date-time-label="{{dateTimeLabel}}"
+                      data-emotion="{{emotionLabel}}"
+                      data-intensity="{{intensity}}"
+                      data-triggers="{{#each triggers}}{{this}}{{#unless @last}}|{{/unless}}{{/each}}"
+                    ></div>
+                  {{/each}}
+                </div>
+              {{else}}
+                <div class="empty-state-card mt-4">
+                  <h3>Nenhum dado temporal ainda</h3>
+                  <p>
+                    Registre novos relatos para visualizar a evolução das
+                    emoções ao longo do tempo.
+                  </p>
+                </div>
+              {{/if}}
+            </article>
+
             <article class="dashboard-recent-card surface-card">
               <h2>Registros recentes</h2>
 

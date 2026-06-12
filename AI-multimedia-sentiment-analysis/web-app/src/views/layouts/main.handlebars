@@ -26,6 +26,10 @@
       <script src="/js/emotion-gauge.js"></script>
     {{/if}}
 
+    {{#if useEmotionTemporalChart}}
+      <script src="/js/emotion-temporal-chart.js"></script>
+    {{/if}}
+
     {{#if usePasswordToggle}}
       <script src="/js/auth-password-toggle.js"></script>
     {{/if}}
@@ -33,6 +37,7 @@
     {{#if useRegisterValidation}}
       <script src="/js/register-validation.js"></script>
     {{/if}}
+    
     <script src="/js/flash-message.js"></script>
     {{#if useAvatarPreview}}
       <script src="/js/avatar-preview.js"></script>

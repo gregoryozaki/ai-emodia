@@ -258,6 +258,43 @@ const getEmotionDashboardSummary = async (userId: string) => {
     }
   })
 
+  const temporalRecords = records
+    .slice()
+    .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime())
+    .map((record) => {
+      const triggers = record.trigger
+        ? record.trigger
+            .split(",")
+            .map((trigger) => trigger.trim())
+            .filter(Boolean)
+        : []
+
+      return {
+        id: record.id,
+        date: record.createdAt.toISOString(),
+        dateLabel: formatDate(record.createdAt),
+        dateTimeLabel: formatDateTime(record.createdAt),
+        emotion: record.emotion,
+        emotionLabel: EMOTION_LABELS[record.emotion],
+        intensity: record.intensity ?? 0,
+        triggers
+      }
+    })
+
+  const temporalEmotionOptions = Array.from(
+    new Set(temporalRecords.map((record) => record.emotionLabel))
+  ).map((emotion) => ({
+    value: emotion,
+    label: emotion
+  }))
+
+  const temporalTriggerOptions = Array.from(
+    new Set(temporalRecords.flatMap((record) => record.triggers))
+  ).map((trigger) => ({
+    value: trigger,
+    label: trigger
+  }))
+
   return {
     totalRecords,
     mostFrequentEmotion: mostFrequentEmotionEntry
@@ -267,6 +304,11 @@ const getEmotionDashboardSummary = async (userId: string) => {
     mainTriggers,
     triggerChart,
     emotionChart,
+    temporalChart: {
+      records: temporalRecords,
+      emotionOptions: temporalEmotionOptions,
+      triggerOptions: temporalTriggerOptions
+    },
     recentRecords: recentRecords.map((record) => {
       return {
         id: record.id,
