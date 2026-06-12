@@ -2328,3 +2328,17 @@
     transform: none;
   }
 }
+
+.audio-recorder-actions {
+  button:disabled {
+    opacity: 0.38;
+    cursor: not-allowed;
+    filter: grayscale(0.65);
+    box-shadow: none;
+    transform: none;
+  }
+
+  button:disabled:hover {
+    transform: none;
+  }
+}

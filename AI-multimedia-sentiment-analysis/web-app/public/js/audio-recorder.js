@@ -10,17 +10,14 @@ const audioTimer = document.getElementById("audioRecorderTimer")
 const audioVisual = document.getElementById("audioRecorderVisual")
 const transcriptionStatus = document.getElementById("audioTranscriptionStatus")
 const audioTranscript = document.getElementById("audioTranscript")
+const audioAnalysisForm = document.getElementById("audioAnalysisForm")
 
 let audioStream = null
 let mediaRecorder = null
 let audioChunks = []
+let currentAudioBlob = null
 let timerInterval = null
 let recordingSeconds = 0
-let recognition = null
-let liveTranscript = ""
-
-const SpeechRecognition =
-  window.SpeechRecognition || window.webkitSpeechRecognition
 
 const formatTime = (seconds) => {
   const minutes = String(Math.floor(seconds / 60)).padStart(2, "0")
@@ -42,6 +39,7 @@ const setStatus = (status, helper) => {
 const showOnlyStartButton = () => {
   startAudioButton.hidden = false
   startAudioButton.disabled = false
+  startAudioButton.textContent = "🎙️ Iniciar gravação"
 
   stopAudioButton.hidden = true
   stopAudioButton.disabled = true
@@ -50,7 +48,7 @@ const showOnlyStartButton = () => {
   clearAudioButton.disabled = true
 }
 
-const showRecordingButton = () => {
+const showRecordingButtons = () => {
   startAudioButton.hidden = false
   startAudioButton.disabled = true
 
@@ -64,12 +62,21 @@ const showRecordingButton = () => {
 const showFinishedButtons = () => {
   startAudioButton.hidden = false
   startAudioButton.disabled = false
+  startAudioButton.textContent = "🎙️ Gravar novamente"
 
   stopAudioButton.hidden = true
   stopAudioButton.disabled = true
 
   clearAudioButton.hidden = false
   clearAudioButton.disabled = false
+}
+
+const showProcessingButtons = () => {
+  startAudioButton.disabled = true
+  stopAudioButton.hidden = true
+  stopAudioButton.disabled = true
+  clearAudioButton.hidden = false
+  clearAudioButton.disabled = true
 }
 
 const startTimer = () => {
@@ -131,117 +138,84 @@ const hideTranscriptionStatus = () => {
   transcriptionStatus.textContent = ""
 }
 
-const setupSpeechRecognition = () => {
-  if (!SpeechRecognition) {
-    showTranscriptionStatus(
-      "Transcrição automática indisponível neste navegador. Use Chrome/Chromium ou preencha manualmente."
-    )
+const showAudioForm = () => {
+  if (audioAnalysisForm) {
+    audioAnalysisForm.hidden = false
+  }
+}
 
-    return null
+const hideAudioForm = () => {
+  if (audioAnalysisForm) {
+    audioAnalysisForm.hidden = true
+  }
+}
+
+const transcribeAudioRecording = async () => {
+  if (!currentAudioBlob) {
+    showTranscriptionStatus("Nenhum áudio disponível para transcrever.")
+    return
   }
 
-  const speechRecognition = new SpeechRecognition()
+  showProcessingButtons()
+  showAudioForm()
 
-  speechRecognition.lang = "pt-BR"
-  speechRecognition.continuous = true
-  speechRecognition.interimResults = true
-  speechRecognition.maxAlternatives = 1
+  showTranscriptionStatus("Transcrevendo áudio automaticamente. Aguarde...")
 
-  speechRecognition.onstart = () => {
-    showTranscriptionStatus(
-      "Transcrição automática ativa enquanto você fala..."
-    )
+  if (audioTranscript) {
+    audioTranscript.value = ""
+    audioTranscript.placeholder = "Transcrevendo áudio automaticamente..."
   }
 
-  speechRecognition.onresult = (event) => {
-    let interimTranscript = ""
+  const formData = new FormData()
+  formData.append("audio", currentAudioBlob, "emodia-audio.webm")
 
-    for (
-      let index = event.resultIndex;
-      index < event.results.length;
-      index += 1
-    ) {
-      const result = event.results[index]
-      const text = result[0]?.transcript ?? ""
+  try {
+    const response = await fetch("/analises/audio/transcrever", {
+      method: "POST",
+      body: formData
+    })
 
-      if (result.isFinal) {
-        liveTranscript += `${text.trim()} `
-      } else {
-        interimTranscript += text
-      }
+    const data = await response.json()
+
+    if (!response.ok) {
+      throw new Error(data.message || "Erro ao transcrever áudio.")
     }
 
     if (audioTranscript) {
-      audioTranscript.value = `${liveTranscript}${interimTranscript}`.trim()
-    }
-  }
-
-  speechRecognition.onerror = (event) => {
-    const errorMessages = {
-      "not-allowed":
-        "Permissão de microfone/transcrição negada. Verifique as permissões do navegador.",
-      "no-speech":
-        "Nenhuma fala detectada. Tente falar mais próximo do microfone.",
-      network:
-        "A transcrição automática falhou por conexão/serviço indisponível. Você pode preencher manualmente.",
-      "audio-capture": "Não foi possível capturar o áudio do microfone."
+      audioTranscript.value = data.transcript || ""
+      audioTranscript.placeholder =
+        "A transcrição automática aparecerá aqui. Você poderá editar antes de enviar."
+      audioTranscript.focus()
     }
 
     showTranscriptionStatus(
-      errorMessages[event.error] ??
-        "Não foi possível gerar a transcrição automática. Você pode editar ou preencher manualmente."
+      "Transcrição gerada. Revise o texto antes de enviar."
     )
-  }
 
-  speechRecognition.onend = () => {
-    if (audioTranscript && audioTranscript.value.trim()) {
-      showTranscriptionStatus(
-        "Transcrição finalizada. Revise o texto antes de enviar."
-      )
+    setStatus("Transcrição pronta", "Revise o texto gerado e clique em enviar.")
+  } catch (error) {
+    const message =
+      error instanceof Error
+        ? error.message
+        : "Erro ao gerar transcrição automática."
 
-      return
+    showTranscriptionStatus(
+      `${message} Você pode preencher a transcrição manualmente.`
+    )
+
+    if (audioTranscript) {
+      audioTranscript.placeholder =
+        "Não foi possível gerar a transcrição automática. Digite a transcrição manualmente."
+      audioTranscript.focus()
     }
 
-    showTranscriptionStatus(
-      "Nenhuma transcrição foi gerada. Você pode tentar gravar novamente ou preencher manualmente."
+    setStatus(
+      "Transcrição automática falhou",
+      "Você ainda pode ouvir o áudio e preencher a transcrição manualmente."
     )
+  } finally {
+    showFinishedButtons()
   }
-
-  return speechRecognition
-}
-
-const startSpeechRecognition = () => {
-  recognition = setupSpeechRecognition()
-
-  if (!recognition) {
-    return
-  }
-
-  try {
-    liveTranscript = audioTranscript?.value
-      ? `${audioTranscript.value.trim()} `
-      : ""
-
-    recognition.start()
-  } catch {
-    showTranscriptionStatus(
-      "A transcrição automática já estava ativa ou não pôde ser iniciada."
-    )
-  }
-}
-
-const stopSpeechRecognition = () => {
-  if (!recognition) {
-    return
-  }
-
-  try {
-    recognition.stop()
-  } catch {
-    // não faz nada
-  }
-
-  recognition = null
 }
 
 const startAudioRecording = async () => {
@@ -251,6 +225,15 @@ const startAudioRecording = async () => {
     })
 
     audioChunks = []
+    currentAudioBlob = null
+
+    if (audioTranscript) {
+      audioTranscript.value = ""
+      audioTranscript.placeholder =
+        "A transcrição automática aparecerá aqui. Você poderá editar antes de enviar."
+    }
+
+    hideAudioForm()
 
     mediaRecorder = new MediaRecorder(audioStream)
 
@@ -260,12 +243,12 @@ const startAudioRecording = async () => {
       }
     })
 
-    mediaRecorder.addEventListener("stop", () => {
-      const audioBlob = new Blob(audioChunks, {
+    mediaRecorder.addEventListener("stop", async () => {
+      currentAudioBlob = new Blob(audioChunks, {
         type: "audio/webm"
       })
 
-      const audioUrl = URL.createObjectURL(audioBlob)
+      const audioUrl = URL.createObjectURL(currentAudioBlob)
 
       if (audioPreview) {
         audioPreview.src = audioUrl
@@ -276,26 +259,21 @@ const startAudioRecording = async () => {
       }
 
       stopAudioStream()
-      showFinishedButtons()
       setRecordingVisual(false)
 
       setStatus(
         "Gravação finalizada",
-        "Ouça o áudio, revise a transcrição e envie quando estiver tudo certo."
+        "Ouça o áudio enquanto o Emodia gera a transcrição."
       )
 
-      if (!audioTranscript?.value.trim()) {
-        showTranscriptionStatus(
-          "A transcrição automática não gerou texto. Você pode preencher manualmente ou gravar novamente."
-        )
-      }
+      await transcribeAudioRecording()
     })
 
     mediaRecorder.start()
     startTimer()
-    startSpeechRecognition()
-    showRecordingButton()
+    showRecordingButtons()
     setRecordingVisual(true)
+    hideTranscriptionStatus()
 
     if (audioPreviewBox) {
       audioPreviewBox.hidden = true
@@ -303,7 +281,7 @@ const startAudioRecording = async () => {
 
     setStatus(
       "Gravando agora...",
-      "Fale naturalmente. A transcrição automática será preenchida enquanto você fala."
+      "Fale naturalmente. Clique em parar quando terminar."
     )
   } catch {
     showOnlyStartButton()
@@ -324,18 +302,15 @@ const stopAudioRecording = () => {
   }
 
   mediaRecorder.stop()
-  stopSpeechRecognition()
   stopTimer()
-
-  showFinishedButtons()
+  showProcessingButtons()
   setRecordingVisual(false)
 }
 
 const clearAudioRecording = () => {
   audioChunks = []
-  liveTranscript = ""
+  currentAudioBlob = null
 
-  stopSpeechRecognition()
   stopAudioStream()
   stopTimer()
   setRecordingVisual(false)
@@ -351,6 +326,8 @@ const clearAudioRecording = () => {
 
   if (audioTranscript) {
     audioTranscript.value = ""
+    audioTranscript.placeholder =
+      "A transcrição automática aparecerá aqui. Você poderá editar antes de enviar."
   }
 
   if (audioTimer) {
@@ -358,6 +335,7 @@ const clearAudioRecording = () => {
   }
 
   hideTranscriptionStatus()
+  hideAudioForm()
   showOnlyStartButton()
 
   setStatus(
@@ -367,6 +345,7 @@ const clearAudioRecording = () => {
 }
 
 if (startAudioButton && stopAudioButton && clearAudioButton && audioPreview) {
+  hideAudioForm()
   showOnlyStartButton()
 
   startAudioButton.addEventListener("click", startAudioRecording)

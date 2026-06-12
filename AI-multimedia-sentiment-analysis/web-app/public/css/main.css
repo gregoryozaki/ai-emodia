@@ -2977,6 +2977,17 @@ select option:hover {
   transform: none;
 }
 
+.audio-recorder-actions button:disabled {
+  opacity: 0.38;
+  cursor: not-allowed;
+  filter: grayscale(0.65);
+  box-shadow: none;
+  transform: none;
+}
+.audio-recorder-actions button:disabled:hover {
+  transform: none;
+}
+
 .auth-page {
   min-height: calc(100vh - 88px);
   padding: 3rem 0 5rem;

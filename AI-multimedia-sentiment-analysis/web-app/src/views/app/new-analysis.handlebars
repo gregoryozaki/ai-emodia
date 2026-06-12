@@ -88,7 +88,7 @@
                   </div>
 
                   <button type="submit" class="btn-emodia-primary">
-                    Analisar texto
+                    Enviar
                   </button>
                 </form>
               </div>
@@ -170,7 +170,7 @@
                     id="audioTranscriptionStatus"
                     hidden
                   >
-                    Gerando transcrição automática...
+                    Transcrevendo áudio automaticamente...
                   </div>
                 </div>
 
@@ -178,6 +178,8 @@
                   action="/analises/transcricao"
                   method="post"
                   class="analysis-form"
+                  id="audioAnalysisForm"
+                  hidden
                 >
                   <input type="hidden" name="inputMode" value="AUDIO" />
 
@@ -199,7 +201,7 @@
                   </div>
 
                   <button type="submit" class="btn-emodia-primary">
-                    Enviar transcrição do áudio
+                    Enviar
                   </button>
                 </form>
               </div>
@@ -258,7 +260,7 @@
                   </div>
 
                   <button type="submit" class="btn-emodia-primary">
-                    Enviar transcrição do vídeo
+                    Enviar
                   </button>
                 </form>
               </div>
