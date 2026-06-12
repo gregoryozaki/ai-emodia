@@ -4,8 +4,8 @@
       <main class="analysis-main-content">
         <section class="analysis-internal-section">
           <div class="detail-top-actions">
-            <a href="/dashboard" class="auth-back-link">
-              ← Voltar para dashboard
+            <a href="/analises/nova" class="auth-back-link">
+              ← Voltar para registrar
             </a>
 
             <a href="/historico" class="detail-history-link">
@@ -74,6 +74,46 @@
             </div>
           {{/if}}
 
+          {{#if record.hasVisualAnalysis}}
+            <div class="report-risk-box">
+              <span>Sinal visual complementar</span>
+
+              <h3>Expressão facial estimada no vídeo</h3>
+
+              <p>
+                A análise visual identificou um sinal compatível com
+                <strong>{{record.visualEmodiaEmotion}}</strong>
+                com nível de confiança
+                <strong>{{record.visualConfidenceLevel}}</strong>.
+              </p>
+
+              {{#if record.visualConfidencePercent}}
+                <div class="report-risk-list">
+                  <div class="report-risk-item">
+                    <strong>Confiança média</strong>
+                    <small>{{record.visualConfidencePercent}}</small>
+                  </div>
+
+                  {{#if record.visualEmotion}}
+                    <div class="report-risk-item">
+                      <strong>Classe original do modelo</strong>
+                      <small>{{record.visualEmotion}}</small>
+                    </div>
+                  {{/if}}
+                </div>
+              {{/if}}
+
+              <div class="risk-alert-support-text">
+                <p>
+                  Este resultado vem da análise automática de expressão facial
+                  aparente. Ele não define a emoção principal, não realiza
+                  diagnóstico e deve ser interpretado apenas como apoio à
+                  análise textual/transcrita.
+                </p>
+              </div>
+            </div>
+          {{/if}}
+
           <article class="detail-card surface-card">
             <div class="detail-header">
               <div>
@@ -125,6 +165,28 @@
                   {{record.riskLevel}}
                 </strong>
               </div>
+
+              {{#if record.hasVisualAnalysis}}
+                <div class="detail-item">
+                  <span>Sinal visual complementar</span>
+
+                  <strong>
+                    {{record.visualEmodiaEmotion}}
+                  </strong>
+                </div>
+
+                <div class="detail-item">
+                  <span>Confiança visual</span>
+
+                  <strong>
+                    {{#if record.visualConfidencePercent}}
+                      {{record.visualConfidencePercent}}
+                    {{else}}
+                      {{record.visualConfidenceLevel}}
+                    {{/if}}
+                  </strong>
+                </div>
+              {{/if}}
 
               {{#if record.riskTerms}}
                 <div class="detail-item">

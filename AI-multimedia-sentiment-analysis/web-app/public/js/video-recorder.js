@@ -17,6 +17,9 @@ const videoTranscriptionStatus = document.getElementById(
 )
 const videoTranscript = document.getElementById("videoTranscript")
 const videoAnalysisForm = document.getElementById("videoAnalysisForm")
+const videoVisualAnalysisInput = document.getElementById(
+  "videoVisualAnalysisInput"
+)
 
 let videoStream = null
 let videoRecorder = null
@@ -185,6 +188,12 @@ const hideVideoForm = () => {
   }
 }
 
+const resetVideoVisualAnalysis = () => {
+  if (videoVisualAnalysisInput) {
+    videoVisualAnalysisInput.value = ""
+  }
+}
+
 const openVideoCamera = async () => {
   try {
     videoStream = await navigator.mediaDevices.getUserMedia({
@@ -204,6 +213,7 @@ const openVideoCamera = async () => {
       videoPreviewBox.hidden = true
     }
 
+    resetVideoVisualAnalysis()
     hideVideoForm()
     hideVideoTranscriptionStatus()
     showCameraReadyButtons()
@@ -220,6 +230,30 @@ const openVideoCamera = async () => {
       "Verifique as permissões do navegador para câmera e microfone."
     )
   }
+}
+
+const analyzeVideoVisualEmotion = async () => {
+  if (!currentVideoBlob) {
+    return null
+  }
+
+  const formData = new FormData()
+  formData.append("video", currentVideoBlob, "emodia-video.webm")
+
+  const response = await fetch("/analises/video/analisar-emocao", {
+    method: "POST",
+    body: formData
+  })
+
+  const data = await response.json()
+
+  if (!response.ok) {
+    throw new Error(
+      data.message || "Não foi possível analisar a emoção facial."
+    )
+  }
+
+  return data
 }
 
 const transcribeVideoRecording = async () => {
@@ -244,6 +278,8 @@ const transcribeVideoRecording = async () => {
   const formData = new FormData()
   formData.append("audio", currentVideoBlob, "emodia-video.webm")
 
+  let transcriptionFinished = false
+
   try {
     const response = await fetch("/analises/audio/transcrever", {
       method: "POST",
@@ -263,13 +299,15 @@ const transcribeVideoRecording = async () => {
       videoTranscript.focus()
     }
 
+    transcriptionFinished = true
+
     showVideoTranscriptionStatus(
-      "Transcrição gerada. Revise o texto antes de enviar."
+      "Transcrição gerada. Analisando expressão facial do vídeo..."
     )
 
     setVideoStatus(
       "Transcrição pronta",
-      "Revise o texto gerado e clique em enviar."
+      "Agora o Emodia está analisando o sinal visual complementar."
     )
   } catch (error) {
     const message =
@@ -278,7 +316,7 @@ const transcribeVideoRecording = async () => {
         : "Erro ao gerar transcrição automática."
 
     showVideoTranscriptionStatus(
-      `${message} Você pode preencher a transcrição manualmente.`
+      `${message} Você pode preencher a transcrição manualmente. Tentando analisar o sinal visual do vídeo...`
     )
 
     if (videoTranscript) {
@@ -289,7 +327,56 @@ const transcribeVideoRecording = async () => {
 
     setVideoStatus(
       "Transcrição automática falhou",
-      "Você ainda pode assistir ao vídeo e preencher a transcrição manualmente."
+      "Você ainda pode preencher a transcrição manualmente. A análise visual será tentada separadamente."
+    )
+  }
+
+  try {
+    const visualAnalysis = await analyzeVideoVisualEmotion()
+
+    if (videoVisualAnalysisInput && visualAnalysis) {
+      videoVisualAnalysisInput.value = JSON.stringify(visualAnalysis)
+    }
+
+    if (visualAnalysis?.confidenceLevel === "LOW") {
+      showVideoTranscriptionStatus(
+        transcriptionFinished
+          ? "Transcrição gerada. Sinal visual analisado com baixa confiança. Revise o texto antes de enviar."
+          : "Sinal visual analisado com baixa confiança. Preencha ou revise a transcrição antes de enviar."
+      )
+
+      setVideoStatus(
+        "Análise visual concluída",
+        "O sinal visual foi salvo como complementar, mas com baixa confiança."
+      )
+    } else {
+      showVideoTranscriptionStatus(
+        transcriptionFinished
+          ? "Transcrição gerada e sinal visual analisado. Revise o texto antes de enviar."
+          : "Sinal visual analisado. Preencha ou revise a transcrição antes de enviar."
+      )
+
+      setVideoStatus(
+        "Análise visual concluída",
+        "Revise a transcrição e clique em enviar."
+      )
+    }
+  } catch (error) {
+    console.warn("Análise visual indisponível:", error)
+
+    showVideoTranscriptionStatus(
+      transcriptionFinished
+        ? "Transcrição gerada. A análise visual não ficou disponível, mas você pode enviar normalmente."
+        : "Não foi possível gerar a transcrição automática nem a análise visual. Preencha a transcrição manualmente."
+    )
+
+    setVideoStatus(
+      transcriptionFinished
+        ? "Transcrição pronta"
+        : "Preenchimento manual necessário",
+      transcriptionFinished
+        ? "A análise visual falhou, mas a análise textual pode ser enviada normalmente."
+        : "Digite a transcrição manualmente para continuar."
     )
   } finally {
     showVideoFinishedButtons()
@@ -307,6 +394,7 @@ const startVideoRecording = async () => {
 
   videoChunks = []
   currentVideoBlob = null
+  resetVideoVisualAnalysis()
 
   if (videoTranscript) {
     videoTranscript.value = ""
@@ -349,7 +437,7 @@ const startVideoRecording = async () => {
 
     setVideoStatus(
       "Gravação finalizada",
-      "Assista à prévia enquanto o Emodia gera a transcrição."
+      "Assista à prévia enquanto o Emodia gera a transcrição e analisa o sinal visual."
     )
 
     await transcribeVideoRecording()
@@ -380,6 +468,7 @@ const stopVideoRecording = () => {
 const clearVideoRecording = () => {
   videoChunks = []
   currentVideoBlob = null
+  resetVideoVisualAnalysis()
 
   stopVideoStream()
   stopVideoTimer()

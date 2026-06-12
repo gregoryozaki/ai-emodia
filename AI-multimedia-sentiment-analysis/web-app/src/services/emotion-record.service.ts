@@ -17,10 +17,30 @@ type CreateTextEmotionRecordInput = {
   content: string
 }
 
+type VisualConfidenceLevel = "LOW" | "MEDIUM" | "HIGH"
+
+type VisualAnalysisInput = {
+  emotion: string
+  emodiaEmotion: string
+  confidence: number
+  confidenceLevel: VisualConfidenceLevel
+  topGap?: number
+  averageScores?: Record<string, number>
+  emotionCounts?: Record<string, number>
+  framesAnalyzed?: number
+  frameIntervalSeconds?: number
+  model?: string
+  input?: string
+  interpretation?: string
+  warning?: string
+  [key: string]: unknown
+}
+
 type CreateTranscriptEmotionRecordInput = {
   userId: string
   transcript: string
   inputMode: Extract<EmotionInputMode, "AUDIO" | "VIDEO">
+  visualAnalysis?: VisualAnalysisInput
 }
 
 type EmotionHistoryQuery = {
@@ -208,7 +228,16 @@ const createTranscriptEmotionRecord = async (
     ...(riskAnalysis.riskMessage
       ? { riskMessage: riskAnalysis.riskMessage }
       : {}),
-    ...(riskAnalysis.riskTerms ? { riskTerms: riskAnalysis.riskTerms } : {})
+    ...(riskAnalysis.riskTerms ? { riskTerms: riskAnalysis.riskTerms } : {}),
+    ...(input.visualAnalysis
+      ? {
+          visualEmotion: input.visualAnalysis.emotion,
+          visualEmodiaEmotion: input.visualAnalysis.emodiaEmotion,
+          visualConfidence: input.visualAnalysis.confidence,
+          visualConfidenceLevel: input.visualAnalysis.confidenceLevel,
+          visualAnalysis: input.visualAnalysis
+        }
+      : {})
   })
 }
 
@@ -411,6 +440,9 @@ const getEmotionRecordDetails = async (userId: string, recordId: string) => {
     throw new Error("Registro emocional não encontrado.")
   }
 
+  const hasRiskAlert =
+    record.riskLevel === "HIGH" || record.riskLevel === "CRITICAL"
+
   return {
     id: record.id,
     emotion: record.emotion,
@@ -423,8 +455,20 @@ const getEmotionRecordDetails = async (userId: string, recordId: string) => {
     riskLevel: record.riskLevel,
     riskMessage: record.riskMessage,
     riskTerms: record.riskTerms,
-    hasRiskAlert:
-      record.riskLevel === "HIGH" || record.riskLevel === "CRITICAL",
+
+    visualEmotion: record.visualEmotion,
+    visualEmodiaEmotion: record.visualEmodiaEmotion,
+    visualConfidence: record.visualConfidence,
+    visualConfidencePercent:
+      record.visualConfidence !== null
+        ? `${Math.round(record.visualConfidence * 100)}%`
+        : null,
+    visualConfidenceLevel: record.visualConfidenceLevel,
+    visualAnalysis: record.visualAnalysis,
+    hasVisualAnalysis: Boolean(record.visualEmotion),
+
+    hasRiskAlert,
+
     createdAt: formatDateTime(record.createdAt),
     createdDateInput: formatDateInput(record.createdAt)
   }

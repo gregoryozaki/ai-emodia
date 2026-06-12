@@ -2396,10 +2396,12 @@ export namespace Prisma {
 
   export type EmotionRecordAvgAggregateOutputType = {
     intensity: number | null
+    visualConfidence: number | null
   }
 
   export type EmotionRecordSumAggregateOutputType = {
     intensity: number | null
+    visualConfidence: number | null
   }
 
   export type EmotionRecordMinAggregateOutputType = {
@@ -2414,6 +2416,10 @@ export namespace Prisma {
     riskLevel: $Enums.RiskLevel | null
     riskMessage: string | null
     riskTerms: string | null
+    visualEmotion: string | null
+    visualEmodiaEmotion: string | null
+    visualConfidence: number | null
+    visualConfidenceLevel: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -2430,6 +2436,10 @@ export namespace Prisma {
     riskLevel: $Enums.RiskLevel | null
     riskMessage: string | null
     riskTerms: string | null
+    visualEmotion: string | null
+    visualEmodiaEmotion: string | null
+    visualConfidence: number | null
+    visualConfidenceLevel: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -2446,6 +2456,11 @@ export namespace Prisma {
     riskLevel: number
     riskMessage: number
     riskTerms: number
+    visualEmotion: number
+    visualEmodiaEmotion: number
+    visualConfidence: number
+    visualConfidenceLevel: number
+    visualAnalysis: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -2454,10 +2469,12 @@ export namespace Prisma {
 
   export type EmotionRecordAvgAggregateInputType = {
     intensity?: true
+    visualConfidence?: true
   }
 
   export type EmotionRecordSumAggregateInputType = {
     intensity?: true
+    visualConfidence?: true
   }
 
   export type EmotionRecordMinAggregateInputType = {
@@ -2472,6 +2489,10 @@ export namespace Prisma {
     riskLevel?: true
     riskMessage?: true
     riskTerms?: true
+    visualEmotion?: true
+    visualEmodiaEmotion?: true
+    visualConfidence?: true
+    visualConfidenceLevel?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -2488,6 +2509,10 @@ export namespace Prisma {
     riskLevel?: true
     riskMessage?: true
     riskTerms?: true
+    visualEmotion?: true
+    visualEmodiaEmotion?: true
+    visualConfidence?: true
+    visualConfidenceLevel?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -2504,6 +2529,11 @@ export namespace Prisma {
     riskLevel?: true
     riskMessage?: true
     riskTerms?: true
+    visualEmotion?: true
+    visualEmodiaEmotion?: true
+    visualConfidence?: true
+    visualConfidenceLevel?: true
+    visualAnalysis?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -2607,6 +2637,11 @@ export namespace Prisma {
     riskLevel: $Enums.RiskLevel
     riskMessage: string | null
     riskTerms: string | null
+    visualEmotion: string | null
+    visualEmodiaEmotion: string | null
+    visualConfidence: number | null
+    visualConfidenceLevel: string | null
+    visualAnalysis: JsonValue | null
     createdAt: Date
     updatedAt: Date
     _count: EmotionRecordCountAggregateOutputType | null
@@ -2642,6 +2677,11 @@ export namespace Prisma {
     riskLevel?: boolean
     riskMessage?: boolean
     riskTerms?: boolean
+    visualEmotion?: boolean
+    visualEmodiaEmotion?: boolean
+    visualConfidence?: boolean
+    visualConfidenceLevel?: boolean
+    visualAnalysis?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -2659,6 +2699,11 @@ export namespace Prisma {
     riskLevel?: boolean
     riskMessage?: boolean
     riskTerms?: boolean
+    visualEmotion?: boolean
+    visualEmodiaEmotion?: boolean
+    visualConfidence?: boolean
+    visualConfidenceLevel?: boolean
+    visualAnalysis?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -2676,6 +2721,11 @@ export namespace Prisma {
     riskLevel?: boolean
     riskMessage?: boolean
     riskTerms?: boolean
+    visualEmotion?: boolean
+    visualEmodiaEmotion?: boolean
+    visualConfidence?: boolean
+    visualConfidenceLevel?: boolean
+    visualAnalysis?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -2693,11 +2743,16 @@ export namespace Prisma {
     riskLevel?: boolean
     riskMessage?: boolean
     riskTerms?: boolean
+    visualEmotion?: boolean
+    visualEmodiaEmotion?: boolean
+    visualConfidence?: boolean
+    visualConfidenceLevel?: boolean
+    visualAnalysis?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type EmotionRecordOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "emotion" | "inputMode" | "content" | "transcript" | "intensity" | "trigger" | "riskLevel" | "riskMessage" | "riskTerms" | "createdAt" | "updatedAt", ExtArgs["result"]["emotionRecord"]>
+  export type EmotionRecordOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "emotion" | "inputMode" | "content" | "transcript" | "intensity" | "trigger" | "riskLevel" | "riskMessage" | "riskTerms" | "visualEmotion" | "visualEmodiaEmotion" | "visualConfidence" | "visualConfidenceLevel" | "visualAnalysis" | "createdAt" | "updatedAt", ExtArgs["result"]["emotionRecord"]>
   export type EmotionRecordInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
   }
@@ -2725,6 +2780,11 @@ export namespace Prisma {
       riskLevel: $Enums.RiskLevel
       riskMessage: string | null
       riskTerms: string | null
+      visualEmotion: string | null
+      visualEmodiaEmotion: string | null
+      visualConfidence: number | null
+      visualConfidenceLevel: string | null
+      visualAnalysis: Prisma.JsonValue | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["emotionRecord"]>
@@ -3162,6 +3222,11 @@ export namespace Prisma {
     readonly riskLevel: FieldRef<"EmotionRecord", 'RiskLevel'>
     readonly riskMessage: FieldRef<"EmotionRecord", 'String'>
     readonly riskTerms: FieldRef<"EmotionRecord", 'String'>
+    readonly visualEmotion: FieldRef<"EmotionRecord", 'String'>
+    readonly visualEmodiaEmotion: FieldRef<"EmotionRecord", 'String'>
+    readonly visualConfidence: FieldRef<"EmotionRecord", 'Float'>
+    readonly visualConfidenceLevel: FieldRef<"EmotionRecord", 'String'>
+    readonly visualAnalysis: FieldRef<"EmotionRecord", 'Json'>
     readonly createdAt: FieldRef<"EmotionRecord", 'DateTime'>
     readonly updatedAt: FieldRef<"EmotionRecord", 'DateTime'>
   }
@@ -5670,6 +5735,11 @@ export namespace Prisma {
     riskLevel: 'riskLevel',
     riskMessage: 'riskMessage',
     riskTerms: 'riskTerms',
+    visualEmotion: 'visualEmotion',
+    visualEmodiaEmotion: 'visualEmodiaEmotion',
+    visualConfidence: 'visualConfidence',
+    visualConfidenceLevel: 'visualConfidenceLevel',
+    visualAnalysis: 'visualAnalysis',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -5704,6 +5774,14 @@ export namespace Prisma {
   };
 
   export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
+
+
+  export const NullableJsonNullValueInput: {
+    DbNull: typeof DbNull,
+    JsonNull: typeof JsonNull
+  };
+
+  export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
 
 
   export const JsonNullValueInput: {
@@ -5835,20 +5913,6 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'Json'
-   */
-  export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
-    
-
-
-  /**
-   * Reference to a field of type 'QueryMode'
-   */
-  export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
-    
-
-
-  /**
    * Reference to a field of type 'Float'
    */
   export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
@@ -5859,6 +5923,20 @@ export namespace Prisma {
    * Reference to a field of type 'Float[]'
    */
   export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'Json'
+   */
+  export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
+    
+
+
+  /**
+   * Reference to a field of type 'QueryMode'
+   */
+  export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
     
   /**
    * Deep Input Types
@@ -5958,6 +6036,11 @@ export namespace Prisma {
     riskLevel?: EnumRiskLevelFilter<"EmotionRecord"> | $Enums.RiskLevel
     riskMessage?: StringNullableFilter<"EmotionRecord"> | string | null
     riskTerms?: StringNullableFilter<"EmotionRecord"> | string | null
+    visualEmotion?: StringNullableFilter<"EmotionRecord"> | string | null
+    visualEmodiaEmotion?: StringNullableFilter<"EmotionRecord"> | string | null
+    visualConfidence?: FloatNullableFilter<"EmotionRecord"> | number | null
+    visualConfidenceLevel?: StringNullableFilter<"EmotionRecord"> | string | null
+    visualAnalysis?: JsonNullableFilter<"EmotionRecord">
     createdAt?: DateTimeFilter<"EmotionRecord"> | Date | string
     updatedAt?: DateTimeFilter<"EmotionRecord"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -5975,6 +6058,11 @@ export namespace Prisma {
     riskLevel?: SortOrder
     riskMessage?: SortOrderInput | SortOrder
     riskTerms?: SortOrderInput | SortOrder
+    visualEmotion?: SortOrderInput | SortOrder
+    visualEmodiaEmotion?: SortOrderInput | SortOrder
+    visualConfidence?: SortOrderInput | SortOrder
+    visualConfidenceLevel?: SortOrderInput | SortOrder
+    visualAnalysis?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     user?: UserOrderByWithRelationInput
@@ -5995,6 +6083,11 @@ export namespace Prisma {
     riskLevel?: EnumRiskLevelFilter<"EmotionRecord"> | $Enums.RiskLevel
     riskMessage?: StringNullableFilter<"EmotionRecord"> | string | null
     riskTerms?: StringNullableFilter<"EmotionRecord"> | string | null
+    visualEmotion?: StringNullableFilter<"EmotionRecord"> | string | null
+    visualEmodiaEmotion?: StringNullableFilter<"EmotionRecord"> | string | null
+    visualConfidence?: FloatNullableFilter<"EmotionRecord"> | number | null
+    visualConfidenceLevel?: StringNullableFilter<"EmotionRecord"> | string | null
+    visualAnalysis?: JsonNullableFilter<"EmotionRecord">
     createdAt?: DateTimeFilter<"EmotionRecord"> | Date | string
     updatedAt?: DateTimeFilter<"EmotionRecord"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -6012,6 +6105,11 @@ export namespace Prisma {
     riskLevel?: SortOrder
     riskMessage?: SortOrderInput | SortOrder
     riskTerms?: SortOrderInput | SortOrder
+    visualEmotion?: SortOrderInput | SortOrder
+    visualEmodiaEmotion?: SortOrderInput | SortOrder
+    visualConfidence?: SortOrderInput | SortOrder
+    visualConfidenceLevel?: SortOrderInput | SortOrder
+    visualAnalysis?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: EmotionRecordCountOrderByAggregateInput
@@ -6036,6 +6134,11 @@ export namespace Prisma {
     riskLevel?: EnumRiskLevelWithAggregatesFilter<"EmotionRecord"> | $Enums.RiskLevel
     riskMessage?: StringNullableWithAggregatesFilter<"EmotionRecord"> | string | null
     riskTerms?: StringNullableWithAggregatesFilter<"EmotionRecord"> | string | null
+    visualEmotion?: StringNullableWithAggregatesFilter<"EmotionRecord"> | string | null
+    visualEmodiaEmotion?: StringNullableWithAggregatesFilter<"EmotionRecord"> | string | null
+    visualConfidence?: FloatNullableWithAggregatesFilter<"EmotionRecord"> | number | null
+    visualConfidenceLevel?: StringNullableWithAggregatesFilter<"EmotionRecord"> | string | null
+    visualAnalysis?: JsonNullableWithAggregatesFilter<"EmotionRecord">
     createdAt?: DateTimeWithAggregatesFilter<"EmotionRecord"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"EmotionRecord"> | Date | string
   }
@@ -6245,6 +6348,11 @@ export namespace Prisma {
     riskLevel?: $Enums.RiskLevel
     riskMessage?: string | null
     riskTerms?: string | null
+    visualEmotion?: string | null
+    visualEmodiaEmotion?: string | null
+    visualConfidence?: number | null
+    visualConfidenceLevel?: string | null
+    visualAnalysis?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     user: UserCreateNestedOneWithoutEmotionRecordsInput
@@ -6262,6 +6370,11 @@ export namespace Prisma {
     riskLevel?: $Enums.RiskLevel
     riskMessage?: string | null
     riskTerms?: string | null
+    visualEmotion?: string | null
+    visualEmodiaEmotion?: string | null
+    visualConfidence?: number | null
+    visualConfidenceLevel?: string | null
+    visualAnalysis?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -6277,6 +6390,11 @@ export namespace Prisma {
     riskLevel?: EnumRiskLevelFieldUpdateOperationsInput | $Enums.RiskLevel
     riskMessage?: NullableStringFieldUpdateOperationsInput | string | null
     riskTerms?: NullableStringFieldUpdateOperationsInput | string | null
+    visualEmotion?: NullableStringFieldUpdateOperationsInput | string | null
+    visualEmodiaEmotion?: NullableStringFieldUpdateOperationsInput | string | null
+    visualConfidence?: NullableFloatFieldUpdateOperationsInput | number | null
+    visualConfidenceLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    visualAnalysis?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutEmotionRecordsNestedInput
@@ -6294,6 +6412,11 @@ export namespace Prisma {
     riskLevel?: EnumRiskLevelFieldUpdateOperationsInput | $Enums.RiskLevel
     riskMessage?: NullableStringFieldUpdateOperationsInput | string | null
     riskTerms?: NullableStringFieldUpdateOperationsInput | string | null
+    visualEmotion?: NullableStringFieldUpdateOperationsInput | string | null
+    visualEmodiaEmotion?: NullableStringFieldUpdateOperationsInput | string | null
+    visualConfidence?: NullableFloatFieldUpdateOperationsInput | number | null
+    visualConfidenceLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    visualAnalysis?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -6310,6 +6433,11 @@ export namespace Prisma {
     riskLevel?: $Enums.RiskLevel
     riskMessage?: string | null
     riskTerms?: string | null
+    visualEmotion?: string | null
+    visualEmodiaEmotion?: string | null
+    visualConfidence?: number | null
+    visualConfidenceLevel?: string | null
+    visualAnalysis?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -6325,6 +6453,11 @@ export namespace Prisma {
     riskLevel?: EnumRiskLevelFieldUpdateOperationsInput | $Enums.RiskLevel
     riskMessage?: NullableStringFieldUpdateOperationsInput | string | null
     riskTerms?: NullableStringFieldUpdateOperationsInput | string | null
+    visualEmotion?: NullableStringFieldUpdateOperationsInput | string | null
+    visualEmodiaEmotion?: NullableStringFieldUpdateOperationsInput | string | null
+    visualConfidence?: NullableFloatFieldUpdateOperationsInput | number | null
+    visualConfidenceLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    visualAnalysis?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -6341,6 +6474,11 @@ export namespace Prisma {
     riskLevel?: EnumRiskLevelFieldUpdateOperationsInput | $Enums.RiskLevel
     riskMessage?: NullableStringFieldUpdateOperationsInput | string | null
     riskTerms?: NullableStringFieldUpdateOperationsInput | string | null
+    visualEmotion?: NullableStringFieldUpdateOperationsInput | string | null
+    visualEmodiaEmotion?: NullableStringFieldUpdateOperationsInput | string | null
+    visualConfidence?: NullableFloatFieldUpdateOperationsInput | number | null
+    visualConfidenceLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    visualAnalysis?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -6646,6 +6784,40 @@ export namespace Prisma {
     not?: NestedEnumRiskLevelFilter<$PrismaModel> | $Enums.RiskLevel
   }
 
+  export type FloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+  export type JsonNullableFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonNullableFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonNullableFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
+
   export type UserScalarRelationFilter = {
     is?: UserWhereInput
     isNot?: UserWhereInput
@@ -6663,12 +6835,18 @@ export namespace Prisma {
     riskLevel?: SortOrder
     riskMessage?: SortOrder
     riskTerms?: SortOrder
+    visualEmotion?: SortOrder
+    visualEmodiaEmotion?: SortOrder
+    visualConfidence?: SortOrder
+    visualConfidenceLevel?: SortOrder
+    visualAnalysis?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
 
   export type EmotionRecordAvgOrderByAggregateInput = {
     intensity?: SortOrder
+    visualConfidence?: SortOrder
   }
 
   export type EmotionRecordMaxOrderByAggregateInput = {
@@ -6683,6 +6861,10 @@ export namespace Prisma {
     riskLevel?: SortOrder
     riskMessage?: SortOrder
     riskTerms?: SortOrder
+    visualEmotion?: SortOrder
+    visualEmodiaEmotion?: SortOrder
+    visualConfidence?: SortOrder
+    visualConfidenceLevel?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -6699,12 +6881,17 @@ export namespace Prisma {
     riskLevel?: SortOrder
     riskMessage?: SortOrder
     riskTerms?: SortOrder
+    visualEmotion?: SortOrder
+    visualEmodiaEmotion?: SortOrder
+    visualConfidence?: SortOrder
+    visualConfidenceLevel?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
 
   export type EmotionRecordSumOrderByAggregateInput = {
     intensity?: SortOrder
+    visualConfidence?: SortOrder
   }
 
   export type EnumEmotionTypeWithAggregatesFilter<$PrismaModel = never> = {
@@ -6751,6 +6938,48 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumRiskLevelFilter<$PrismaModel>
     _max?: NestedEnumRiskLevelFilter<$PrismaModel>
+  }
+
+  export type FloatNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedFloatNullableFilter<$PrismaModel>
+    _min?: NestedFloatNullableFilter<$PrismaModel>
+    _max?: NestedFloatNullableFilter<$PrismaModel>
+  }
+  export type JsonNullableWithAggregatesFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonNullableWithAggregatesFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedJsonNullableFilter<$PrismaModel>
+    _max?: NestedJsonNullableFilter<$PrismaModel>
   }
   export type JsonFilter<$PrismaModel = never> =
     | PatchUndefined<
@@ -6996,6 +7225,14 @@ export namespace Prisma {
     set?: $Enums.RiskLevel
   }
 
+  export type NullableFloatFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
   export type UserUpdateOneRequiredWithoutEmotionRecordsNestedInput = {
     create?: XOR<UserCreateWithoutEmotionRecordsInput, UserUncheckedCreateWithoutEmotionRecordsInput>
     connectOrCreate?: UserCreateOrConnectWithoutEmotionRecordsInput
@@ -7165,6 +7402,17 @@ export namespace Prisma {
     not?: NestedEnumRiskLevelFilter<$PrismaModel> | $Enums.RiskLevel
   }
 
+  export type NestedFloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
   export type NestedEnumEmotionTypeWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.EmotionType | EnumEmotionTypeFieldRefInput<$PrismaModel>
     in?: $Enums.EmotionType[] | ListEnumEmotionTypeFieldRefInput<$PrismaModel>
@@ -7201,17 +7449,6 @@ export namespace Prisma {
     _max?: NestedIntNullableFilter<$PrismaModel>
   }
 
-  export type NestedFloatNullableFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
-  }
-
   export type NestedEnumRiskLevelWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.RiskLevel | EnumRiskLevelFieldRefInput<$PrismaModel>
     in?: $Enums.RiskLevel[] | ListEnumRiskLevelFieldRefInput<$PrismaModel>
@@ -7220,6 +7457,45 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumRiskLevelFilter<$PrismaModel>
     _max?: NestedEnumRiskLevelFilter<$PrismaModel>
+  }
+
+  export type NestedFloatNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedFloatNullableFilter<$PrismaModel>
+    _min?: NestedFloatNullableFilter<$PrismaModel>
+    _max?: NestedFloatNullableFilter<$PrismaModel>
+  }
+  export type NestedJsonNullableFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<NestedJsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>,
+        Required<NestedJsonNullableFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>
+
+  export type NestedJsonNullableFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
   }
   export type NestedJsonFilter<$PrismaModel = never> =
     | PatchUndefined<
@@ -7281,6 +7557,11 @@ export namespace Prisma {
     riskLevel?: $Enums.RiskLevel
     riskMessage?: string | null
     riskTerms?: string | null
+    visualEmotion?: string | null
+    visualEmodiaEmotion?: string | null
+    visualConfidence?: number | null
+    visualConfidenceLevel?: string | null
+    visualAnalysis?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -7296,6 +7577,11 @@ export namespace Prisma {
     riskLevel?: $Enums.RiskLevel
     riskMessage?: string | null
     riskTerms?: string | null
+    visualEmotion?: string | null
+    visualEmodiaEmotion?: string | null
+    visualConfidence?: number | null
+    visualConfidenceLevel?: string | null
+    visualAnalysis?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -7367,6 +7653,11 @@ export namespace Prisma {
     riskLevel?: EnumRiskLevelFilter<"EmotionRecord"> | $Enums.RiskLevel
     riskMessage?: StringNullableFilter<"EmotionRecord"> | string | null
     riskTerms?: StringNullableFilter<"EmotionRecord"> | string | null
+    visualEmotion?: StringNullableFilter<"EmotionRecord"> | string | null
+    visualEmodiaEmotion?: StringNullableFilter<"EmotionRecord"> | string | null
+    visualConfidence?: FloatNullableFilter<"EmotionRecord"> | number | null
+    visualConfidenceLevel?: StringNullableFilter<"EmotionRecord"> | string | null
+    visualAnalysis?: JsonNullableFilter<"EmotionRecord">
     createdAt?: DateTimeFilter<"EmotionRecord"> | Date | string
     updatedAt?: DateTimeFilter<"EmotionRecord"> | Date | string
   }
@@ -7546,6 +7837,11 @@ export namespace Prisma {
     riskLevel?: $Enums.RiskLevel
     riskMessage?: string | null
     riskTerms?: string | null
+    visualEmotion?: string | null
+    visualEmodiaEmotion?: string | null
+    visualConfidence?: number | null
+    visualConfidenceLevel?: string | null
+    visualAnalysis?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -7569,6 +7865,11 @@ export namespace Prisma {
     riskLevel?: EnumRiskLevelFieldUpdateOperationsInput | $Enums.RiskLevel
     riskMessage?: NullableStringFieldUpdateOperationsInput | string | null
     riskTerms?: NullableStringFieldUpdateOperationsInput | string | null
+    visualEmotion?: NullableStringFieldUpdateOperationsInput | string | null
+    visualEmodiaEmotion?: NullableStringFieldUpdateOperationsInput | string | null
+    visualConfidence?: NullableFloatFieldUpdateOperationsInput | number | null
+    visualConfidenceLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    visualAnalysis?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -7584,6 +7885,11 @@ export namespace Prisma {
     riskLevel?: EnumRiskLevelFieldUpdateOperationsInput | $Enums.RiskLevel
     riskMessage?: NullableStringFieldUpdateOperationsInput | string | null
     riskTerms?: NullableStringFieldUpdateOperationsInput | string | null
+    visualEmotion?: NullableStringFieldUpdateOperationsInput | string | null
+    visualEmodiaEmotion?: NullableStringFieldUpdateOperationsInput | string | null
+    visualConfidence?: NullableFloatFieldUpdateOperationsInput | number | null
+    visualConfidenceLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    visualAnalysis?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -7599,6 +7905,11 @@ export namespace Prisma {
     riskLevel?: EnumRiskLevelFieldUpdateOperationsInput | $Enums.RiskLevel
     riskMessage?: NullableStringFieldUpdateOperationsInput | string | null
     riskTerms?: NullableStringFieldUpdateOperationsInput | string | null
+    visualEmotion?: NullableStringFieldUpdateOperationsInput | string | null
+    visualEmodiaEmotion?: NullableStringFieldUpdateOperationsInput | string | null
+    visualConfidence?: NullableFloatFieldUpdateOperationsInput | number | null
+    visualConfidenceLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    visualAnalysis?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

@@ -144,6 +144,11 @@ exports.Prisma.EmotionRecordScalarFieldEnum = {
   riskLevel: 'riskLevel',
   riskMessage: 'riskMessage',
   riskTerms: 'riskTerms',
+  visualEmotion: 'visualEmotion',
+  visualEmodiaEmotion: 'visualEmodiaEmotion',
+  visualConfidence: 'visualConfidence',
+  visualConfidenceLevel: 'visualConfidenceLevel',
+  visualAnalysis: 'visualAnalysis',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -166,6 +171,11 @@ exports.Prisma.PasswordResetTokenScalarFieldEnum = {
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
+};
+
+exports.Prisma.NullableJsonNullValueInput = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull
 };
 
 exports.Prisma.JsonNullValueInput = {

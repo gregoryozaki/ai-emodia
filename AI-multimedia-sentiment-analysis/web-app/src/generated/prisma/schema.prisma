@@ -66,6 +66,12 @@ model EmotionRecord {
   riskMessage String?
   riskTerms   String?
 
+  visualEmotion         String?
+  visualEmodiaEmotion   String?
+  visualConfidence      Float?
+  visualConfidenceLevel String?
+  visualAnalysis        Json?
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

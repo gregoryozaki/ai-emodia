@@ -54,10 +54,23 @@ const createTranscriptEmotionRecordController = async (
   try {
     const inputMode = req.body.inputMode === "VIDEO" ? "VIDEO" : "AUDIO"
 
+    const visualAnalysisRaw = req.body.visualAnalysis
+
+    let visualAnalysis
+
+    if (visualAnalysisRaw && typeof visualAnalysisRaw === "string") {
+      try {
+        visualAnalysis = JSON.parse(visualAnalysisRaw)
+      } catch {
+        visualAnalysis = undefined
+      }
+    }
+
     const record = await createTranscriptEmotionRecord({
       userId,
       inputMode,
-      transcript: req.body.transcript
+      transcript: req.body.transcript,
+      ...(inputMode === "VIDEO" && visualAnalysis ? { visualAnalysis } : {})
     })
 
     if (record.riskLevel === "HIGH" || record.riskLevel === "CRITICAL") {
@@ -73,7 +86,10 @@ const createTranscriptEmotionRecordController = async (
     res.status(400).render("app/new-analysis", {
       title: "Emodia | Nova análise",
       error: message,
-      formData: req.body
+      formData: req.body,
+      useNewAnalysisTabs: true,
+      useAudioRecorder: true,
+      useVideoRecorder: true
     })
   }
 }

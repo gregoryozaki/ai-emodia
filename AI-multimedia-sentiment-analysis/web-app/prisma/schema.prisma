@@ -49,9 +49,9 @@ enum RiskLevel {
 }
 
 model EmotionRecord {
-  id        String           @id @default(uuid())
+  id        String @id @default(uuid())
   userId    String
-  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user      User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   emotion   EmotionType
   inputMode EmotionInputMode @default(TEXT)
@@ -65,6 +65,12 @@ model EmotionRecord {
   riskLevel   RiskLevel @default(NONE)
   riskMessage String?
   riskTerms   String?
+
+  visualEmotion         String?
+  visualEmodiaEmotion   String?
+  visualConfidence      Float?
+  visualConfidenceLevel String?
+  visualAnalysis        Json?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

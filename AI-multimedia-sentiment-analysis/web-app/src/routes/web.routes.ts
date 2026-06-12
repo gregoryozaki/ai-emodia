@@ -27,6 +27,7 @@ import { uploadAvatar } from "../middlewares/upload.middleware.js"
 import { exportEmotionReportPdfController } from "../controllers/report.controller.js"
 import { transcribeAudioController } from "../controllers/transcription.controller.js"
 import { audioTranscriptionUpload } from "../middlewares/audio-transcription-upload.middleware.js"
+import { analyzeVideoEmotionController } from "../controllers/video-emotion-analysis.controller.js"
 
 const webRoutes = Router()
 
@@ -61,6 +62,13 @@ webRoutes.post(
   audioTranscriptionUpload.single("audio"),
   transcribeAudioController
 )
+webRoutes.post(
+  "/analises/video/analisar-emocao",
+  ensureAuthenticated,
+  audioTranscriptionUpload.single("video"),
+  analyzeVideoEmotionController
+)
+
 webRoutes.get("/historico", ensureAuthenticated, renderHistoryPage)
 webRoutes.get("/relatorios", ensureAuthenticated, renderReportsPage)
 webRoutes.get(
