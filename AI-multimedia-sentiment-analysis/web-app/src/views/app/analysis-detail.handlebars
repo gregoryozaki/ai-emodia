@@ -1,0 +1,66 @@
+<section class="analysis-page">
+  <div class="container-page">
+    <div class="analysis-app-layout">
+      <main class="analysis-main-content">
+        <section class="analysis-internal-section">
+          <a href="/historico" class="auth-back-link">
+            ← Voltar para histórico
+          </a>
+
+          <div class="analysis-section-title">
+            <span class="page-badge">Detalhes</span>
+
+            <h1>
+              Análise
+              <span class="text-gradient">emocional</span>.
+            </h1>
+
+            <p>
+              Veja os dados registrados nessa análise.
+            </p>
+          </div>
+
+          <article class="detail-card surface-card">
+            <div class="detail-header">
+              <div>
+                <span class="record-emotion-badge">
+                  {{record.emotionLabel}}
+                </span>
+
+                <h2>
+                  Registro de
+                  {{record.createdAt}}
+                </h2>
+              </div>
+
+              <strong>
+                Intensidade
+                {{record.intensity}}/10
+              </strong>
+            </div>
+
+            <div class="detail-grid">
+              <div class="detail-item">
+                <span>Modo de entrada</span>
+                <strong>{{record.inputMode}}</strong>
+              </div>
+
+              <div class="detail-item">
+                <span>Gatilhos detectados</span>
+                <strong>{{record.trigger}}</strong>
+              </div>
+
+              <div class="detail-item detail-item-full">
+                <span>Texto analisado</span>
+
+                <p>
+                  {{record.content}}
+                </p>
+              </div>
+            </div>
+          </article>
+        </section>
+      </main>
+    </div>
+  </div>
+</section>

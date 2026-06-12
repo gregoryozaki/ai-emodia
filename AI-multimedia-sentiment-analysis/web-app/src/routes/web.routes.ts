@@ -5,6 +5,8 @@ import {
   redirectAnalysisPage,
   renderAboutPage,
   renderDashboardPage,
+  renderEmotionRecordDetailsPage,
+  renderHistoryPage,
   renderHomePage,
   renderNewAnalysisPage,
   renderProfilePage,
@@ -27,12 +29,20 @@ webRoutes.get("/sobre", renderAboutPage)
 webRoutes.get("/analises", ensureAuthenticated, redirectAnalysisPage)
 webRoutes.get("/dashboard", ensureAuthenticated, renderDashboardPage)
 webRoutes.get("/analises/nova", ensureAuthenticated, renderNewAnalysisPage)
+webRoutes.get("/historico", ensureAuthenticated, renderHistoryPage)
+webRoutes.get(
+  "/analises/:id",
+  ensureAuthenticated,
+  renderEmotionRecordDetailsPage
+)
+webRoutes.get("/relatorios", ensureAuthenticated, renderReportsPage)
+
 webRoutes.post(
   "/analises/registros",
   ensureAuthenticated,
   createTextEmotionRecordController
 )
-webRoutes.get("/relatorios", ensureAuthenticated, renderReportsPage)
+
 webRoutes.get("/perfil", ensureAuthenticated, renderProfilePage)
 webRoutes.post(
   "/perfil/dados",

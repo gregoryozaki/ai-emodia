@@ -1,4 +1,4 @@
-<section class="analysis-page">
+<section class="analysis-page dashboard-page">
   <div class="container-page">
     <div class="analysis-app-layout">
       <main class="analysis-main-content">
@@ -18,138 +18,179 @@
           </div>
 
           {{#if success}}
-            <div class="auth-alert auth-alert-success mb-4">
-              Relato analisado e salvo com sucesso.
+            <div class="auth-alert auth-alert-success mb-4" data-flash-message>
+              {{success}}
             </div>
           {{/if}}
 
-          <div class="row g-4">
-            <div class="col-12 col-md-6 col-xl-3">
-              <article class="analysis-metric-card surface-card">
-                <span>Total de relatos</span>
-                <strong>{{summary.totalRecords}}</strong>
-                <p>Registros emocionais analisados.</p>
-              </article>
-            </div>
+          <div class="dashboard-metrics-grid">
+            <article class="dashboard-metric-card surface-card">
+              <span>Total de relatos</span>
 
-            <div class="col-12 col-md-6 col-xl-3">
-              <article class="analysis-metric-card surface-card">
-                <span>Emoção mais frequente</span>
-                <strong>{{summary.mostFrequentEmotion}}</strong>
-                <p>Predominância nos relatos salvos.</p>
-              </article>
-            </div>
+              <strong>
+                {{dashboard.totalRecords}}
+              </strong>
 
-            <div class="col-12 col-md-6 col-xl-3">
-              <article class="analysis-metric-card surface-card">
-                <span>Intensidade média</span>
-                <strong>{{summary.averageIntensity}}/5</strong>
-                <p>Média estimada pelo sistema.</p>
-              </article>
-            </div>
+              <p>
+                Registros emocionais analisados.
+              </p>
+            </article>
 
-            <div class="col-12 col-md-6 col-xl-3">
-              <article class="analysis-metric-card surface-card">
-                <span>Gatilhos recorrentes</span>
-                <strong>{{summary.mainTriggers}}</strong>
-                <p>Possíveis padrões detectados.</p>
-              </article>
-            </div>
+            <article class="dashboard-metric-card surface-card">
+              <span>Emoção mais frequente</span>
+
+              <strong>
+                {{dashboard.mostFrequentEmotion}}
+              </strong>
+
+              <p>
+                Predominância nos relatos salvos.
+              </p>
+            </article>
+
+            <article class="dashboard-metric-card surface-card">
+              <span>Intensidade média</span>
+
+              <strong>
+                {{dashboard.averageIntensity}}/10
+              </strong>
+
+              <p>
+                Média estimada pelo sistema.
+              </p>
+            </article>
+
+            <article class="dashboard-metric-card surface-card">
+              <span>Gatilhos recorrentes</span>
+
+              {{#if dashboard.mainTriggers.length}}
+                <strong>
+                  {{#each dashboard.mainTriggers}}
+                    {{this}}{{#unless @last}}, {{/unless}}
+                  {{/each}}
+                </strong>
+              {{else}}
+                <strong>
+                  Sem dados
+                </strong>
+              {{/if}}
+
+              <p>
+                Possíveis padrões detectados.
+              </p>
+            </article>
           </div>
 
-          <div class="row g-4 mt-1">
-            <div class="col-12 col-xl-7">
-              <article class="analysis-chart-card surface-card">
-                <div class="analysis-panel-header">
-                  <div>
-                    <h2>Frequência emocional</h2>
+          <div class="dashboard-content-grid">
+            <article class="dashboard-chart-card surface-card">
+              <h2>Frequência emocional</h2>
 
-                    <p>
-                      Distribuição das emoções predominantes detectadas nos seus
-                      relatos.
-                    </p>
-                  </div>
-                </div>
+              <p>
+                Distribuição das emoções predominantes detectadas nos seus
+                relatos.
+              </p>
 
-                <div class="emotion-chart-list">
-                  {{#each summary.emotionChart}}
-                    <div class="emotion-chart-row">
-                      <div class="emotion-chart-info">
-                        <strong>{{emotion}}</strong>
+              {{#if dashboard.emotionChart.length}}
+                <div class="emotion-chart-list mt-4">
+                  {{#each dashboard.emotionChart}}
+                    <div class="emotion-chart-item">
+                      <div class="emotion-chart-header">
+                        <span>{{label}}</span>
                         <span>{{count}} registro(s)</span>
                       </div>
 
-                      <div class="emotion-chart-track">
+                      <div class="emotion-chart-bar">
                         <div
-                          class="emotion-chart-bar"
+                          class="emotion-chart-fill"
                           style="width: {{percentage}}%;"
                         ></div>
                       </div>
-
-                      <span class="emotion-chart-percent">
-                        {{percentage}}%
-                      </span>
                     </div>
                   {{/each}}
                 </div>
-              </article>
-            </div>
+              {{else}}
+                <div class="empty-state-card mt-4">
+                  <h3>Nenhuma emoção registrada ainda</h3>
 
-            <div class="col-12 col-xl-5">
-              <article class="analysis-panel surface-card">
-                <div class="analysis-panel-header">
-                  <div>
-                    <h2>Registros recentes</h2>
-
-                    <p>
-                      Últimos relatos com análise emocional estimada.
-                    </p>
-                  </div>
+                  <p>
+                    Faça uma nova análise para visualizar a frequência
+                    emocional.
+                  </p>
                 </div>
+              {{/if}}
+            </article>
 
-                {{#if records}}
-                  <div class="emotion-history-list">
-                    {{#each records}}
-                      <article class="emotion-history-item">
-                        <div class="emotion-history-top">
-                          <div>
-                            <strong>{{emotion}}</strong>
-                            <span>{{inputMode}} · {{createdAt}}</span>
-                          </div>
+            <article class="dashboard-recent-card surface-card">
+              <h2>Registros recentes</h2>
 
-                          <span class="emotion-intensity">
-                            {{intensity}}/5
-                          </span>
-                        </div>
+              <p>
+                Últimos relatos com análise emocional estimada.
+              </p>
+
+              {{#if dashboard.recentRecords.length}}
+                <div class="recent-records-list mt-4">
+                  {{#each dashboard.recentRecords}}
+                    <a href="/analises/{{id}}" class="recent-record-item">
+                      <header>
+                        <span class="record-emotion-badge">
+                          {{emotionLabel}}
+                        </span>
+
+                        <time>
+                          {{createdAt}}
+                        </time>
+                      </header>
+
+                      <p>
+                        {{content}}
+                      </p>
+
+                      <div class="history-item-meta mt-3">
+                        <strong>
+                          Intensidade
+                          {{intensity}}/10
+                        </strong>
 
                         {{#if trigger}}
-                          <p class="emotion-trigger">
-                            Gatilhos possíveis:
+                          <span>
+                            Gatilhos:
                             {{trigger}}
-                          </p>
+                          </span>
                         {{/if}}
+                      </div>
+                    </a>
+                  {{/each}}
+                </div>
+              {{else}}
+                <div class="empty-state-card mt-4">
+                  <h3>Nenhum relato analisado</h3>
 
-                        <p class="emotion-content">
-                          {{content}}
-                        </p>
-                      </article>
-                    {{/each}}
-                  </div>
-                {{else}}
-                  <div class="empty-state">
-                    <div class="empty-state-icon">📭</div>
-
-                    <h3>Nenhum relato analisado</h3>
-
-                    <p>
-                      Quando você escrever um relato, o resultado da análise
-                      emocional será exibido aqui.
-                    </p>
-                  </div>
-                {{/if}}
-              </article>
-            </div>
+                  <p>
+                    Quando você escrever um relato, o resultado da análise
+                    emocional será exibido aqui.
+                  </p>
+                </div>
+              {{/if}}
+            </article>
           </div>
+
+          <article class="dashboard-trigger-card surface-card">
+            <h2>Ações rápidas</h2>
+
+            <div class="history-filter-actions">
+              <a href="/analises/nova" class="btn-emodia-primary">
+                Nova análise
+              </a>
+
+              <a href="/historico" class="btn-emodia-outline">
+                Ver histórico
+              </a>
+
+              <a href="/relatorios" class="btn-emodia-outline">
+                Ver relatórios
+              </a>
+            </div>
+          </article>
         </section>
       </main>
     </div>

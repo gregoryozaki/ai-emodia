@@ -19,13 +19,30 @@ type CreateEmotionRecordData = {
   trigger?: string
 }
 
+type EmotionRecordFilters = {
+  userId: string
+  emotion?: EmotionType
+  startDate?: Date
+  endDate?: Date
+  page: number
+  perPage: number
+}
+
 const createEmotionRecord = async (data: CreateEmotionRecordData) => {
   return prisma.emotionRecord.create({
     data
   })
 }
 
-const listRecentEmotionRecordsByUserId = async (userId: string, limit = 5) => {
+const countEmotionRecordsByUserId = async (userId: string) => {
+  return prisma.emotionRecord.count({
+    where: {
+      userId
+    }
+  })
+}
+
+const findRecentEmotionRecordsByUserId = async (userId: string, limit = 5) => {
   return prisma.emotionRecord.findMany({
     where: {
       userId
@@ -37,7 +54,7 @@ const listRecentEmotionRecordsByUserId = async (userId: string, limit = 5) => {
   })
 }
 
-const listAllEmotionRecordsByUserId = async (userId: string) => {
+const findEmotionRecordsForDashboardByUserId = async (userId: string) => {
   return prisma.emotionRecord.findMany({
     where: {
       userId
@@ -48,9 +65,76 @@ const listAllEmotionRecordsByUserId = async (userId: string) => {
   })
 }
 
-export {
-  createEmotionRecord,
-  listRecentEmotionRecordsByUserId,
-  listAllEmotionRecordsByUserId
+const findEmotionRecordsByUserId = async (filters: EmotionRecordFilters) => {
+  const where = {
+    userId: filters.userId,
+    ...(filters.emotion ? { emotion: filters.emotion } : {}),
+    ...(filters.startDate || filters.endDate
+      ? {
+          createdAt: {
+            ...(filters.startDate ? { gte: filters.startDate } : {}),
+            ...(filters.endDate ? { lte: filters.endDate } : {})
+          }
+        }
+      : {})
+  }
+
+  const [records, total] = await Promise.all([
+    prisma.emotionRecord.findMany({
+      where,
+      orderBy: {
+        createdAt: "desc"
+      },
+      skip: (filters.page - 1) * filters.perPage,
+      take: filters.perPage
+    }),
+    prisma.emotionRecord.count({
+      where
+    })
+  ])
+
+  return {
+    records,
+    total
+  }
 }
-export type { EmotionType, EmotionInputMode }
+
+const findEmotionRecordByIdAndUserId = async (id: string, userId: string) => {
+  return prisma.emotionRecord.findFirst({
+    where: {
+      id,
+      userId
+    }
+  })
+}
+
+const findEmotionRecordsByPeriod = async (
+  userId: string,
+  startDate: Date,
+  endDate: Date
+) => {
+  return prisma.emotionRecord.findMany({
+    where: {
+      userId,
+      createdAt: {
+        gte: startDate,
+        lte: endDate
+      }
+    },
+    orderBy: {
+      createdAt: "asc"
+    }
+  })
+}
+
+export {
+  countEmotionRecordsByUserId,
+  createEmotionRecord,
+  findEmotionRecordByIdAndUserId,
+  findEmotionRecordsByPeriod,
+  findEmotionRecordsByUserId,
+  findEmotionRecordsForDashboardByUserId,
+  findRecentEmotionRecordsByUserId
+}
+
+export type { EmotionInputMode, EmotionType }

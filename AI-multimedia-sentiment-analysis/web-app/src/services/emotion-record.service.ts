@@ -1,26 +1,42 @@
 import {
-  analyzeTextEmotion,
-  type EmotionType
-} from "./text-emotion-analysis.service.js"
-
-import {
   createEmotionRecord,
-  listAllEmotionRecordsByUserId,
-  listRecentEmotionRecordsByUserId
+  findEmotionRecordByIdAndUserId,
+  findEmotionRecordsByPeriod,
+  findEmotionRecordsByUserId,
+  findEmotionRecordsForDashboardByUserId,
+  findRecentEmotionRecordsByUserId,
+  type EmotionType
 } from "../repositories/emotion-record.repository.js"
+import { analyzeTextEmotion } from "./text-emotion-analysis.service.js"
 
 type CreateTextEmotionRecordInput = {
   userId: string
   content: string
 }
 
-const emotionLabels: Record<EmotionType, string> = {
+type EmotionHistoryQuery = {
+  emotion?: string
+  startDate?: string
+  endDate?: string
+  page?: string
+}
+
+const EMOTION_LABELS: Record<EmotionType, string> = {
   ALEGRIA: "Alegria",
   TRISTEZA: "Tristeza",
   RAIVA: "Raiva",
   MEDO: "Medo",
   NOJO: "Nojo",
   ANSIEDADE: "Ansiedade"
+}
+
+const VALID_EMOTIONS = Object.keys(EMOTION_LABELS) as EmotionType[]
+
+const formatDate = (date: Date) => {
+  return new Intl.DateTimeFormat("pt-BR", {
+    timeZone: "UTC",
+    dateStyle: "short"
+  }).format(date)
 }
 
 const formatDateTime = (date: Date) => {
@@ -30,20 +46,51 @@ const formatDateTime = (date: Date) => {
   }).format(date)
 }
 
-const createTextEmotionRecord = async (input: CreateTextEmotionRecordInput) => {
-  const content = input.content?.trim()
+const formatDateInput = (date: Date) => {
+  const [formattedDate] = date.toISOString().split("T")
+  return formattedDate ?? ""
+}
 
-  if (!content || content.length < 10) {
-    throw new Error("Escreva um relato um pouco mais detalhado para análise.")
+const parseStartDate = (date?: string) => {
+  if (!date) {
+    return undefined
   }
 
-  if (content.length > 3000) {
-    throw new Error("O relato deve ter no máximo 3000 caracteres.")
+  return new Date(`${date}T00:00:00.000Z`)
+}
+
+const parseEndDate = (date?: string) => {
+  if (!date) {
+    return undefined
+  }
+
+  return new Date(`${date}T23:59:59.999Z`)
+}
+
+const normalizeEmotion = (emotion?: string) => {
+  if (!emotion) {
+    return undefined
+  }
+
+  const normalizedEmotion = emotion.toUpperCase() as EmotionType
+
+  if (!VALID_EMOTIONS.includes(normalizedEmotion)) {
+    return undefined
+  }
+
+  return normalizedEmotion
+}
+
+const createTextEmotionRecord = async (input: CreateTextEmotionRecordInput) => {
+  const content = input.content.trim()
+
+  if (!content) {
+    throw new Error("Informe um texto para análise.")
   }
 
   const analysis = analyzeTextEmotion(content)
 
-  await createEmotionRecord({
+  return createEmotionRecord({
     userId: input.userId,
     emotion: analysis.emotion,
     inputMode: "TEXT",
@@ -53,64 +100,28 @@ const createTextEmotionRecord = async (input: CreateTextEmotionRecordInput) => {
   })
 }
 
-const listRecentEmotionRecords = async (userId: string) => {
-  const records = await listRecentEmotionRecordsByUserId(userId)
-
-  return records.map((record) => {
-    return {
-      id: record.id,
-      emotion: emotionLabels[record.emotion as EmotionType],
-      inputMode: "Texto",
-      content: record.content,
-      intensity: record.intensity,
-      trigger: record.trigger,
-      createdAt: formatDateTime(record.createdAt)
-    }
-  })
-}
-
 const getEmotionDashboardSummary = async (userId: string) => {
-  const records = await listAllEmotionRecordsByUserId(userId)
+  const records = await findEmotionRecordsForDashboardByUserId(userId)
+  const recentRecords = await findRecentEmotionRecordsByUserId(userId, 5)
 
-  const emptyEmotionChart = [
-    { emotion: "Alegria", count: 0, percentage: 0 },
-    { emotion: "Tristeza", count: 0, percentage: 0 },
-    { emotion: "Raiva", count: 0, percentage: 0 },
-    { emotion: "Medo", count: 0, percentage: 0 },
-    { emotion: "Nojo", count: 0, percentage: 0 },
-    { emotion: "Ansiedade", count: 0, percentage: 0 }
-  ]
-
-  if (records.length === 0) {
-    return {
-      totalRecords: 0,
-      mostFrequentEmotion: "Sem dados",
-      averageIntensity: "0.0",
-      mainTriggers: "Sem dados",
-      emotionChart: emptyEmotionChart
-    }
-  }
+  const totalRecords = records.length
 
   const emotionCount = records.reduce<Record<string, number>>((acc, record) => {
-    acc[record.emotion] = (acc[record.emotion] || 0) + 1
+    acc[record.emotion] = (acc[record.emotion] ?? 0) + 1
     return acc
   }, {})
 
-  const mostFrequentEmotionKey = Object.entries(emotionCount).sort(
+  const mostFrequentEmotionEntry = Object.entries(emotionCount).sort(
     (a, b) => b[1] - a[1]
-  )[0]?.[0]
-
-  const validIntensities = records
-    .map((record) => record.intensity)
-    .filter((intensity): intensity is number => typeof intensity === "number")
+  )[0]
 
   const averageIntensity =
-    validIntensities.length > 0
-      ? (
-          validIntensities.reduce((total, intensity) => total + intensity, 0) /
-          validIntensities.length
-        ).toFixed(1)
-      : "0.0"
+    totalRecords > 0
+      ? Math.round(
+          records.reduce((sum, record) => sum + (record.intensity ?? 0), 0) /
+            totalRecords
+        )
+      : 0
 
   const triggerCount = records.reduce<Record<string, number>>((acc, record) => {
     if (!record.trigger) {
@@ -123,7 +134,7 @@ const getEmotionDashboardSummary = async (userId: string) => {
       .filter(Boolean)
 
     triggers.forEach((trigger) => {
-      acc[trigger] = (acc[trigger] || 0) + 1
+      acc[trigger] = (acc[trigger] ?? 0) + 1
     })
 
     return acc
@@ -131,35 +142,197 @@ const getEmotionDashboardSummary = async (userId: string) => {
 
   const mainTriggers = Object.entries(triggerCount)
     .sort((a, b) => b[1] - a[1])
-    .slice(0, 3)
+    .slice(0, 4)
     .map(([trigger]) => trigger)
-    .join(", ")
 
-  const emotionChart = Object.entries(emotionLabels).map(
-    ([emotionKey, label]) => {
-      const count = emotionCount[emotionKey] || 0
-
-      return {
-        emotion: label,
-        count,
-        percentage: Math.round((count / records.length) * 100)
-      }
+  const emotionChart = Object.entries(emotionCount).map(([emotion, count]) => {
+    return {
+      emotion,
+      label: EMOTION_LABELS[emotion as EmotionType],
+      count,
+      percentage:
+        totalRecords > 0 ? Math.round((count / totalRecords) * 100) : 0
     }
-  )
+  })
 
   return {
-    totalRecords: records.length,
-    mostFrequentEmotion: mostFrequentEmotionKey
-      ? emotionLabels[mostFrequentEmotionKey as EmotionType]
+    totalRecords,
+    mostFrequentEmotion: mostFrequentEmotionEntry
+      ? EMOTION_LABELS[mostFrequentEmotionEntry[0] as EmotionType]
       : "Sem dados",
     averageIntensity,
-    mainTriggers: mainTriggers || "Sem gatilhos claros",
-    emotionChart
+    mainTriggers,
+    emotionChart,
+    recentRecords: recentRecords.map((record) => {
+      return {
+        id: record.id,
+        emotion: record.emotion,
+        emotionLabel: EMOTION_LABELS[record.emotion],
+        inputMode: record.inputMode,
+        content: record.content,
+        intensity: record.intensity,
+        trigger: record.trigger,
+        createdAt: formatDateTime(record.createdAt)
+      }
+    })
+  }
+}
+
+const getEmotionHistory = async (
+  userId: string,
+  query: EmotionHistoryQuery
+) => {
+  const page = Number(query.page ?? "1")
+  const safePage = Number.isNaN(page) || page < 1 ? 1 : page
+  const perPage = 10
+
+  const emotion = normalizeEmotion(query.emotion)
+  const startDate = parseStartDate(query.startDate)
+  const endDate = parseEndDate(query.endDate)
+
+  const filters = {
+    userId,
+    page: safePage,
+    perPage,
+    ...(emotion ? { emotion } : {}),
+    ...(startDate ? { startDate } : {}),
+    ...(endDate ? { endDate } : {})
+  }
+
+  const result = await findEmotionRecordsByUserId(filters)
+
+  const totalPages = Math.max(Math.ceil(result.total / perPage), 1)
+
+  return {
+    records: result.records.map((record) => {
+      return {
+        id: record.id,
+        emotion: record.emotion,
+        emotionLabel: EMOTION_LABELS[record.emotion],
+        inputMode: record.inputMode,
+        content: record.content,
+        intensity: record.intensity,
+        trigger: record.trigger,
+        createdAt: formatDateTime(record.createdAt)
+      }
+    }),
+    total: result.total,
+    currentPage: safePage,
+    totalPages,
+    hasPreviousPage: safePage > 1,
+    hasNextPage: safePage < totalPages,
+    previousPage: safePage - 1,
+    nextPage: safePage + 1,
+    filters: {
+      emotion: emotion ?? "",
+      startDate: query.startDate ?? "",
+      endDate: query.endDate ?? ""
+    },
+    emotions: VALID_EMOTIONS.map((emotionValue) => {
+      return {
+        value: emotionValue,
+        label: EMOTION_LABELS[emotionValue],
+        selected: emotion === emotionValue
+      }
+    })
+  }
+}
+
+const getEmotionRecordDetails = async (userId: string, recordId: string) => {
+  const record = await findEmotionRecordByIdAndUserId(recordId, userId)
+
+  if (!record) {
+    throw new Error("Registro emocional não encontrado.")
+  }
+
+  return {
+    id: record.id,
+    emotion: record.emotion,
+    emotionLabel: EMOTION_LABELS[record.emotion],
+    inputMode: record.inputMode,
+    content: record.content,
+    intensity: record.intensity,
+    trigger: record.trigger,
+    createdAt: formatDateTime(record.createdAt),
+    createdDateInput: formatDateInput(record.createdAt)
+  }
+}
+
+const getEmotionReports = async (userId: string) => {
+  const now = new Date()
+
+  const weekStart = new Date(now)
+  weekStart.setDate(now.getDate() - 6)
+  weekStart.setHours(0, 0, 0, 0)
+
+  const monthStart = new Date(now)
+  monthStart.setDate(1)
+  monthStart.setHours(0, 0, 0, 0)
+
+  const weekRecords = await findEmotionRecordsByPeriod(userId, weekStart, now)
+  const monthRecords = await findEmotionRecordsByPeriod(userId, monthStart, now)
+
+  const buildSummary = (records: typeof weekRecords) => {
+    const total = records.length
+
+    const emotionCount = records.reduce<Record<string, number>>(
+      (acc, record) => {
+        acc[record.emotion] = (acc[record.emotion] ?? 0) + 1
+        return acc
+      },
+      {}
+    )
+
+    const mostFrequentEmotionEntry = Object.entries(emotionCount).sort(
+      (a, b) => b[1] - a[1]
+    )[0]
+
+    const averageIntensity =
+      total > 0
+        ? Math.round(
+            records.reduce((sum, record) => sum + (record.intensity ?? 0), 0) /
+              total
+          )
+        : 0
+
+    return {
+      total,
+      averageIntensity,
+      mostFrequentEmotion: mostFrequentEmotionEntry
+        ? EMOTION_LABELS[mostFrequentEmotionEntry[0] as EmotionType]
+        : "Sem dados",
+      emotionDistribution: Object.entries(emotionCount).map(
+        ([emotion, count]) => {
+          return {
+            emotion,
+            label: EMOTION_LABELS[emotion as EmotionType],
+            count,
+            percentage: total > 0 ? Math.round((count / total) * 100) : 0
+          }
+        }
+      )
+    }
+  }
+
+  return {
+    weekly: {
+      title: "Relatório semanal",
+      period: `${formatDate(weekStart)} até ${formatDate(now)}`,
+      ...buildSummary(weekRecords)
+    },
+    monthly: {
+      title: "Relatório mensal",
+      period: `${formatDate(monthStart)} até ${formatDate(now)}`,
+      ...buildSummary(monthRecords)
+    },
+    exportPdfReady: false
   }
 }
 
 export {
-  createTextEmotionRecord,
   getEmotionDashboardSummary,
-  listRecentEmotionRecords
+  getEmotionHistory,
+  getEmotionRecordDetails,
+  getEmotionReports,
+  createTextEmotionRecord
 }

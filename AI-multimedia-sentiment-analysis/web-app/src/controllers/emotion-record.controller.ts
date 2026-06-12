@@ -1,9 +1,6 @@
 import type { Request, Response } from "express"
 
-import {
-  createTextEmotionRecord,
-  listRecentEmotionRecords
-} from "../services/emotion-record.service.js"
+import { createTextEmotionRecord } from "../services/emotion-record.service.js"
 
 const createTextEmotionRecordController = async (
   req: Request,
@@ -24,15 +21,12 @@ const createTextEmotionRecordController = async (
 
     res.redirect("/dashboard?created=1")
   } catch (error) {
-    const records = await listRecentEmotionRecords(userId)
-
     const message =
       error instanceof Error ? error.message : "Erro ao registrar emoção."
 
     res.status(400).render("app/new-analysis", {
-      title: "Emodia | Análises",
+      title: "Emodia | Nova análise",
       error: message,
-      records,
       formData: req.body
     })
   }

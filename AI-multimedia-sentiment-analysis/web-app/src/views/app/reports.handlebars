@@ -1,4 +1,4 @@
-<section class="analysis-page">
+<section class="analysis-page reports-page">
   <div class="container-page">
     <div class="analysis-app-layout">
       <main class="analysis-main-content">
@@ -7,57 +7,113 @@
             <span class="page-badge">Relatórios</span>
 
             <h1>
-              Relatórios semanais e
-              <span class="text-gradient">mensais</span>.
+              Relatórios
+              <span class="text-gradient">emocionais</span>.
             </h1>
 
             <p>
-              Esta área vai resumir evolução emocional, gatilhos recorrentes e
-              possíveis sinais de melhora ao longo do tempo.
+              Resumos semanais e mensais das suas análises registradas.
             </p>
           </div>
 
-          <div class="row g-4">
-            <div class="col-12 col-lg-6">
-              <article class="analysis-report-card surface-card">
-                <h2>Resumo semanal</h2>
+          <div class="report-grid">
+            <article class="report-card surface-card">
+              <span class="page-badge">{{reports.weekly.title}}</span>
 
-                <p>
-                  Em breve: comparação dos relatos da semana, emoção
-                  predominante, intensidade média e gatilhos mais citados.
-                </p>
+              <h2>{{reports.weekly.period}}</h2>
 
-                <div class="report-placeholder compact">
-                  <div class="report-bars">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                  </div>
+              <div class="report-metrics">
+                <div>
+                  <span>Total de registros</span>
+                  <strong>{{reports.weekly.total}}</strong>
                 </div>
-              </article>
-            </div>
 
-            <div class="col-12 col-lg-6">
-              <article class="analysis-report-card surface-card">
-                <h2>Resumo mensal</h2>
-
-                <p>
-                  Em breve: tendências emocionais, evolução temporal e
-                  comparações entre semanas.
-                </p>
-
-                <div class="report-placeholder compact">
-                  <div class="report-bars">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                  </div>
+                <div>
+                  <span>Emoção mais frequente</span>
+                  <strong>{{reports.weekly.mostFrequentEmotion}}</strong>
                 </div>
-              </article>
-            </div>
+
+                <div>
+                  <span>Intensidade média</span>
+                  <strong>{{reports.weekly.averageIntensity}}/10</strong>
+                </div>
+              </div>
+
+              <div class="report-distribution">
+                {{#each reports.weekly.emotionDistribution}}
+                  <div class="emotion-chart-item">
+                    <div class="emotion-chart-header">
+                      <span>{{label}}</span>
+                      <span>{{count}} registro(s)</span>
+                    </div>
+
+                    <div class="emotion-chart-bar">
+                      <div
+                        class="emotion-chart-fill"
+                        style="width: {{percentage}}%;"
+                      ></div>
+                    </div>
+                  </div>
+                {{/each}}
+              </div>
+            </article>
+
+            <article class="report-card surface-card">
+              <span class="page-badge">{{reports.monthly.title}}</span>
+
+              <h2>{{reports.monthly.period}}</h2>
+
+              <div class="report-metrics">
+                <div>
+                  <span>Total de registros</span>
+                  <strong>{{reports.monthly.total}}</strong>
+                </div>
+
+                <div>
+                  <span>Emoção mais frequente</span>
+                  <strong>{{reports.monthly.mostFrequentEmotion}}</strong>
+                </div>
+
+                <div>
+                  <span>Intensidade média</span>
+                  <strong>{{reports.monthly.averageIntensity}}/10</strong>
+                </div>
+              </div>
+
+              <div class="report-distribution">
+                {{#each reports.monthly.emotionDistribution}}
+                  <div class="emotion-chart-item">
+                    <div class="emotion-chart-header">
+                      <span>{{label}}</span>
+                      <span>{{count}} registro(s)</span>
+                    </div>
+
+                    <div class="emotion-chart-bar">
+                      <div
+                        class="emotion-chart-fill"
+                        style="width: {{percentage}}%;"
+                      ></div>
+                    </div>
+                  </div>
+                {{/each}}
+              </div>
+            </article>
           </div>
+
+          <article class="report-export-card surface-card">
+            <div>
+              <h2>Exportação em PDF</h2>
+
+              <p>
+                Estrutura preparada para exportar relatórios futuramente. A
+                geração do PDF será adicionada em uma próxima etapa.
+              </p>
+            </div>
+
+            <button type="button" class="btn-emodia-outline" disabled>
+              Exportar PDF em breve
+            </button>
+          </article>
         </section>
       </main>
     </div>
