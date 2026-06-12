@@ -1,23 +1,3 @@
-<section class="app-secondary-nav">
-  <div class="container-page">
-    <div class="app-secondary-nav-inner">
-      <button
-        class="btn-emodia-outline app-menu-button"
-        type="button"
-        data-bs-toggle="offcanvas"
-        data-bs-target="#appSidebar"
-        aria-controls="appSidebar"
-      >
-        ☰ Menu da área
-      </button>
-
-      <span>
-        Área logada do Emodia
-      </span>
-    </div>
-  </div>
-</section>
-
 <aside
   class="offcanvas offcanvas-start app-sidebar-drawer"
   tabindex="-1"
@@ -32,9 +12,16 @@
         Emodia
       </h2>
 
-      <p>
-        Acompanhamento emocional inteligente.
-      </p>
+      {{#if currentUser}}
+        <p>
+          Olá,
+          {{currentUser.firstName}}.
+        </p>
+      {{else}}
+        <p>
+          Acompanhamento emocional inteligente.
+        </p>
+      {{/if}}
     </div>
 
     <button
@@ -58,19 +45,26 @@
       Nova análise
     </a>
 
-    <a href="/relatorios" class="app-sidebar-link">
-      <span>📅</span>
-      Relatórios
-    </a>
-
     <a href="/historico" class="app-sidebar-link">
       <span>🧾</span>
       Histórico
+    </a>
+
+    <a href="/relatorios" class="app-sidebar-link">
+      <span>📅</span>
+      Relatórios
     </a>
 
     <a href="/perfil" class="app-sidebar-link">
       <span>👤</span>
       Perfil
     </a>
+
+    <form action="/logout" method="post" class="app-sidebar-logout-form">
+      <button type="submit" class="app-sidebar-link app-sidebar-logout-button">
+        <span>⏻</span>
+        Sair
+      </button>
+    </form>
   </nav>
 </aside>

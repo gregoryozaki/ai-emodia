@@ -1,14 +1,33 @@
 <nav class="navbar navbar-expand-lg app-navbar sticky-top">
   <div class="container-page">
-    <a class="navbar-brand brand-wrap" href="/">
-      <span class="brand-logo-box">
-        <img src="/img/logo-emodia.png" alt="Logo Emodia" class="brand-logo" />
-      </span>
+    <div class="navbar-brand-area">
+      {{#if isAuthenticated}}
+        <button
+          class="navbar-menu-toggle"
+          type="button"
+          data-bs-toggle="offcanvas"
+          data-bs-target="#appSidebar"
+          aria-controls="appSidebar"
+          aria-label="Abrir menu"
+        >
+          ☰
+        </button>
+      {{/if}}
 
-      <span class="brand-name">
-        Emo<span>dia</span>
-      </span>
-    </a>
+      <a class="navbar-brand brand-wrap" href="/">
+        <span class="brand-logo-box">
+          <img
+            src="/img/logo-emodia.png"
+            alt="Logo Emodia"
+            class="brand-logo"
+          />
+        </span>
+
+        <span class="brand-name">
+          Emo<span>dia</span>
+        </span>
+      </a>
+    </div>
 
     <button
       class="navbar-toggler border-0"
@@ -41,16 +60,79 @@
           <a class="nav-link app-nav-link" href="/dashboard">
             Dashboard
           </a>
+
+          <a class="nav-link app-nav-link" href="/analises/nova">
+            Nova análise
+          </a>
+
+          <a class="nav-link app-nav-link" href="/historico">
+            Histórico
+          </a>
+
+          <a class="nav-link app-nav-link" href="/relatorios">
+            Relatórios
+          </a>
         {{/if}}
       </div>
 
       <div class="navbar-actions d-flex flex-column flex-lg-row">
         {{#if isAuthenticated}}
-          <form action="/logout" method="post" class="m-0">
-            <button type="submit" class="btn-emodia-ghost">
-              Sair
+          <div class="user-menu dropdown">
+            <button
+              class="user-menu-button"
+              type="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              {{#if currentUser.avatarPath}}
+                <img
+                  src="{{currentUser.avatarPath}}"
+                  alt="Foto de perfil"
+                  class="user-menu-avatar"
+                />
+              {{else}}
+                <span class="user-menu-avatar user-menu-avatar-empty">
+                  👤
+                </span>
+              {{/if}}
+
+              <span>
+                Olá,
+                {{currentUser.firstName}}
+              </span>
+
+              <span class="user-menu-arrow">
+                ▾
+              </span>
             </button>
-          </form>
+
+            <div class="dropdown-menu dropdown-menu-end user-dropdown-menu">
+              <div class="user-dropdown-header">
+                <strong>
+                  {{currentUser.fullName}}
+                </strong>
+
+                <span>
+                  {{currentUser.email}}
+                </span>
+              </div>
+
+              <a class="user-dropdown-item" href="/perfil">
+                <span>👤</span>
+                Meu perfil
+              </a>
+
+              <form action="/logout" method="post" class="m-0">
+                <button
+                  type="submit"
+                  class="user-dropdown-item user-dropdown-danger"
+                >
+                  <span>⏻</span>
+                  Sair da conta
+                </button>
+              </form>
+            </div>
+          </div>
         {{else}}
           <a class="btn-emodia-ghost" href="/login">
             Entrar

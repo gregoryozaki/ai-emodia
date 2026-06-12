@@ -120,6 +120,44 @@
               {{/if}}
             </article>
 
+            <article class="dashboard-chart-card surface-card">
+              <h2>Gatilhos recorrentes</h2>
+
+              <p>
+                Termos e temas que aparecem com maior frequência nos relatos
+                analisados.
+              </p>
+
+              {{#if dashboard.triggerChart.length}}
+                <div class="trigger-chart-list mt-4">
+                  {{#each dashboard.triggerChart}}
+                    <div class="trigger-chart-item">
+                      <div class="trigger-chart-header">
+                        <span>{{trigger}}</span>
+                        <span>{{count}} ocorrência(s)</span>
+                      </div>
+
+                      <div class="trigger-chart-bar">
+                        <div
+                          class="trigger-chart-fill"
+                          style="width: {{percentage}}%;"
+                        ></div>
+                      </div>
+                    </div>
+                  {{/each}}
+                </div>
+              {{else}}
+                <div class="empty-state-card mt-4">
+                  <h3>Nenhum gatilho detectado</h3>
+
+                  <p>
+                    Os gatilhos aparecerão conforme seus relatos forem
+                    analisados.
+                  </p>
+                </div>
+              {{/if}}
+            </article>
+
             <article class="dashboard-recent-card surface-card">
               <h2>Registros recentes</h2>
 
@@ -173,24 +211,6 @@
               {{/if}}
             </article>
           </div>
-
-          <article class="dashboard-trigger-card surface-card">
-            <h2>Ações rápidas</h2>
-
-            <div class="history-filter-actions">
-              <a href="/analises/nova" class="btn-emodia-primary">
-                Nova análise
-              </a>
-
-              <a href="/historico" class="btn-emodia-outline">
-                Ver histórico
-              </a>
-
-              <a href="/relatorios" class="btn-emodia-outline">
-                Ver relatórios
-              </a>
-            </div>
-          </article>
         </section>
       </main>
     </div>

@@ -145,6 +145,18 @@ const getEmotionDashboardSummary = async (userId: string) => {
     .slice(0, 4)
     .map(([trigger]) => trigger)
 
+  const triggerChart = Object.entries(triggerCount)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 6)
+    .map(([trigger, count]) => {
+      return {
+        trigger,
+        count,
+        percentage:
+          totalRecords > 0 ? Math.round((count / totalRecords) * 100) : 0
+      }
+    })
+
   const emotionChart = Object.entries(emotionCount).map(([emotion, count]) => {
     return {
       emotion,
@@ -162,6 +174,7 @@ const getEmotionDashboardSummary = async (userId: string) => {
       : "Sem dados",
     averageIntensity,
     mainTriggers,
+    triggerChart,
     emotionChart,
     recentRecords: recentRecords.map((record) => {
       return {
@@ -283,6 +296,26 @@ const getEmotionReports = async (userId: string) => {
       {}
     )
 
+    const triggerCount = records.reduce<Record<string, number>>(
+      (acc, record) => {
+        if (!record.trigger) {
+          return acc
+        }
+
+        const triggers = record.trigger
+          .split(",")
+          .map((trigger) => trigger.trim())
+          .filter(Boolean)
+
+        triggers.forEach((trigger) => {
+          acc[trigger] = (acc[trigger] ?? 0) + 1
+        })
+
+        return acc
+      },
+      {}
+    )
+
     const mostFrequentEmotionEntry = Object.entries(emotionCount).sort(
       (a, b) => b[1] - a[1]
     )[0]
@@ -301,6 +334,7 @@ const getEmotionReports = async (userId: string) => {
       mostFrequentEmotion: mostFrequentEmotionEntry
         ? EMOTION_LABELS[mostFrequentEmotionEntry[0] as EmotionType]
         : "Sem dados",
+
       emotionDistribution: Object.entries(emotionCount).map(
         ([emotion, count]) => {
           return {
@@ -310,7 +344,18 @@ const getEmotionReports = async (userId: string) => {
             percentage: total > 0 ? Math.round((count / total) * 100) : 0
           }
         }
-      )
+      ),
+
+      triggerDistribution: Object.entries(triggerCount)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 6)
+        .map(([trigger, count]) => {
+          return {
+            trigger,
+            count,
+            percentage: total > 0 ? Math.round((count / total) * 100) : 0
+          }
+        })
     }
   }
 
