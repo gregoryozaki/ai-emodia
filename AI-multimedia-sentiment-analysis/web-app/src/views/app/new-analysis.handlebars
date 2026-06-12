@@ -215,23 +215,97 @@
                   <h2>Relato com câmera em tempo real</h2>
 
                   <p>
-                    A câmera em tempo real será ligada na próxima etapa.
-                    Futuramente, o Emodia poderá combinar transcrição da fala
-                    com emoção facial detectada por visão computacional.
+                    Grave seu relato em vídeo, revise a prévia e edite a
+                    transcrição automática antes de enviar. O vídeo não será
+                    salvo no banco.
                   </p>
                 </div>
 
-                <div class="media-input-placeholder">
-                  <div class="media-input-icon">📹</div>
+                <div class="video-recorder-card" data-video-recorder>
+                  <div class="video-recorder-top">
+                    <div class="video-recorder-visual" id="videoRecorderVisual">
+                      📹
+                    </div>
 
-                  <div>
-                    <strong>Análise por vídeo em preparação</strong>
+                    <div>
+                      <strong id="videoRecorderStatus">
+                        Câmera pronta para iniciar
+                      </strong>
 
-                    <p>
-                      O vídeo não será salvo no banco. A ideia é usar a câmera
-                      para análise em tempo real e armazenar apenas transcrição,
-                      emoção, intensidade, gatilhos e sinais de atenção.
-                    </p>
+                      <p id="videoRecorderHelper">
+                        Clique em abrir câmera para preparar a gravação.
+                      </p>
+                    </div>
+
+                    <div class="video-recorder-timer" id="videoRecorderTimer">
+                      00:00
+                    </div>
+                  </div>
+
+                  <div class="video-live-box" id="videoLiveBox" hidden>
+                    <span>Prévia da câmera</span>
+
+                    <video
+                      id="videoLivePreview"
+                      autoplay
+                      muted
+                      playsinline
+                    ></video>
+                  </div>
+
+                  <div class="video-recorder-actions">
+                    <button
+                      type="button"
+                      class="btn-emodia-primary"
+                      id="openVideoCamera"
+                    >
+                      📹 Abrir câmera
+                    </button>
+
+                    <button
+                      type="button"
+                      class="btn-emodia-primary"
+                      id="startVideoRecording"
+                      hidden
+                    >
+                      🔴 Iniciar gravação
+                    </button>
+
+                    <button
+                      type="button"
+                      class="btn-emodia-outline"
+                      id="stopVideoRecording"
+                      hidden
+                    >
+                      ⏹ Parar gravação
+                    </button>
+
+                    <button
+                      type="button"
+                      class="btn-emodia-outline"
+                      id="clearVideoRecording"
+                      hidden
+                    >
+                      🗑 Limpar vídeo
+                    </button>
+                  </div>
+
+                  <div class="video-preview-box" id="videoPreviewBox" hidden>
+                    <span>Prévia do vídeo gravado</span>
+
+                    <video
+                      id="videoRecordingPreview"
+                      controls
+                      playsinline
+                    ></video>
+                  </div>
+
+                  <div
+                    class="video-transcription-status"
+                    id="videoTranscriptionStatus"
+                    hidden
+                  >
+                    Transcrevendo áudio do vídeo automaticamente...
                   </div>
                 </div>
 
@@ -239,6 +313,8 @@
                   action="/analises/transcricao"
                   method="post"
                   class="analysis-form"
+                  id="videoAnalysisForm"
+                  hidden
                 >
                   <input type="hidden" name="inputMode" value="VIDEO" />
 
@@ -250,13 +326,13 @@
                     id="videoTranscript"
                     name="transcript"
                     rows="8"
-                    placeholder="A transcrição automática do vídeo aparecerá aqui em uma próxima etapa. Por enquanto, digite ou cole a transcrição para validar o fluxo."
+                    placeholder="A transcrição automática do vídeo aparecerá aqui. Você poderá editar antes de enviar."
                     required
                   >{{formData.transcript}}</textarea>
 
                   <div class="analysis-form-warning">
-                    O vídeo original não será salvo. O sistema guardará somente
-                    a transcrição revisada e os resultados da análise.
+                    O vídeo original não será salvo. Apenas a transcrição
+                    revisada e a análise emocional serão registradas.
                   </div>
 
                   <button type="submit" class="btn-emodia-primary">
