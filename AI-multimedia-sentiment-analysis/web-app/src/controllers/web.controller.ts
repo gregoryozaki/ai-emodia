@@ -48,7 +48,9 @@ const renderDashboardPage = async (req: Request, res: Response) => {
 
 const renderNewAnalysisPage = (req: Request, res: Response) => {
   res.render("app/new-analysis", {
-    title: "Emodia | Nova análise"
+    title: "Emodia | Nova análise",
+    useNewAnalysisTabs: true,
+    useAudioRecorder: true
   })
 }
 

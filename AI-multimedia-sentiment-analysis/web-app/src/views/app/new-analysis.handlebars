@@ -1,4 +1,4 @@
-<section class="analysis-page">
+<section class="analysis-page new-analysis-page">
   <div class="container-page">
     <div class="analysis-app-layout">
       <main class="analysis-main-content">
@@ -7,151 +7,262 @@
             <span class="page-badge">Nova análise</span>
 
             <h1>
-              Registre uma nova
-              <span class="text-gradient">entrada emocional</span>.
+              Registrar novo
+              <span class="text-gradient">relato emocional</span>.
             </h1>
 
             <p>
-              Escolha entre texto, áudio ou vídeo em tempo real. Nesta etapa, a
-              análise textual já está ativa.
+              Escolha como deseja registrar seu desabafo. O Emodia analisará o
+              conteúdo para identificar emoção, intensidade, gatilhos e sinais
+              de atenção.
             </p>
           </div>
 
-          <div class="row g-4 new-analysis-grid">
-            <div class="col-12 col-xl-5">
-              <article class="analysis-form-card surface-card">
-                <div class="section-header text-start">
-                  <h2>Analisar relato por texto</h2>
+          {{#if error}}
+            <div class="auth-alert auth-alert-error mb-4" data-flash-message>
+              {{error}}
+            </div>
+          {{/if}}
+
+          <div
+            class="input-mode-tabs"
+            role="tablist"
+            aria-label="Tipo de entrada emocional"
+          >
+            <button
+              class="input-mode-tab active"
+              type="button"
+              data-input-tab="text"
+            >
+              <span>✍️</span>
+              Texto
+            </button>
+
+            <button class="input-mode-tab" type="button" data-input-tab="audio">
+              <span>🎙️</span>
+              Áudio
+            </button>
+
+            <button class="input-mode-tab" type="button" data-input-tab="video">
+              <span>📹</span>
+              Vídeo em tempo real
+            </button>
+          </div>
+
+          <div class="input-mode-panels">
+            <article class="input-mode-panel active" data-input-panel="text">
+              <div class="analysis-form-card surface-card">
+                <div class="analysis-form-header">
+                  <span class="page-badge">Entrada por texto</span>
+
+                  <h2>Escreva seu relato</h2>
 
                   <p>
-                    Escreva seu relato livremente. O sistema irá estimar emoção,
-                    intensidade e possíveis gatilhos.
+                    Descreva como você está se sentindo, o que aconteceu e o que
+                    pode ter provocado esse estado emocional.
                   </p>
                 </div>
-
-                {{#if error}}
-                  <div class="auth-alert auth-alert-error">
-                    {{error}}
-                  </div>
-                {{/if}}
 
                 <form
                   action="/analises/registros"
                   method="post"
-                  class="emotion-form"
+                  class="analysis-form"
                 >
-                  <div class="auth-field">
-                    <label for="content" class="form-label">
-                      Conte como você está se sentindo
-                    </label>
+                  <label for="content">
+                    Relato emocional
+                  </label>
 
-                    <textarea
-                      id="content"
-                      name="content"
-                      class="form-control auth-input emotion-textarea"
-                      placeholder="Desabafe livremente. O Emodia irá analisar o texto e identificar emoções e possíveis gatilhos automaticamente..."
-                      maxlength="3000"
-                      required
-                    >{{formData.content}}</textarea>
+                  <textarea
+                    id="content"
+                    name="content"
+                    rows="9"
+                    placeholder="Exemplo: Hoje me senti muito ansioso por causa da faculdade..."
+                    required
+                  >{{formData.content}}</textarea>
+
+                  <div class="analysis-form-warning">
+                    <strong>Importante:</strong>
+                    se o relato contiver sinais de sofrimento intenso,
+                    violência, abuso ou risco, o Emodia mostrará uma mensagem de
+                    atenção e orientação de apoio.
                   </div>
 
-                  <button type="submit" class="btn-emodia-primary w-100">
-                    Analisar e salvar registro
+                  <button type="submit" class="btn-emodia-primary">
+                    Analisar texto
                   </button>
                 </form>
-              </article>
-            </div>
-
-            <div class="col-12 col-xl-7">
-              <div class="analysis-options-list">
-                <article class="analysis-action-card surface-card">
-                  <div class="analysis-action-icon">
-                    T
-                  </div>
-
-                  <div>
-                    <h3>Texto</h3>
-
-                    <p>
-                      Escreva um relato para o sistema identificar emoções,
-                      intensidade e possíveis gatilhos.
-                    </p>
-                  </div>
-
-                  <a href="#content" class="btn-emodia-outline">
-                    Disponível
-                  </a>
-                </article>
-
-                <article class="analysis-action-card surface-card">
-                  <div class="analysis-action-icon">
-                    A
-                  </div>
-
-                  <div>
-                    <h3>Áudio</h3>
-
-                    <p>
-                      Grave sua voz para transcrição e análise emocional por
-                      NLP.
-                    </p>
-                  </div>
-
-                  <button type="button" class="btn-emodia-outline" disabled>
-                    Em breve
-                  </button>
-                </article>
-
-                <article class="analysis-action-card surface-card">
-                  <div class="analysis-action-icon">
-                    V
-                  </div>
-
-                  <div>
-                    <h3>Vídeo em tempo real</h3>
-
-                    <p>
-                      Use a câmera para análise facial, transcrição da fala e
-                      combinação multimodal dos sinais emocionais.
-                    </p>
-                  </div>
-
-                  <button type="button" class="btn-emodia-outline" disabled>
-                    Em breve
-                  </button>
-                </article>
               </div>
+            </article>
 
-              <article class="analysis-flow-card surface-card">
-                <h3>Fluxo multimodal planejado</h3>
+            <article class="input-mode-panel" data-input-panel="audio">
+              <div class="analysis-form-card surface-card">
+                <div class="analysis-form-header">
+                  <span class="page-badge">Entrada por áudio</span>
 
-                <div class="analysis-flow-grid">
-                  <div>
-                    <strong>Texto</strong>
+                  <h2>Fale seu relato</h2>
 
-                    <span>
-                      NLP direto no relato escrito pelo usuário.
-                    </span>
+                  <p>
+                    Grave sua fala, escute a prévia e revise a transcrição
+                    automática antes de enviar. O áudio não será salvo no banco.
+                  </p>
+                </div>
+
+                <div class="audio-recorder-card" data-audio-recorder>
+                  <div class="audio-recorder-top">
+                    <div class="audio-recorder-visual" id="audioRecorderVisual">
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                    </div>
+
+                    <div>
+                      <strong id="audioRecorderStatus">
+                        Pronto para gravar
+                      </strong>
+
+                      <p id="audioRecorderHelper">
+                        Clique em iniciar, fale seu relato e finalize quando
+                        terminar.
+                      </p>
+                    </div>
+
+                    <div class="audio-recorder-timer" id="audioRecorderTimer">
+                      00:00
+                    </div>
                   </div>
 
-                  <div>
-                    <strong>Áudio</strong>
+                  <div class="audio-recorder-actions">
+                    <button
+                      type="button"
+                      class="btn-emodia-primary"
+                      id="startAudioRecording"
+                    >
+                      🎙️ Iniciar gravação
+                    </button>
 
-                    <span>
-                      Transcrição da fala + NLP + sinais da voz.
-                    </span>
+                    <button
+                      type="button"
+                      class="btn-emodia-outline"
+                      id="stopAudioRecording"
+                      hidden
+                    >
+                      ⏹ Parar gravação
+                    </button>
+
+                    <button
+                      type="button"
+                      class="btn-emodia-outline"
+                      id="clearAudioRecording"
+                      hidden
+                    >
+                      🗑 Limpar áudio
+                    </button>
                   </div>
 
-                  <div>
-                    <strong>Vídeo</strong>
+                  <div class="audio-preview-box" id="audioPreviewBox" hidden>
+                    <span>Prévia do áudio gravado</span>
 
-                    <span>
-                      Visão computacional + áudio transcrito.
-                    </span>
+                    <audio id="audioRecordingPreview" controls></audio>
+                  </div>
+
+                  <div
+                    class="audio-transcription-status"
+                    id="audioTranscriptionStatus"
+                    hidden
+                  >
+                    Gerando transcrição automática...
                   </div>
                 </div>
-              </article>
-            </div>
+
+                <form
+                  action="/analises/transcricao"
+                  method="post"
+                  class="analysis-form"
+                >
+                  <input type="hidden" name="inputMode" value="AUDIO" />
+
+                  <label for="audioTranscript">
+                    Transcrição do áudio
+                  </label>
+
+                  <textarea
+                    id="audioTranscript"
+                    name="transcript"
+                    rows="8"
+                    placeholder="A transcrição automática aparecerá aqui. Você poderá editar antes de enviar."
+                    required
+                  >{{formData.transcript}}</textarea>
+
+                  <div class="analysis-form-warning">
+                    O áudio original não será salvo. Apenas a transcrição
+                    revisada e a análise emocional serão registradas.
+                  </div>
+
+                  <button type="submit" class="btn-emodia-primary">
+                    Enviar transcrição do áudio
+                  </button>
+                </form>
+              </div>
+            </article>
+
+            <article class="input-mode-panel" data-input-panel="video">
+              <div class="analysis-form-card surface-card">
+                <div class="analysis-form-header">
+                  <span class="page-badge">Entrada por vídeo</span>
+
+                  <h2>Relato com câmera em tempo real</h2>
+
+                  <p>
+                    A câmera em tempo real será ligada na próxima etapa.
+                    Futuramente, o Emodia poderá combinar transcrição da fala
+                    com emoção facial detectada por visão computacional.
+                  </p>
+                </div>
+
+                <div class="media-input-placeholder">
+                  <div class="media-input-icon">📹</div>
+
+                  <div>
+                    <strong>Análise por vídeo em preparação</strong>
+
+                    <p>
+                      O vídeo não será salvo no banco. A ideia é usar a câmera
+                      para análise em tempo real e armazenar apenas transcrição,
+                      emoção, intensidade, gatilhos e sinais de atenção.
+                    </p>
+                  </div>
+                </div>
+
+                <form
+                  action="/analises/transcricao"
+                  method="post"
+                  class="analysis-form"
+                >
+                  <input type="hidden" name="inputMode" value="VIDEO" />
+
+                  <label for="videoTranscript">
+                    Transcrição do áudio do vídeo
+                  </label>
+
+                  <textarea
+                    id="videoTranscript"
+                    name="transcript"
+                    rows="8"
+                    placeholder="A transcrição automática do vídeo aparecerá aqui em uma próxima etapa. Por enquanto, digite ou cole a transcrição para validar o fluxo."
+                    required
+                  >{{formData.transcript}}</textarea>
+
+                  <div class="analysis-form-warning">
+                    O vídeo original não será salvo. O sistema guardará somente
+                    a transcrição revisada e os resultados da análise.
+                  </div>
+
+                  <button type="submit" class="btn-emodia-primary">
+                    Enviar transcrição do vídeo
+                  </button>
+                </form>
+              </div>
+            </article>
           </div>
         </section>
       </main>

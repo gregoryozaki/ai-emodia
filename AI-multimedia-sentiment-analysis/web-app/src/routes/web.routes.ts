@@ -1,6 +1,10 @@
 import { Router } from "express"
 
-import { createTextEmotionRecordController } from "../controllers/emotion-record.controller.js"
+import {
+  createTextEmotionRecordController,
+  createTranscriptEmotionRecordController
+} from "../controllers/emotion-record.controller.js"
+
 import {
   redirectAnalysisPage,
   renderAboutPage,
@@ -30,22 +34,30 @@ webRoutes.get("/sobre", renderAboutPage)
 webRoutes.get("/analises", ensureAuthenticated, redirectAnalysisPage)
 webRoutes.get("/dashboard", ensureAuthenticated, renderDashboardPage)
 webRoutes.get("/analises/nova", ensureAuthenticated, renderNewAnalysisPage)
-webRoutes.get("/historico", ensureAuthenticated, renderHistoryPage)
+
+webRoutes.post(
+  "/analises/registros",
+  ensureAuthenticated,
+  createTextEmotionRecordController
+)
+
+webRoutes.post(
+  "/analises/transcricao",
+  ensureAuthenticated,
+  createTranscriptEmotionRecordController
+)
+
 webRoutes.get(
   "/analises/:id",
   ensureAuthenticated,
   renderEmotionRecordDetailsPage
 )
+webRoutes.get("/historico", ensureAuthenticated, renderHistoryPage)
 webRoutes.get("/relatorios", ensureAuthenticated, renderReportsPage)
 webRoutes.get(
   "/relatorios/pdf",
   ensureAuthenticated,
   exportEmotionReportPdfController
-)
-webRoutes.post(
-  "/analises/registros",
-  ensureAuthenticated,
-  createTextEmotionRecordController
 )
 
 webRoutes.get("/perfil", ensureAuthenticated, renderProfilePage)

@@ -3,9 +3,15 @@
     <div class="analysis-app-layout">
       <main class="analysis-main-content">
         <section class="analysis-internal-section">
-          <a href="/historico" class="auth-back-link">
-            ← Voltar para histórico
-          </a>
+          <div class="detail-top-actions">
+            <a href="/dashboard" class="auth-back-link">
+              ← Voltar para dashboard
+            </a>
+
+            <a href="/historico" class="detail-history-link">
+              Ver histórico
+            </a>
+          </div>
 
           <div class="analysis-section-title">
             <span class="page-badge">Detalhes</span>
@@ -14,30 +20,59 @@
               Análise
               <span class="text-gradient">emocional</span>.
             </h1>
-            {{#if record.hasRiskAlert}}
-              <div class="report-risk-box report-risk-critical">
-                <span>Sinal de atenção</span>
 
-                <h3>Atenção: termos sensíveis identificados</h3>
-
-                <p>
-                  {{record.riskMessage}}
-                </p>
-
-                {{#if record.riskTerms}}
-                  <div class="report-risk-list">
-                    <div class="report-risk-item">
-                      <strong>Termos identificados</strong>
-                      <small>{{record.riskTerms}}</small>
-                    </div>
-                  </div>
-                {{/if}}
-              </div>
-            {{/if}}
             <p>
               Veja os dados registrados nessa análise.
             </p>
           </div>
+
+          {{#if record.hasRiskAlert}}
+            <div class="report-risk-box report-risk-critical">
+              <span>Sinal de atenção</span>
+
+              <h3>Atenção: termos sensíveis identificados</h3>
+
+              <p>
+                {{record.riskMessage}}
+              </p>
+
+              {{#if record.riskTerms}}
+                <div class="report-risk-list">
+                  <div class="report-risk-item">
+                    <strong>Termos identificados</strong>
+                    <small>{{record.riskTerms}}</small>
+                  </div>
+                </div>
+              {{/if}}
+
+              <div class="risk-alert-actions">
+                <a href="tel:188" class="btn-emodia-primary">
+                  Buscar ajuda agora — CVV 188
+                </a>
+
+                <a href="tel:192" class="btn-emodia-outline">
+                  Emergência médica — SAMU 192
+                </a>
+
+                <a href="tel:190" class="btn-emodia-outline">
+                  Risco ou violência — 190
+                </a>
+
+                <a href="/dashboard" class="btn-emodia-outline">
+                  Voltar para dashboard
+                </a>
+              </div>
+
+              <div class="risk-alert-support-text">
+                <p>
+                  Se houver risco imediato, ameaça, violência, abuso ou perigo
+                  físico, procure uma pessoa de confiança ou acione um serviço
+                  de emergência da sua região. O Emodia não realiza diagnóstico
+                  e não substitui atendimento profissional.
+                </p>
+              </div>
+            </div>
+          {{/if}}
 
           <article class="detail-card surface-card">
             <div class="detail-header">
@@ -61,21 +96,63 @@
             <div class="detail-grid">
               <div class="detail-item">
                 <span>Modo de entrada</span>
-                <strong>{{record.inputMode}}</strong>
+
+                <strong>
+                  {{#if record.inputMode}}
+                    {{record.inputMode}}
+                  {{else}}
+                    TEXT
+                  {{/if}}
+                </strong>
               </div>
 
               <div class="detail-item">
                 <span>Gatilhos detectados</span>
-                <strong>{{record.trigger}}</strong>
+
+                <strong>
+                  {{#if record.trigger}}
+                    {{record.trigger}}
+                  {{else}}
+                    Não identificado
+                  {{/if}}
+                </strong>
               </div>
 
-              <div class="detail-item detail-item-full">
-                <span>Texto analisado</span>
+              <div class="detail-item">
+                <span>Nível de atenção</span>
 
-                <p>
-                  {{record.content}}
-                </p>
+                <strong>
+                  {{record.riskLevel}}
+                </strong>
               </div>
+
+              {{#if record.riskTerms}}
+                <div class="detail-item">
+                  <span>Termos sensíveis</span>
+
+                  <strong>
+                    {{record.riskTerms}}
+                  </strong>
+                </div>
+              {{/if}}
+
+              {{#if record.transcript}}
+                <div class="detail-item detail-item-full">
+                  <span>Transcrição analisada</span>
+
+                  <p>
+                    {{record.transcript}}
+                  </p>
+                </div>
+              {{else}}
+                <div class="detail-item detail-item-full">
+                  <span>Texto analisado</span>
+
+                  <p>
+                    {{record.content}}
+                  </p>
+                </div>
+              {{/if}}
             </div>
           </article>
         </section>
