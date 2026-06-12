@@ -12,8 +12,20 @@
             </h1>
 
             <p>
-              Resumos semanais e mensais das suas análises registradas.
+              Resumos semanais e mensais das suas análises registradas, com emoções,
+              gatilhos recorrentes, sinais de atenção, comparação com período anterior
+              e recomendações de cuidado.
             </p>
+          </div>
+
+          <div class="report-export-actions">
+            <a href="/relatorios/pdf?period=weekly" class="btn-emodia-primary">
+              Exportar semanal em PDF
+            </a>
+
+            <a href="/relatorios/pdf?period=monthly" class="btn-emodia-outline">
+              Exportar mensal em PDF
+            </a>
           </div>
 
           <div class="report-grid">
@@ -22,10 +34,24 @@
 
               <h2>{{reports.weekly.period}}</h2>
 
+              <p class="report-period-comparison">
+                Comparado com: {{reports.weekly.previousPeriod}}
+              </p>
+
               <div class="report-metrics">
                 <div>
                   <span>Total de registros</span>
                   <strong>{{reports.weekly.total}}</strong>
+                </div>
+
+                <div>
+                  <span>Registros no período anterior</span>
+                  <strong>{{reports.weekly.previousTotal}}</strong>
+                </div>
+
+                <div>
+                  <span>Variação de registros</span>
+                  <strong>{{reports.weekly.totalVariation}}</strong>
                 </div>
 
                 <div>
@@ -37,25 +63,141 @@
                   <span>Intensidade média</span>
                   <strong>{{reports.weekly.averageIntensity}}/10</strong>
                 </div>
+
+                <div>
+                  <span>Variação de intensidade</span>
+                  <strong>{{reports.weekly.intensityVariation}}</strong>
+                </div>
               </div>
 
-              <div class="report-distribution">
-                {{#each reports.weekly.emotionDistribution}}
-                  <div class="emotion-chart-item">
-                    <div class="emotion-chart-header">
-                      <span>{{label}}</span>
-                      <span>{{count}} registro(s)</span>
-                    </div>
+              <div class="report-advice-box">
+                <span>Interpretação</span>
 
-                    <div class="emotion-chart-bar">
-                      <div
-                        class="emotion-chart-fill"
-                        style="width: {{percentage}}%;"
-                      ></div>
-                    </div>
+                <h3>{{reports.weekly.advice.title}}</h3>
+
+                <p>{{reports.weekly.advice.message}}</p>
+              </div>
+
+              <div class="report-risk-box {{#if reports.weekly.riskAnalysis.hasCriticalRisk}}report-risk-critical{{/if}}">
+                <span>Sinais de atenção</span>
+
+                <h3>
+                  {{#if reports.weekly.riskAnalysis.hasRisk}}
+                    Termos sensíveis identificados
+                  {{else}}
+                    Nenhum termo crítico identificado
+                  {{/if}}
+                </h3>
+
+                <p>{{reports.weekly.riskAnalysis.alertMessage}}</p>
+
+                {{#if reports.weekly.riskAnalysis.signals.length}}
+                  <div class="report-risk-list">
+                    {{#each reports.weekly.riskAnalysis.signals}}
+                      <div class="report-risk-item">
+                        <strong>{{category}}</strong>
+
+                        <span>
+                          Ocorrências: {{occurrences}}
+                        </span>
+
+                        <small>
+                          Termos:
+                          {{#each terms}}
+                            {{this}}{{#unless @last}}, {{/unless}}
+                          {{/each}}
+                        </small>
+                      </div>
+                    {{/each}}
                   </div>
-                {{/each}}
+                {{/if}}
               </div>
+
+              <h3 class="report-subtitle">Distribuição emocional</h3>
+
+              {{#if reports.weekly.emotionDistribution.length}}
+                <div class="report-distribution">
+                  {{#each reports.weekly.emotionDistribution}}
+                    <div class="emotion-chart-item">
+                      <div class="emotion-chart-header">
+                        <span>{{label}}</span>
+                        <span>{{count}} registro(s)</span>
+                      </div>
+
+                      <div class="emotion-chart-bar">
+                        <div
+                          class="emotion-chart-fill"
+                          style="width: {{percentage}}%;"
+                        ></div>
+                      </div>
+                    </div>
+                  {{/each}}
+                </div>
+              {{else}}
+                <p class="report-empty-text">
+                  Nenhuma emoção registrada neste período.
+                </p>
+              {{/if}}
+
+              <h3 class="report-subtitle">Gatilhos recorrentes</h3>
+
+              {{#if reports.weekly.triggerDistribution.length}}
+                <div class="report-distribution">
+                  {{#each reports.weekly.triggerDistribution}}
+                    <div class="trigger-chart-item">
+                      <div class="trigger-chart-header">
+                        <span>{{trigger}}</span>
+                        <span>{{count}} ocorrência(s)</span>
+                      </div>
+
+                      <div class="trigger-chart-bar">
+                        <div
+                          class="trigger-chart-fill"
+                          style="width: {{percentage}}%;"
+                        ></div>
+                      </div>
+                    </div>
+                  {{/each}}
+                </div>
+              {{else}}
+                <p class="report-empty-text">
+                  Nenhum gatilho detectado neste período.
+                </p>
+              {{/if}}
+
+              <h3 class="report-subtitle">Registros do período</h3>
+
+              {{#if reports.weekly.records.length}}
+                <div class="report-records-list">
+                  {{#each reports.weekly.records}}
+                    <div class="report-record-item">
+                      <div class="report-record-header">
+                        <span class="record-emotion-badge">
+                          {{emotionLabel}}
+                        </span>
+
+                        <time>{{createdAt}}</time>
+                      </div>
+
+                      <p>{{content}}</p>
+
+                      <div class="report-record-meta">
+                        <span>Intensidade {{intensity}}/10</span>
+
+                        {{#if trigger}}
+                          <span>Gatilhos: {{trigger}}</span>
+                        {{else}}
+                          <span>Gatilhos: não identificado</span>
+                        {{/if}}
+                      </div>
+                    </div>
+                  {{/each}}
+                </div>
+              {{else}}
+                <p class="report-empty-text">
+                  Nenhum registro encontrado neste período.
+                </p>
+              {{/if}}
             </article>
 
             <article class="report-card surface-card">
@@ -63,10 +205,24 @@
 
               <h2>{{reports.monthly.period}}</h2>
 
+              <p class="report-period-comparison">
+                Comparado com: {{reports.monthly.previousPeriod}}
+              </p>
+
               <div class="report-metrics">
                 <div>
                   <span>Total de registros</span>
                   <strong>{{reports.monthly.total}}</strong>
+                </div>
+
+                <div>
+                  <span>Registros no período anterior</span>
+                  <strong>{{reports.monthly.previousTotal}}</strong>
+                </div>
+
+                <div>
+                  <span>Variação de registros</span>
+                  <strong>{{reports.monthly.totalVariation}}</strong>
                 </div>
 
                 <div>
@@ -78,41 +234,158 @@
                   <span>Intensidade média</span>
                   <strong>{{reports.monthly.averageIntensity}}/10</strong>
                 </div>
+
+                <div>
+                  <span>Variação de intensidade</span>
+                  <strong>{{reports.monthly.intensityVariation}}</strong>
+                </div>
               </div>
 
-              <div class="report-distribution">
-                {{#each reports.monthly.emotionDistribution}}
-                  <div class="emotion-chart-item">
-                    <div class="emotion-chart-header">
-                      <span>{{label}}</span>
-                      <span>{{count}} registro(s)</span>
-                    </div>
+              <div class="report-advice-box">
+                <span>Interpretação</span>
 
-                    <div class="emotion-chart-bar">
-                      <div
-                        class="emotion-chart-fill"
-                        style="width: {{percentage}}%;"
-                      ></div>
-                    </div>
+                <h3>{{reports.monthly.advice.title}}</h3>
+
+                <p>{{reports.monthly.advice.message}}</p>
+              </div>
+
+              <div class="report-risk-box {{#if reports.monthly.riskAnalysis.hasCriticalRisk}}report-risk-critical{{/if}}">
+                <span>Sinais de atenção</span>
+
+                <h3>
+                  {{#if reports.monthly.riskAnalysis.hasRisk}}
+                    Termos sensíveis identificados
+                  {{else}}
+                    Nenhum termo crítico identificado
+                  {{/if}}
+                </h3>
+
+                <p>{{reports.monthly.riskAnalysis.alertMessage}}</p>
+
+                {{#if reports.monthly.riskAnalysis.signals.length}}
+                  <div class="report-risk-list">
+                    {{#each reports.monthly.riskAnalysis.signals}}
+                      <div class="report-risk-item">
+                        <strong>{{category}}</strong>
+
+                        <span>
+                          Ocorrências: {{occurrences}}
+                        </span>
+
+                        <small>
+                          Termos:
+                          {{#each terms}}
+                            {{this}}{{#unless @last}}, {{/unless}}
+                          {{/each}}
+                        </small>
+                      </div>
+                    {{/each}}
                   </div>
-                {{/each}}
+                {{/if}}
               </div>
+
+              <h3 class="report-subtitle">Distribuição emocional</h3>
+
+              {{#if reports.monthly.emotionDistribution.length}}
+                <div class="report-distribution">
+                  {{#each reports.monthly.emotionDistribution}}
+                    <div class="emotion-chart-item">
+                      <div class="emotion-chart-header">
+                        <span>{{label}}</span>
+                        <span>{{count}} registro(s)</span>
+                      </div>
+
+                      <div class="emotion-chart-bar">
+                        <div
+                          class="emotion-chart-fill"
+                          style="width: {{percentage}}%;"
+                        ></div>
+                      </div>
+                    </div>
+                  {{/each}}
+                </div>
+              {{else}}
+                <p class="report-empty-text">
+                  Nenhuma emoção registrada neste período.
+                </p>
+              {{/if}}
+
+              <h3 class="report-subtitle">Gatilhos recorrentes</h3>
+
+              {{#if reports.monthly.triggerDistribution.length}}
+                <div class="report-distribution">
+                  {{#each reports.monthly.triggerDistribution}}
+                    <div class="trigger-chart-item">
+                      <div class="trigger-chart-header">
+                        <span>{{trigger}}</span>
+                        <span>{{count}} ocorrência(s)</span>
+                      </div>
+
+                      <div class="trigger-chart-bar">
+                        <div
+                          class="trigger-chart-fill"
+                          style="width: {{percentage}}%;"
+                        ></div>
+                      </div>
+                    </div>
+                  {{/each}}
+                </div>
+              {{else}}
+                <p class="report-empty-text">
+                  Nenhum gatilho detectado neste período.
+                </p>
+              {{/if}}
+
+              <h3 class="report-subtitle">Registros do período</h3>
+
+              {{#if reports.monthly.records.length}}
+                <div class="report-records-list">
+                  {{#each reports.monthly.records}}
+                    <div class="report-record-item">
+                      <div class="report-record-header">
+                        <span class="record-emotion-badge">
+                          {{emotionLabel}}
+                        </span>
+
+                        <time>{{createdAt}}</time>
+                      </div>
+
+                      <p>{{content}}</p>
+
+                      <div class="report-record-meta">
+                        <span>Intensidade {{intensity}}/10</span>
+
+                        {{#if trigger}}
+                          <span>Gatilhos: {{trigger}}</span>
+                        {{else}}
+                          <span>Gatilhos: não identificado</span>
+                        {{/if}}
+                      </div>
+                    </div>
+                  {{/each}}
+                </div>
+              {{else}}
+                <p class="report-empty-text">
+                  Nenhum registro encontrado neste período.
+                </p>
+              {{/if}}
             </article>
           </div>
 
           <article class="report-export-card surface-card">
             <div>
-              <h2>Exportação em PDF</h2>
+              <h2>Aviso importante</h2>
 
               <p>
-                Estrutura preparada para exportar relatórios futuramente. A
-                geração do PDF será adicionada em uma próxima etapa.
+                Os relatórios do Emodia são ferramentas de apoio ao autoconhecimento
+                e não substituem avaliação médica, psicológica ou psiquiátrica.
+                A detecção de termos sensíveis serve apenas como sinal de atenção,
+                não como confirmação de diagnóstico ou situação de risco. Em caso
+                de sofrimento intenso, pensamentos de autoagressão, ameaça, violência
+                ou risco imediato, procure ajuda presencial, uma pessoa de confiança
+                ou serviço de emergência.
               </p>
             </div>
-
-            <button type="button" class="btn-emodia-outline" disabled>
-              Exportar PDF em breve
-            </button>
           </article>
         </section>
       </main>

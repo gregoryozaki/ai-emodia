@@ -20,6 +20,7 @@ import {
   updatePersonalDataController
 } from "../controllers/profile.controller.js"
 import { uploadAvatar } from "../middlewares/upload.middleware.js"
+import { exportEmotionReportPdfController } from "../controllers/report.controller.js"
 
 const webRoutes = Router()
 
@@ -36,7 +37,11 @@ webRoutes.get(
   renderEmotionRecordDetailsPage
 )
 webRoutes.get("/relatorios", ensureAuthenticated, renderReportsPage)
-
+webRoutes.get(
+  "/relatorios/pdf",
+  ensureAuthenticated,
+  exportEmotionReportPdfController
+)
 webRoutes.post(
   "/analises/registros",
   ensureAuthenticated,
