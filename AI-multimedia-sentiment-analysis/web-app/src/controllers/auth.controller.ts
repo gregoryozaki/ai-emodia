@@ -5,6 +5,7 @@ import {
   requestPasswordRecovery,
   resetPassword
 } from "../services/password-recovery.service.js"
+import { passwordResetTokenParamsSchema } from "../validations/auth.validation.js"
 
 const regenerateSession = (req: Request) => {
   return new Promise<void>((resolve, reject) => {
@@ -75,16 +76,16 @@ const renderForgotPasswordPage = (req: Request, res: Response) => {
 }
 
 const renderResetPasswordPage = (req: Request, res: Response) => {
-  const tokenParam = req.params.token
+  const validation = passwordResetTokenParamsSchema.safeParse(req.params)
 
-  if (!tokenParam || Array.isArray(tokenParam)) {
+  if (!validation.success) {
     res.redirect("/recuperar-senha")
     return
   }
 
   res.render("auth/reset-password", {
     title: "Emodia | Redefinir senha",
-    token: tokenParam,
+    token: validation.data.token,
     usePasswordToggle: true
   })
 }
@@ -103,7 +104,14 @@ const registerUserController = async (req: Request, res: Response) => {
       usePasswordToggle: true,
       useRegisterValidation: true,
       error: message,
-      formData: req.body
+      formData: {
+        fullName:
+          typeof req.body.fullName === "string" ? req.body.fullName : "",
+        birthDate:
+          typeof req.body.birthDate === "string" ? req.body.birthDate : "",
+        email: typeof req.body.email === "string" ? req.body.email : "",
+        consentTerm: req.body.consentTerm === "true" ? "true" : undefined
+      }
     })
   }
 }
@@ -127,7 +135,9 @@ const loginUserController = async (req: Request, res: Response) => {
       title: "Emodia | Entrar",
       usePasswordToggle: true,
       error: message,
-      formData: req.body
+      formData: {
+        email: typeof req.body.email === "string" ? req.body.email : ""
+      }
     })
   }
 }
@@ -156,20 +166,22 @@ const requestPasswordRecoveryController = async (
     res.status(400).render("auth/forgot-password", {
       title: "Emodia | Recuperar senha",
       error: message,
-      formData: req.body
+      formData: {
+        email: typeof req.body.email === "string" ? req.body.email : ""
+      }
     })
   }
 }
 
 const resetPasswordController = async (req: Request, res: Response) => {
-  const tokenParam = req.params.token
+  const validation = passwordResetTokenParamsSchema.safeParse(req.params)
 
-  if (!tokenParam || Array.isArray(tokenParam)) {
+  if (!validation.success) {
     res.redirect("/recuperar-senha")
     return
   }
 
-  const token = tokenParam
+  const { token } = validation.data
 
   try {
     await resetPassword({

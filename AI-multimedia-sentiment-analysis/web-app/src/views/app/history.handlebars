@@ -15,6 +15,15 @@
               Consulte suas análises anteriores e filtre por emoção ou período.
             </p>
           </div>
+          {{#if error}}
+          <div
+            class="auth-alert auth-alert-error mb-4"
+            role="alert"
+            data-flash-message
+          >
+            {{error}}
+          </div>
+        {{/if}}
 
           <article class="history-filter-card surface-card">
             <form action="/historico" method="get" class="history-filter-form">

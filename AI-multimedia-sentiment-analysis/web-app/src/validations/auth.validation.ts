@@ -106,6 +106,13 @@ const isAdult = (birthDate: Date) => {
   return age >= 18
 }
 
+const passwordResetTokenSchema = z.preprocess(
+  (value) => {
+    return typeof value === "string" ? value.trim() : ""
+  },
+  z.string().regex(/^[a-f0-9]{64}$/i, "Token de recuperação inválido.")
+)
+
 const registerUserSchema = z
   .object({
     fullName: z.preprocess(
@@ -175,15 +182,13 @@ const requestPasswordRecoverySchema = z.object({
   email: emailSchema
 })
 
+const passwordResetTokenParamsSchema = z.object({
+  token: passwordResetTokenSchema
+})
+
 const resetPasswordSchema = z
   .object({
-    token: z.preprocess(
-      (value) => {
-        return typeof value === "string" ? value.trim() : ""
-      },
-      z.string().regex(/^[a-f0-9]{64}$/i, "Token de recuperação inválido.")
-    ),
-
+    token: passwordResetTokenSchema,
     newPassword: passwordSchema,
     confirmNewPassword: passwordConfirmationSchema
   })
@@ -208,6 +213,7 @@ export {
   loginUserSchema,
   parseBirthDate,
   passwordConfirmationSchema,
+  passwordResetTokenParamsSchema,
   passwordSchema,
   registerUserSchema,
   requestPasswordRecoverySchema,

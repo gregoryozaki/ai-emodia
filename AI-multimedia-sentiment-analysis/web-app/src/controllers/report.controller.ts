@@ -1,14 +1,11 @@
 import type { Request, Response } from "express"
 
-import {
-  getEmotionReportByPeriod,
-  type ReportPeriod
-} from "../services/emotion-record.service.js"
+import { getEmotionReportByPeriod } from "../services/emotion-record.service.js"
 import { generateEmotionReportPdf } from "../services/report-pdf.service.js"
-
-const normalizePeriod = (period?: string): ReportPeriod => {
-  return period === "monthly" ? "monthly" : "weekly"
-}
+import {
+  getValidationMessage,
+  reportPeriodQuerySchema
+} from "../validations/emotion-record.validation.js"
 
 const exportEmotionReportPdfController = async (
   req: Request,
@@ -21,7 +18,14 @@ const exportEmotionReportPdfController = async (
     return
   }
 
-  const period = normalizePeriod(req.query.period?.toString())
+  const validation = reportPeriodQuerySchema.safeParse(req.query)
+
+  if (!validation.success) {
+    res.status(400).send(getValidationMessage(validation.error))
+    return
+  }
+
+  const { period } = validation.data
   const report = await getEmotionReportByPeriod(userId, period)
   const pdfBuffer = await generateEmotionReportPdf(report)
 

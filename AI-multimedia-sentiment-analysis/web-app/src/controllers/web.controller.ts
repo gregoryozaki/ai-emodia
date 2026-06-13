@@ -7,6 +7,11 @@ import {
   getEmotionReports
 } from "../services/emotion-record.service.js"
 import { getUserProfile } from "../services/user.service.js"
+import {
+  emotionHistoryQuerySchema,
+  emotionRecordIdParamsSchema,
+  getValidationMessage
+} from "../validations/emotion-record.validation.js"
 
 const renderHomePage = (_req: Request, res: Response) => {
   res.render("home", {
@@ -63,16 +68,22 @@ const renderHistoryPage = async (req: Request, res: Response) => {
     return
   }
 
-  const historyQuery = {
-    ...(req.query.emotion ? { emotion: req.query.emotion.toString() } : {}),
-    ...(req.query.startDate
-      ? { startDate: req.query.startDate.toString() }
-      : {}),
-    ...(req.query.endDate ? { endDate: req.query.endDate.toString() } : {}),
-    ...(req.query.page ? { page: req.query.page.toString() } : {})
+  const validation = emotionHistoryQuerySchema.safeParse(req.query)
+
+  if (!validation.success) {
+    const history = await getEmotionHistory(userId, {
+      page: 1
+    })
+
+    res.status(400).render("app/history", {
+      title: "Emodia | Histórico",
+      history,
+      error: getValidationMessage(validation.error)
+    })
+    return
   }
 
-  const history = await getEmotionHistory(userId, historyQuery)
+  const history = await getEmotionHistory(userId, validation.data)
 
   res.render("app/history", {
     title: "Emodia | Histórico",
@@ -88,14 +99,14 @@ const renderEmotionRecordDetailsPage = async (req: Request, res: Response) => {
     return
   }
 
-  const recordIdParam = req.params.id
+  const validation = emotionRecordIdParamsSchema.safeParse(req.params)
 
-  if (!recordIdParam || Array.isArray(recordIdParam)) {
-    res.redirect("/historico")
+  if (!validation.success) {
+    res.status(400).send(getValidationMessage(validation.error))
     return
   }
 
-  const recordId = recordIdParam
+  const { id: recordId } = validation.data
 
   try {
     const record = await getEmotionRecordDetails(userId, recordId)

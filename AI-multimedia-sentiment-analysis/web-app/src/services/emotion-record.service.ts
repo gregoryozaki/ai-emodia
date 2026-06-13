@@ -11,9 +11,12 @@ import {
 } from "../repositories/emotion-record.repository.js"
 import { analyzeRiskSignals } from "./risk-analysis.service.js"
 import { analyzeTextEmotion } from "./text-emotion-analysis.service.js"
+
 import {
   parseEmotionContent,
-  parseEmotionTranscript
+  parseEmotionTranscript,
+  type EmotionHistoryQuery,
+  type ReportPeriod
 } from "../validations/emotion-record.validation.js"
 
 type CreateTextEmotionRecordInput = {
@@ -70,15 +73,6 @@ type CreateTranscriptEmotionRecordInput = {
   inputMode: Extract<EmotionInputMode, "AUDIO" | "VIDEO">
   visualAnalysis?: VisualAnalysisInput
 }
-
-type EmotionHistoryQuery = {
-  emotion?: string
-  startDate?: string
-  endDate?: string
-  page?: string
-}
-
-type ReportPeriod = "weekly" | "monthly"
 
 type ReportSummaryRecord = {
   id: string
@@ -140,34 +134,12 @@ const formatDateInput = (date: Date) => {
   return formattedDate ?? ""
 }
 
-const parseStartDate = (date?: string) => {
-  if (!date) {
-    return undefined
-  }
-
-  return new Date(`${date}T00:00:00.000Z`)
+const createStartDate = (date?: string) => {
+  return date ? new Date(`${date}T00:00:00.000Z`) : undefined
 }
 
-const parseEndDate = (date?: string) => {
-  if (!date) {
-    return undefined
-  }
-
-  return new Date(`${date}T23:59:59.999Z`)
-}
-
-const normalizeEmotion = (emotion?: string) => {
-  if (!emotion) {
-    return undefined
-  }
-
-  const normalizedEmotion = emotion.toUpperCase() as EmotionType
-
-  if (!VALID_EMOTIONS.includes(normalizedEmotion)) {
-    return undefined
-  }
-
-  return normalizedEmotion
+const createEndDate = (date?: string) => {
+  return date ? new Date(`${date}T23:59:59.999Z`) : undefined
 }
 
 const getHighestRiskLevel = (levels: RiskLevel[]) => {
@@ -422,17 +394,21 @@ const getEmotionHistory = async (
   userId: string,
   query: EmotionHistoryQuery
 ) => {
-  const page = Number(query.page ?? "1")
-  const safePage = Number.isNaN(page) || page < 1 ? 1 : page
   const perPage = 10
 
-  const emotion = normalizeEmotion(query.emotion)
-  const startDate = parseStartDate(query.startDate)
-  const endDate = parseEndDate(query.endDate)
+  const {
+    emotion,
+    startDate: startDateValue,
+    endDate: endDateValue,
+    page
+  } = query
+
+  const startDate = createStartDate(startDateValue)
+  const endDate = createEndDate(endDateValue)
 
   const filters = {
     userId,
-    page: safePage,
+    page,
     perPage,
     ...(emotion ? { emotion } : {}),
     ...(startDate ? { startDate } : {}),
@@ -462,16 +438,16 @@ const getEmotionHistory = async (
       }
     }),
     total: result.total,
-    currentPage: safePage,
+    currentPage: page,
     totalPages,
-    hasPreviousPage: safePage > 1,
-    hasNextPage: safePage < totalPages,
-    previousPage: safePage - 1,
-    nextPage: safePage + 1,
+    hasPreviousPage: page > 1,
+    hasNextPage: page < totalPages,
+    previousPage: page - 1,
+    nextPage: page + 1,
     filters: {
       emotion: emotion ?? "",
-      startDate: query.startDate ?? "",
-      endDate: query.endDate ?? ""
+      startDate: startDateValue ?? "",
+      endDate: endDateValue ?? ""
     },
     emotions: VALID_EMOTIONS.map((emotionValue) => {
       return {
