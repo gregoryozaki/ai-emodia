@@ -337,11 +337,6 @@ const analyzeTextEmotion = async (
   const normalizedText = normalizeText(trimmedContent)
   const triggers = detectTriggers(normalizedText)
 
-  /*
-   * Mesmo quando o script marca como INDEFINIDO, preservamos a classe
-   * com maior probabilidade porque o banco atual exige uma das seis
-   * emoções. A interface continuará mostrando o nível de confiança.
-   */
   const emotion = prediction.emotion
 
   const intensity = estimateIntensity(

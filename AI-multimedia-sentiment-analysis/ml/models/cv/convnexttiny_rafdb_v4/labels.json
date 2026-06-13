@@ -1,0 +1,36 @@
+{
+  "class_names": [
+    "angry",
+    "disgust",
+    "fear",
+    "happy",
+    "neutral",
+    "sad",
+    "surprise"
+  ],
+  "class_to_index": {
+    "angry": 0,
+    "disgust": 1,
+    "fear": 2,
+    "happy": 3,
+    "neutral": 4,
+    "sad": 5,
+    "surprise": 6
+  },
+  "facial_emotion_to_emodia": {
+    "angry": "RAIVA",
+    "disgust": "NOJO",
+    "fear": "MEDO",
+    "happy": "ALEGRIA",
+    "neutral": "NEUTRAL",
+    "sad": "TRISTEZA",
+    "surprise": "SURPRISE"
+  },
+  "image_size": 224,
+  "model": "convnexttiny_rafdb_facecrop",
+  "notes": [
+    "Expressão facial aparente, não diagnóstico clínico.",
+    "Usar somente como sinal complementar no Emodia.",
+    "Emoção principal deve continuar vindo da análise textual/transcrição."
+  ]
+}
