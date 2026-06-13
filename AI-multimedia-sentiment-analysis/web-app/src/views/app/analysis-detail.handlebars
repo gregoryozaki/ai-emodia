@@ -108,7 +108,7 @@
                   Este resultado vem da análise automática de expressão facial
                   aparente. Ele não define a emoção principal, não realiza
                   diagnóstico e deve ser interpretado apenas como apoio à
-                  análise textual/transcrita.
+                  análise textual ou transcrita.
                 </p>
               </div>
             </div>
@@ -117,8 +117,8 @@
           <article class="detail-card surface-card">
             <div class="detail-header">
               <div>
-                <span class="record-emotion-badge">
-                  {{record.emotionLabel}}
+                <span class="page-badge">
+                  Resultado da análise
                 </span>
 
                 <h2>
@@ -166,6 +166,18 @@
                 </strong>
               </div>
 
+              <div class="detail-item detail-emotion-highlight">
+                <span>Emoção predominante</span>
+
+                <strong>
+                  {{record.emotionLabel}}
+                </strong>
+
+                <p>
+                  Emoção principal identificada no conteúdo enviado.
+                </p>
+              </div>
+
               {{#if record.hasVisualAnalysis}}
                 <div class="detail-item">
                   <span>Sinal visual complementar</span>
@@ -189,7 +201,7 @@
               {{/if}}
 
               {{#if record.riskTerms}}
-                <div class="detail-item">
+                <div class="detail-item detail-item-full">
                   <span>Termos sensíveis</span>
 
                   <strong>
@@ -216,7 +228,8 @@
                 </div>
               {{/if}}
             </div>
-            <div class="detail-card-actions">
+
+            <div class="detail-bottom-actions">
               <a href="/dashboard" class="btn-emodia-primary">
                 Ver no dashboard
               </a>
@@ -229,5 +242,6 @@
         </section>
       </main>
     </div>
+
   </div>
 </section>
