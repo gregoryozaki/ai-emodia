@@ -89,21 +89,38 @@ export const env = cleanEnv(process.env, {
   }),
 
   /*
-   * Visão computacional
+   * Visão computacional — ConvNeXtTiny RAF-DB V4
    */
   EMODIA_CV_ENABLED: bool({
     default: true
+  }),
+
+  EMODIA_CV_DEVICE: str({
+    choices: ["cpu", "cuda"],
+    default: "cpu"
   }),
 
   EMODIA_CV_TIMEOUT_MS: num({
     default: 120000
   }),
 
-  EMODIA_CV_MODEL_PATH: str({
-    default: "../ml/models/cv"
+  EMODIA_CV_FRAME_INTERVAL_SECONDS: num({
+    default: 0.5
   }),
 
-  EMODIA_CV_SCRIPT_PATH: str({
+  EMODIA_CV_MODEL_PATH: str({
+    default:
+      "../ml/models/cv/convnexttiny_rafdb_v4/convnexttiny_rafdb_facecrop.onnx"
+  }),
+  EMODIA_CV_LABELS_PATH: str({
+    default: "../ml/models/cv/convnexttiny_rafdb_v4/labels.json"
+  }),
+
+  EMODIA_CV_FACIAL_SCRIPT_PATH: str({
+    default: "../ml/src/cv/predict_facial_emotion.py"
+  }),
+
+  EMODIA_CV_VIDEO_SCRIPT_PATH: str({
     default: "../ml/src/cv/predict_video_emotion.py"
   })
 })
