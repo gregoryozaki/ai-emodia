@@ -14,8 +14,10 @@ model User {
   email        String   @unique
   passwordHash String
   consentTerm  Boolean  @default(false)
+  avatarPath   String?
 
-  emotionRecords EmotionRecord[]
+  emotionRecords      EmotionRecord[]
+  passwordResetTokens PasswordResetToken[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -38,6 +40,14 @@ enum EmotionInputMode {
   VIDEO
 }
 
+enum RiskLevel {
+  NONE
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
 model EmotionRecord {
   id     String @id @default(uuid())
   userId String
@@ -46,9 +56,21 @@ model EmotionRecord {
   emotion   EmotionType
   inputMode EmotionInputMode @default(TEXT)
 
-  content   String?
+  content    String?
+  transcript String?
+
   intensity Int?
   trigger   String?
+
+  riskLevel   RiskLevel @default(NONE)
+  riskMessage String?
+  riskTerms   String?
+
+  visualEmotion         String?
+  visualEmodiaEmotion   String?
+  visualConfidence      Float?
+  visualConfidenceLevel String?
+  visualAnalysis        Json?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -64,4 +86,20 @@ model Session {
 
   @@index([expire], map: "IDX_session_expire")
   @@map("session")
+}
+
+model PasswordResetToken {
+  id     String @id @default(uuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  tokenHash String
+  expiresAt DateTime
+  usedAt    DateTime?
+
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([tokenHash])
+  @@map("password_reset_tokens")
 }

@@ -127,6 +127,7 @@ exports.Prisma.UserScalarFieldEnum = {
   email: 'email',
   passwordHash: 'passwordHash',
   consentTerm: 'consentTerm',
+  avatarPath: 'avatarPath',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -137,8 +138,17 @@ exports.Prisma.EmotionRecordScalarFieldEnum = {
   emotion: 'emotion',
   inputMode: 'inputMode',
   content: 'content',
+  transcript: 'transcript',
   intensity: 'intensity',
   trigger: 'trigger',
+  riskLevel: 'riskLevel',
+  riskMessage: 'riskMessage',
+  riskTerms: 'riskTerms',
+  visualEmotion: 'visualEmotion',
+  visualEmodiaEmotion: 'visualEmodiaEmotion',
+  visualConfidence: 'visualConfidence',
+  visualConfidenceLevel: 'visualConfidenceLevel',
+  visualAnalysis: 'visualAnalysis',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -149,9 +159,23 @@ exports.Prisma.SessionScalarFieldEnum = {
   expire: 'expire'
 };
 
+exports.Prisma.PasswordResetTokenScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  tokenHash: 'tokenHash',
+  expiresAt: 'expiresAt',
+  usedAt: 'usedAt',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
+};
+
+exports.Prisma.NullableJsonNullValueInput = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull
 };
 
 exports.Prisma.JsonNullValueInput = {
@@ -188,10 +212,19 @@ exports.EmotionInputMode = exports.$Enums.EmotionInputMode = {
   VIDEO: 'VIDEO'
 };
 
+exports.RiskLevel = exports.$Enums.RiskLevel = {
+  NONE: 'NONE',
+  LOW: 'LOW',
+  MEDIUM: 'MEDIUM',
+  HIGH: 'HIGH',
+  CRITICAL: 'CRITICAL'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   EmotionRecord: 'EmotionRecord',
-  Session: 'Session'
+  Session: 'Session',
+  PasswordResetToken: 'PasswordResetToken'
 };
 
 /**

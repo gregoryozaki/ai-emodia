@@ -1,0 +1,535 @@
+<section class="analysis-page profile-page">
+  <div class="container-page">
+    <div class="analysis-app-layout">
+      <main class="analysis-main-content">
+        <section class="analysis-internal-section">
+          <div class="analysis-section-title">
+            <span class="page-badge">Perfil</span>
+
+            <h1>
+              Conta e
+              <span class="text-gradient">privacidade</span>.
+            </h1>
+
+            <p>
+              Visualize seus dados, gerencie sua foto de perfil e controle
+              opções sensíveis da conta.
+            </p>
+          </div>
+
+          {{#if success}}
+            <div class="auth-alert auth-alert-success mb-4" data-flash-message>
+              {{success}}
+            </div>
+          {{/if}}
+
+          {{#if error}}
+            <div class="auth-alert auth-alert-error mb-4" data-flash-message>
+              {{error}}
+            </div>
+          {{/if}}
+
+          <article class="profile-hero-card surface-card">
+            <div class="profile-hero-left">
+              {{#if profile.avatarPath}}
+                <img
+                  src="{{profile.avatarPath}}"
+                  alt="Foto de perfil"
+                  class="profile-hero-avatar"
+                />
+              {{else}}
+                <div class="profile-hero-avatar profile-hero-avatar-empty">
+                  👤
+                </div>
+              {{/if}}
+
+              <div>
+                <h2>{{profile.fullName}}</h2>
+
+                <p>
+                  {{profile.email}}
+                </p>
+
+                <span class="profile-status-badge">
+                  Conta ativa
+                </span>
+              </div>
+            </div>
+
+            <div class="profile-hero-actions">
+              <button
+                type="button"
+                class="btn-emodia-primary"
+                data-bs-toggle="modal"
+                data-bs-target="#editPersonalDataModal"
+              >
+                Editar dados pessoais
+              </button>
+
+              <button
+                type="button"
+                class="btn-emodia-outline"
+                data-bs-toggle="modal"
+                data-bs-target="#changePasswordModal"
+              >
+                Alterar senha
+              </button>
+
+              <button
+                type="button"
+                class="btn-emodia-outline"
+                data-bs-toggle="modal"
+                data-bs-target="#avatarModal"
+              >
+                Alterar foto
+              </button>
+            </div>
+          </article>
+
+          <div class="row g-4 mt-1">
+            <div class="col-12 col-lg-8">
+              <article class="profile-details-card surface-card">
+                <h2>Dados da conta</h2>
+
+                <div class="profile-details-grid">
+                  <div class="profile-detail-item">
+                    <span>Nome completo</span>
+                    <strong>{{profile.fullName}}</strong>
+                  </div>
+
+                  <div class="profile-detail-item">
+                    <span>E-mail</span>
+                    <strong>{{profile.email}}</strong>
+                  </div>
+
+                  <div class="profile-detail-item">
+                    <span>Data de nascimento</span>
+                    <strong>{{profile.birthDate}}</strong>
+                  </div>
+
+                  <div class="profile-detail-item">
+                    <span>Idade</span>
+                    <strong>{{profile.age}} anos</strong>
+                  </div>
+
+                  <div class="profile-detail-item">
+                    <span>Conta criada em</span>
+                    <strong>{{profile.createdAt}}</strong>
+                  </div>
+
+                  <div class="profile-detail-item">
+                    <span>Termo LGPD</span>
+                    <strong>{{profile.consentTerm}}</strong>
+                  </div>
+                </div>
+              </article>
+            </div>
+
+            <div class="col-12 col-lg-4">
+              <article class="profile-security-card surface-card">
+                <h2>Privacidade</h2>
+
+                <p>
+                  Seus registros emocionais são associados à sua conta. O Emodia
+                  é uma ferramenta de apoio ao autoconhecimento, não um
+                  diagnóstico médico, psicológico ou psiquiátrico.
+                </p>
+              </article>
+            </div>
+          </div>
+
+          <article class="profile-danger-zone surface-card">
+            <div>
+              <span class="profile-danger-label">
+                Zona perigosa
+              </span>
+
+              <h2>Excluir conta</h2>
+
+              <p>
+                Esta ação remove sua conta e seus registros emocionais. Use
+                apenas se tiver certeza.
+              </p>
+            </div>
+
+            <button
+              type="button"
+              class="btn-emodia-outline"
+              data-bs-toggle="modal"
+              data-bs-target="#deleteAccountModal"
+            >
+              Excluir conta
+            </button>
+          </article>
+        </section>
+      </main>
+    </div>
+  </div>
+</section>
+
+<div
+  class="modal fade"
+  id="editPersonalDataModal"
+  tabindex="-1"
+  aria-labelledby="editPersonalDataModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content profile-modal">
+      <div class="modal-header">
+        <h2 class="modal-title fs-5" id="editPersonalDataModalLabel">
+          Editar dados pessoais
+        </h2>
+
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          data-bs-dismiss="modal"
+          aria-label="Fechar"
+        ></button>
+      </div>
+
+      <form action="/perfil/dados" method="post">
+        <div class="modal-body">
+          <div class="profile-edit-form">
+            <div class="auth-field">
+              <label for="fullName" class="form-label">
+                Nome completo
+              </label>
+
+              <input
+                type="text"
+                id="fullName"
+                name="fullName"
+                class="form-control auth-input"
+                value="{{profile.fullName}}"
+                minlength="3"
+                maxlength="120"
+                autocomplete="name"
+                required
+              />
+            </div>
+
+            <div class="auth-field">
+              <label for="email" class="form-label">
+                E-mail
+              </label>
+
+              <input
+                type="email"
+                id="email"
+                name="email"
+                class="form-control auth-input"
+                value="{{profile.email}}"
+                maxlength="254"
+                autocomplete="email"
+                required
+              />
+            </div>
+
+            <div class="auth-field">
+              <label for="birthDate" class="form-label">
+                Data de nascimento
+              </label>
+
+              <input
+                type="date"
+                id="birthDate"
+                name="birthDate"
+                class="form-control auth-input"
+                value="{{profile.birthDateInput}}"
+                required
+              />
+
+              <small class="profile-help-text">
+                O Emodia é permitido apenas para usuários com 18 anos ou mais.
+              </small>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn-emodia-outline"
+            data-bs-dismiss="modal"
+          >
+            Cancelar
+          </button>
+
+          <button type="submit" class="btn-emodia-primary">
+            Salvar dados
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div
+  class="modal fade"
+  id="changePasswordModal"
+  tabindex="-1"
+  aria-labelledby="changePasswordModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content profile-modal">
+      <div class="modal-header">
+        <h2 class="modal-title fs-5" id="changePasswordModalLabel">
+          Alterar senha
+        </h2>
+
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          data-bs-dismiss="modal"
+          aria-label="Fechar"
+        ></button>
+      </div>
+
+      <form action="/perfil/senha" method="post">
+        <div class="modal-body">
+          <div class="profile-edit-form">
+            <div class="auth-field">
+              <label for="currentPassword" class="form-label">
+                Senha atual
+              </label>
+
+              <div class="password-field">
+                <input
+                  type="password"
+                  id="currentPassword"
+                  name="currentPassword"
+                  class="form-control auth-input"
+                  maxlength="72"
+                  autocomplete="current-password"
+                  required
+                />
+
+                <button
+                  type="button"
+                  class="password-toggle"
+                  data-toggle-password="currentPassword"
+                  aria-label="Mostrar ou esconder senha"
+                >
+                  👁
+                </button>
+              </div>
+            </div>
+
+            <div class="auth-field">
+              <label for="newPassword" class="form-label">
+                Nova senha
+              </label>
+
+              <div class="password-field">
+                <input
+                  type="password"
+                  id="newPassword"
+                  name="newPassword"
+                  class="form-control auth-input"
+                  minlength="8"
+                  maxlength="72"
+                  autocomplete="new-password"
+                  required
+                />
+
+                <button
+                  type="button"
+                  class="password-toggle"
+                  data-toggle-password="newPassword"
+                  aria-label="Mostrar ou esconder senha"
+                >
+                  👁
+                </button>
+              </div>
+
+              <small class="profile-help-text">
+                Use entre 8 e 72 caracteres, com letra maiúscula, minúscula,
+                número e caractere especial.
+              </small>
+            </div>
+
+            <div class="auth-field">
+              <label for="confirmNewPassword" class="form-label">
+                Confirmar nova senha
+              </label>
+
+              <div class="password-field">
+                <input
+                  type="password"
+                  id="confirmNewPassword"
+                  name="confirmNewPassword"
+                  class="form-control auth-input"
+                  autocomplete="new-password"
+                  required
+                />
+
+                <button
+                  type="button"
+                  class="password-toggle"
+                  data-toggle-password="confirmNewPassword"
+                  aria-label="Mostrar ou esconder senha"
+                >
+                  👁
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn-emodia-outline"
+            data-bs-dismiss="modal"
+          >
+            Cancelar
+          </button>
+
+          <button type="submit" class="btn-emodia-primary">
+            Alterar senha
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div
+  class="modal fade"
+  id="avatarModal"
+  tabindex="-1"
+  aria-labelledby="avatarModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content profile-modal">
+      <div class="modal-header">
+        <h2 class="modal-title fs-5" id="avatarModalLabel">
+          Alterar foto de perfil
+        </h2>
+
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          data-bs-dismiss="modal"
+          aria-label="Fechar"
+        ></button>
+      </div>
+
+      <form action="/perfil/avatar" method="post" enctype="multipart/form-data">
+        <div class="modal-body">
+          <p class="profile-modal-text">
+            Envie uma imagem JPG, PNG ou WEBP com até 2 MB.
+          </p>
+
+          <div class="profile-avatar-preview">
+            {{#if profile.avatarPath}}
+              <img
+                src="{{profile.avatarPath}}"
+                alt="Prévia da foto de perfil"
+                id="avatarPreviewImage"
+              />
+            {{else}}
+              <div id="avatarPreviewFallback">
+                👤
+              </div>
+            {{/if}}
+          </div>
+
+          <label class="profile-file-picker">
+            <input
+              type="file"
+              name="avatar"
+              id="avatarInput"
+              accept="image/jpeg,image/png,image/webp"
+              required
+            />
+
+            <span id="avatarFileLabel">
+              Escolher imagem
+            </span>
+          </label>
+        </div>
+
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn-emodia-outline"
+            data-bs-dismiss="modal"
+          >
+            Cancelar
+          </button>
+
+          <button type="submit" class="btn-emodia-primary">
+            Atualizar foto
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div
+  class="modal fade"
+  id="deleteAccountModal"
+  tabindex="-1"
+  aria-labelledby="deleteAccountModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content profile-modal profile-delete-modal">
+      <div class="modal-header">
+        <h2 class="modal-title fs-5" id="deleteAccountModalLabel">
+          Confirmar exclusão da conta
+        </h2>
+
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          data-bs-dismiss="modal"
+          aria-label="Fechar"
+        ></button>
+      </div>
+
+      <form action="/perfil/excluir" method="post">
+        <div class="modal-body">
+          <p>
+            Para confirmar, digite
+            <strong>EXCLUIR</strong>
+            no campo abaixo. Seus registros emocionais também serão removidos.
+          </p>
+
+          <input
+            type="text"
+            name="confirmation"
+            class="form-control auth-input"
+            minlength="7"
+            maxlength="7"
+            pattern="EXCLUIR"
+            title="Digite exatamente EXCLUIR."
+            placeholder="Digite EXCLUIR"
+            autocomplete="off"
+            required
+          />
+        </div>
+
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn-emodia-outline"
+            data-bs-dismiss="modal"
+          >
+            Cancelar
+          </button>
+
+          <button type="submit" class="btn-emodia-primary">
+            Confirmar exclusão
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

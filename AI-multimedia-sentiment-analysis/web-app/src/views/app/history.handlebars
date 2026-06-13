@@ -1,0 +1,152 @@
+<section class="analysis-page history-page">
+  <div class="container-page">
+    <div class="analysis-app-layout">
+      <main class="analysis-main-content">
+        <section class="analysis-internal-section">
+          <div class="analysis-section-title">
+            <span class="page-badge">Histórico</span>
+
+            <h1>
+              Registros
+              <span class="text-gradient">emocionais</span>.
+            </h1>
+
+            <p>
+              Consulte suas análises anteriores e filtre por emoção ou período.
+            </p>
+          </div>
+          {{#if error}}
+          <div
+            class="auth-alert auth-alert-error mb-4"
+            role="alert"
+            data-flash-message
+          >
+            {{error}}
+          </div>
+        {{/if}}
+
+          <article class="history-filter-card surface-card">
+            <form action="/historico" method="get" class="history-filter-form">
+              <div class="analysis-field">
+                <label for="emotion">Emoção</label>
+
+                <select id="emotion" name="emotion" class="form-select">
+                  <option value="">Todas</option>
+
+                  {{#each history.emotions}}
+                    <option value="{{value}}" {{#if selected}}selected{{/if}}>
+                      {{label}}
+                    </option>
+                  {{/each}}
+                </select>
+              </div>
+
+              <div class="analysis-field">
+                <label for="startDate">Data inicial</label>
+
+                <input
+                  type="date"
+                  id="startDate"
+                  name="startDate"
+                  value="{{history.filters.startDate}}"
+                  class="form-control"
+                />
+              </div>
+
+              <div class="analysis-field">
+                <label for="endDate">Data final</label>
+
+                <input
+                  type="date"
+                  id="endDate"
+                  name="endDate"
+                  value="{{history.filters.endDate}}"
+                  class="form-control"
+                />
+              </div>
+
+              <div class="history-filter-actions">
+                <button type="submit" class="btn-emodia-primary">
+                  Filtrar
+                </button>
+
+                <a href="/historico" class="btn-emodia-outline">
+                  Limpar
+                </a>
+              </div>
+            </form>
+          </article>
+
+          <article class="history-list-card surface-card">
+            <div class="history-list-header">
+              <h2>Histórico completo</h2>
+
+              <span>
+                {{history.total}} registro(s)
+              </span>
+            </div>
+
+            {{#if history.records.length}}
+              <div class="history-list">
+                {{#each history.records}}
+                  <a href="/analises/{{id}}" class="history-item">
+                    <div>
+                      <span class="record-emotion-badge">
+                        {{emotionLabel}}
+                      </span>
+
+                      <h3>
+                        {{createdAt}}
+                      </h3>
+
+                      <p>
+                        {{content}}
+                      </p>
+                    </div>
+
+                    <div class="history-item-meta">
+                      <strong>Intensidade {{intensity}}/10</strong>
+                      <span>{{inputMode}}</span>
+                    </div>
+                  </a>
+                {{/each}}
+              </div>
+
+              <div class="history-pagination">
+                {{#if history.hasPreviousPage}}
+                  <a
+                    class="btn-emodia-outline"
+                    href="/historico?page={{history.previousPage}}&emotion={{history.filters.emotion}}&startDate={{history.filters.startDate}}&endDate={{history.filters.endDate}}"
+                  >
+                    Anterior
+                  </a>
+                {{/if}}
+
+                <span>
+                  Página {{history.currentPage}} de {{history.totalPages}}
+                </span>
+
+                {{#if history.hasNextPage}}
+                  <a
+                    class="btn-emodia-outline"
+                    href="/historico?page={{history.nextPage}}&emotion={{history.filters.emotion}}&startDate={{history.filters.startDate}}&endDate={{history.filters.endDate}}"
+                  >
+                    Próxima
+                  </a>
+                {{/if}}
+              </div>
+            {{else}}
+              <div class="empty-state-card">
+                <h2>Nenhum registro encontrado</h2>
+
+                <p>
+                  Tente ajustar os filtros ou criar uma nova análise emocional.
+                </p>
+              </div>
+            {{/if}}
+          </article>
+        </section>
+      </main>
+    </div>
+  </div>
+</section>

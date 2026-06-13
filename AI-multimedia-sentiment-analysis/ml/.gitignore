@@ -1,0 +1,65 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyd
+*.so
+
+# Ambientes virtuais
+.venv/
+venv/
+env/
+ENV/
+.python-version
+
+# Conda
+.conda/
+conda-meta/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Ferramentas e caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.cache/
+
+# Hugging Face, Torch e modelos baixados automaticamente
+huggingface/
+.huggingface/
+torch_cache/
+checkpoints/
+
+# Arquivos temporários de processamento
+tmp/
+temp/
+outputs/
+runs/
+
+# Datasets extraídos ou baixados temporariamente
+datasets/raw/
+datasets/cache/
+datasets/downloads/
+datasets/cv/samples/
+
+# Vídeos, áudios e imagens temporários
+*.wav
+*.webm
+*.mkv
+*.avi
+
+# Manter as amostras versionadas
+!datasets/cv/samples/
+!datasets/cv/samples/**
+
+# Logs
+*.log
+
+# Sistema e editores
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

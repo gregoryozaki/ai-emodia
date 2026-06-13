@@ -7,7 +7,9 @@ import {
   renderForgotPasswordPage,
   renderLoginPage,
   renderRegisterPage,
-  renderResetPasswordPage
+  renderResetPasswordPage,
+  requestPasswordRecoveryController,
+  resetPasswordController
 } from "../controllers/auth.controller.js"
 
 const authRoutes = Router()
@@ -18,9 +20,12 @@ authRoutes.post("/login", loginUserController)
 authRoutes.get("/cadastro", renderRegisterPage)
 authRoutes.post("/cadastro", registerUserController)
 
+authRoutes.get("/recuperar-senha", renderForgotPasswordPage)
+authRoutes.post("/recuperar-senha", requestPasswordRecoveryController)
+
+authRoutes.get("/redefinir-senha/:token", renderResetPasswordPage)
+authRoutes.post("/redefinir-senha/:token", resetPasswordController)
+
 authRoutes.post("/logout", logoutUserController)
 
-authRoutes.get("/recuperar-senha", renderForgotPasswordPage)
-authRoutes.get("/redefinir-senha", renderResetPasswordPage)
-
-export default authRoutes
+export { authRoutes }

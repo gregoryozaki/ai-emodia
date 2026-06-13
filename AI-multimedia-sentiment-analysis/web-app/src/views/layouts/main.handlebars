@@ -9,6 +9,9 @@
   </head>
   <body>
     {{> navbar}}
+    {{#if isAuthenticated}}
+      {{> app-sidebar}}
+    {{/if}}
 
     <main>
       {{{body}}}
@@ -17,10 +20,13 @@
     {{> footer}}
 
     <script src="/js/bootstrap.bundle.min.js"></script>
-    <script src="/js/main.js"></script>
 
     {{#if useEmotionGauge}}
       <script src="/js/emotion-gauge.js"></script>
+    {{/if}}
+
+    {{#if useEmotionTemporalChart}}
+      <script src="/js/emotion-temporal-chart.js"></script>
     {{/if}}
 
     {{#if usePasswordToggle}}
@@ -29,6 +35,27 @@
 
     {{#if useRegisterValidation}}
       <script src="/js/register-validation.js"></script>
+    {{/if}}
+    
+    <script src="/js/flash-message.js"></script>
+    {{#if useAvatarPreview}}
+      <script src="/js/avatar-preview.js"></script>
+    {{/if}}
+    
+    {{#if useNewAnalysisTabs}}
+      <script src="/js/new-analysis-tabs.js"></script>
+    {{/if}}
+
+    {{#if useAudioRecorder}}
+      <script src="/js/audio-recorder.js"></script>
+    {{/if}}
+
+    {{#if useVideoRecorder}}
+      <script src="/js/video-recorder.js"></script>
+    {{/if}}
+
+    {{#if useAnalysisSubmitLoading}}
+      <script src="/js/analysis-submit-loading.js"></script>
     {{/if}}
   </body>
 </html>

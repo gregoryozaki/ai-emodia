@@ -1,0 +1,387 @@
+<section class="analysis-page new-analysis-page">
+  <div class="container-page">
+    <div class="analysis-app-layout">
+      <main class="analysis-main-content">
+        <section class="analysis-internal-section">
+          <div class="analysis-section-title">
+            <span class="page-badge">Nova análise</span>
+            <h1>
+              Registrar novo
+              <span class="text-gradient">relato emocional</span>.
+            </h1>
+
+            <p>
+              Escolha como deseja registrar seu desabafo. O Emodia analisará o
+              conteúdo para identificar emoção, intensidade, gatilhos e sinais
+              de atenção.
+            </p>
+          </div>
+
+          {{#if error}}
+            <div
+              class="auth-alert auth-alert-error mb-4"
+              role="alert"
+              data-flash-message
+            >
+              {{error}}
+            </div>
+          {{/if}}
+
+          <div
+            class="input-mode-tabs"
+            role="tablist"
+            aria-label="Tipo de entrada emocional"
+          >
+            <button
+              class="input-mode-tab active"
+              type="button"
+              data-input-tab="text"
+            >
+              <span>✍️</span>
+              Texto
+            </button>
+
+            <button class="input-mode-tab" type="button" data-input-tab="audio">
+              <span>🎙️</span>
+              Áudio
+            </button>
+
+            <button class="input-mode-tab" type="button" data-input-tab="video">
+              <span>📹</span>
+              Vídeo em tempo real
+            </button>
+          </div>
+
+          <div class="input-mode-panels">
+            <article class="input-mode-panel active" data-input-panel="text">
+              <div class="analysis-form-card surface-card">
+                <div class="analysis-form-header">
+                  <span class="page-badge">Entrada por texto</span>
+
+                  <h2>Escreva seu relato</h2>
+
+                  <p>
+                    Descreva como você está se sentindo, o que aconteceu e o que
+                    pode ter provocado esse estado emocional.
+                  </p>
+                </div>
+
+                <form
+                  action="/analises/registros"
+                  method="post"
+                  class="analysis-form"
+                  data-analysis-submit-form
+                  data-analysis-loading-message="Analisando seu relato emocional..."
+                >
+                  <label for="content">
+                    Relato emocional
+                  </label>
+
+                  <textarea
+                    id="content"
+                    name="content"
+                    rows="9"
+                    minlength="10"
+                    maxlength="5000"
+                    placeholder="Exemplo: Hoje me senti muito ansioso por causa da faculdade..."
+                    required
+                  >{{formData.content}}</textarea>
+
+                  <small>
+                    Use entre 10 e 5.000 caracteres.
+                  </small>
+
+                  <div class="analysis-form-warning">
+                    <strong>Importante:</strong>
+                    se o relato contiver sinais de sofrimento intenso,
+                    violência, abuso ou risco, o Emodia mostrará uma mensagem de
+                    atenção e orientação de apoio.
+                  </div>
+
+                  <button type="submit" class="btn-emodia-primary">
+                    Enviar
+                  </button>
+                </form>
+              </div>
+            </article>
+
+            <article class="input-mode-panel" data-input-panel="audio">
+              <div class="analysis-form-card surface-card">
+                <div class="analysis-form-header">
+                  <span class="page-badge">Entrada por áudio</span>
+
+                  <h2>Fale seu relato</h2>
+
+                  <p>
+                    Grave sua fala, escute a prévia e revise a transcrição
+                    automática antes de enviar. O áudio não será salvo no banco.
+                  </p>
+                </div>
+
+                <div class="audio-recorder-card" data-audio-recorder>
+                  <div class="audio-recorder-top">
+                    <div class="audio-recorder-visual" id="audioRecorderVisual">
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                    </div>
+
+                    <div>
+                      <strong id="audioRecorderStatus">
+                        Pronto para gravar
+                      </strong>
+
+                      <p id="audioRecorderHelper">
+                        Clique em iniciar, fale seu relato e finalize quando
+                        terminar.
+                      </p>
+                    </div>
+
+                    <div class="audio-recorder-timer" id="audioRecorderTimer">
+                      00:00
+                    </div>
+                  </div>
+
+                  <div class="audio-recorder-actions">
+                    <button
+                      type="button"
+                      class="btn-emodia-primary"
+                      id="startAudioRecording"
+                    >
+                      🎙️ Iniciar gravação
+                    </button>
+
+                    <button
+                      type="button"
+                      class="btn-emodia-outline"
+                      id="stopAudioRecording"
+                      hidden
+                    >
+                      ⏹ Parar gravação
+                    </button>
+
+                    <button
+                      type="button"
+                      class="btn-emodia-outline"
+                      id="cancelAudioRecording"
+                      hidden
+                    >
+                      ✕ Cancelar
+                    </button>
+                  </div>
+
+                  <div class="audio-preview-box" id="audioPreviewBox" hidden>
+                    <span>Prévia do áudio gravado</span>
+
+                    <audio id="audioRecordingPreview" controls></audio>
+                  </div>
+
+                  <div
+                    class="audio-transcription-status"
+                    id="audioTranscriptionStatus"
+                    role="status"
+                    aria-live="polite"
+                    hidden
+                  >
+                    Transcrevendo áudio automaticamente...
+                  </div>
+                </div>
+
+                <form
+                  action="/analises/transcricao"
+                  method="post"
+                  class="analysis-form"
+                  id="audioAnalysisForm"
+                  data-analysis-submit-form
+                  data-analysis-loading-message="Analisando a transcrição do áudio..."
+                  hidden
+                >
+                  <input type="hidden" name="inputMode" value="AUDIO" />
+
+                  <label for="audioTranscript">
+                    Transcrição do áudio
+                  </label>
+
+                  <textarea
+                    id="audioTranscript"
+                    name="transcript"
+                    rows="8"
+                    minlength="10"
+                    maxlength="5000"
+                    placeholder="A transcrição automática aparecerá aqui. Você poderá editar antes de enviar."
+                    required
+                  >{{formData.transcript}}</textarea>
+
+                  <small>
+                    Use entre 10 e 5.000 caracteres.
+                  </small>
+
+                  <div class="analysis-form-warning">
+                    O áudio original não será salvo. Apenas a transcrição
+                    revisada e a análise emocional serão registradas.
+                  </div>
+
+                  <button type="submit" class="btn-emodia-primary">
+                    Enviar
+                  </button>
+                </form>
+              </div>
+            </article>
+
+            <article class="input-mode-panel" data-input-panel="video">
+              <div class="analysis-form-card surface-card">
+                <div class="analysis-form-header">
+                  <span class="page-badge">Entrada por vídeo</span>
+
+                  <h2>Relato com câmera em tempo real</h2>
+
+                  <p>
+                    Grave seu relato em vídeo, revise a prévia e edite a
+                    transcrição automática antes de enviar. O vídeo não será
+                    salvo no banco.
+                  </p>
+                </div>
+
+                <div class="video-recorder-card" data-video-recorder>
+                  <div class="video-recorder-top">
+                    <div class="video-recorder-visual" id="videoRecorderVisual">
+                      📹
+                    </div>
+
+                    <div>
+                      <strong id="videoRecorderStatus">
+                        Câmera pronta para iniciar
+                      </strong>
+
+                      <p id="videoRecorderHelper">
+                        Clique em abrir câmera para preparar a gravação.
+                      </p>
+                    </div>
+
+                    <div class="video-recorder-timer" id="videoRecorderTimer">
+                      00:00
+                    </div>
+                  </div>
+
+                  <div class="video-live-box" id="videoLiveBox" hidden>
+                    <span>Prévia da câmera</span>
+
+                    <video
+                      id="videoLivePreview"
+                      autoplay
+                      muted
+                      playsinline
+                    ></video>
+                  </div>
+
+                  <div class="video-recorder-actions">
+                    <button
+                      type="button"
+                      class="btn-emodia-primary"
+                      id="openVideoCamera"
+                    >
+                      📹 Abrir câmera
+                    </button>
+
+                    <button
+                      type="button"
+                      class="btn-emodia-primary"
+                      id="startVideoRecording"
+                      hidden
+                    >
+                      🔴 Iniciar gravação
+                    </button>
+
+                    <button
+                      type="button"
+                      class="btn-emodia-outline"
+                      id="stopVideoRecording"
+                      hidden
+                    >
+                      ⏹ Parar gravação
+                    </button>
+
+                    <button
+                      type="button"
+                      class="btn-emodia-outline"
+                      id="cancelVideoRecording"
+                      hidden
+                    >
+                      ✕ Cancelar
+                    </button>
+                  </div>
+
+                  <div class="video-preview-box" id="videoPreviewBox" hidden>
+                    <span>Prévia do vídeo gravado</span>
+
+                    <video
+                      id="videoRecordingPreview"
+                      controls
+                      playsinline
+                    ></video>
+                  </div>
+
+                  <div
+                    class="video-transcription-status"
+                    id="videoTranscriptionStatus"
+                    role="status"
+                    aria-live="polite"
+                    hidden
+                  >
+                    Transcrevendo áudio do vídeo automaticamente...
+                  </div>
+                </div>
+
+                <form
+                  action="/analises/transcricao"
+                  method="post"
+                  class="analysis-form"
+                  id="videoAnalysisForm"
+                  data-analysis-submit-form
+                  data-analysis-loading-message="Analisando a transcrição e o sinal visual..."
+                  hidden
+                >
+                  <input type="hidden" name="inputMode" value="VIDEO" />
+
+                  <input
+                    type="hidden"
+                    name="visualAnalysis"
+                    id="videoVisualAnalysisInput"
+                  />
+
+                  <label for="videoTranscript">
+                    Transcrição do áudio do vídeo
+                  </label>
+
+                  <textarea
+                    id="videoTranscript"
+                    name="transcript"
+                    rows="8"
+                    minlength="10"
+                    maxlength="5000"
+                    placeholder="A transcrição automática do vídeo aparecerá aqui. Você poderá editar antes de enviar."
+                    required
+                  >{{formData.transcript}}</textarea>
+
+                  <small>
+                    Use entre 10 e 5.000 caracteres.
+                  </small>
+
+                  <div class="analysis-form-warning">
+                    O vídeo original não será salvo. Apenas a transcrição
+                    revisada, a análise emocional e o sinal visual complementar
+                    serão registrados.
+                  </div>
+
+                  <button type="submit" class="btn-emodia-primary">
+                    Enviar
+                  </button>
+                </form>
+              </div>
+            </article>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+</section>

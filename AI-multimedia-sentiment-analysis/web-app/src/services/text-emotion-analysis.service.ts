@@ -1,3 +1,10 @@
+import { execFile } from "node:child_process"
+import { fileURLToPath } from "node:url"
+import path from "node:path"
+import { promisify } from "node:util"
+
+import { env } from "../config/env.js"
+
 type EmotionType =
   | "ALEGRIA"
   | "TRISTEZA"
@@ -6,122 +13,60 @@ type EmotionType =
   | "NOJO"
   | "ANSIEDADE"
 
+type ConfidenceLevel = "LOW" | "MEDIUM" | "HIGH"
+
+type TextEmotionScores = Record<EmotionType, number>
+
+type BertimbauPrediction = {
+  emotion: EmotionType
+  emodiaEmotion: EmotionType | "INDEFINIDO"
+  confidence: number
+  confidencePercent: number
+  confidenceLevel: ConfidenceLevel
+  accepted: boolean
+  scores: Partial<TextEmotionScores>
+  model: string
+  device: string
+  maxLength: number
+  warning: string
+}
+
 type TextEmotionAnalysisResult = {
   emotion: EmotionType
   intensity: number
   triggers: string[]
   summary: string
+  confidence: number
+  confidenceLevel: ConfidenceLevel
+  scores: Partial<TextEmotionScores>
+  model: string
+  warning: string
 }
 
-type EmotionKeywordGroup = {
-  emotion: EmotionType
-  keywords: string[]
+const execFileAsync = promisify(execFile)
+
+const currentFilePath = fileURLToPath(import.meta.url)
+const currentDirectory = path.dirname(currentFilePath)
+
+const WEB_APP_ROOT = path.resolve(currentDirectory, "../..")
+const PROJECT_ROOT = path.resolve(WEB_APP_ROOT, "..")
+
+const resolveFromWebApp = (configuredPath: string) => {
+  return path.resolve(WEB_APP_ROOT, configuredPath)
 }
 
-const emotionKeywordGroups: EmotionKeywordGroup[] = [
-  {
-    emotion: "ALEGRIA",
-    keywords: [
-      "feliz",
-      "alegre",
-      "animado",
-      "animada",
-      "contente",
-      "grato",
-      "grata",
-      "orgulhoso",
-      "orgulhosa",
-      "bem",
-      "leve",
-      "motivado",
-      "motivada"
-    ]
-  },
-  {
-    emotion: "TRISTEZA",
-    keywords: [
-      "triste",
-      "sozinho",
-      "sozinha",
-      "chateado",
-      "chateada",
-      "desanimado",
-      "desanimada",
-      "vazio",
-      "vazia",
-      "chorar",
-      "cansado",
-      "cansada",
-      "sem vontade"
-    ]
-  },
-  {
-    emotion: "RAIVA",
-    keywords: [
-      "raiva",
-      "irritado",
-      "irritada",
-      "ódio",
-      "estressado",
-      "estressada",
-      "explodir",
-      "revoltado",
-      "revoltada",
-      "nervoso",
-      "nervosa"
-    ]
-  },
-  {
-    emotion: "MEDO",
-    keywords: [
-      "medo",
-      "assustado",
-      "assustada",
-      "inseguro",
-      "insegura",
-      "pânico",
-      "apavorado",
-      "apavorada",
-      "ameaça",
-      "perigo"
-    ]
-  },
-  {
-    emotion: "NOJO",
-    keywords: [
-      "nojo",
-      "repulsa",
-      "nojento",
-      "nojenta",
-      "aversão",
-      "desgosto",
-      "insuportável"
-    ]
-  },
-  {
-    emotion: "ANSIEDADE",
-    keywords: [
-      "ansioso",
-      "ansiosa",
-      "ansiedade",
-      "preocupado",
-      "preocupada",
-      "preocupação",
-      "nervosismo",
-      "cobrança",
-      "pressão",
-      "sobrecarga",
-      "prova",
-      "prazo",
-      "futuro",
-      "não consigo dormir",
-      "sem dormir"
-    ]
-  }
+const validEmotions: EmotionType[] = [
+  "ALEGRIA",
+  "TRISTEZA",
+  "RAIVA",
+  "MEDO",
+  "NOJO",
+  "ANSIEDADE"
 ]
 
 const triggerKeywords: Record<string, string[]> = {
   trabalho: ["trabalho", "emprego", "chefe", "empresa", "reunião", "demanda"],
+
   estudo: [
     "estudo",
     "faculdade",
@@ -131,7 +76,9 @@ const triggerKeywords: Record<string, string[]> = {
     "nota",
     "tcc"
   ],
+
   família: ["família", "mãe", "pai", "irmão", "irmã", "casa"],
+
   relacionamento: [
     "namoro",
     "namorada",
@@ -139,9 +86,13 @@ const triggerKeywords: Record<string, string[]> = {
     "relacionamento",
     "término"
   ],
+
   sono: ["sono", "dormir", "insônia", "sem dormir", "cansado", "cansada"],
+
   dinheiro: ["dinheiro", "conta", "dívida", "salário", "financeiro"],
+
   saúde: ["saúde", "doença", "dor", "médico", "hospital"],
+
   futuro: ["futuro", "incerteza", "medo do futuro", "não sei o que fazer"]
 }
 
@@ -156,39 +107,23 @@ const countMatches = (text: string, keywords: string[]) => {
   return keywords.reduce((total, keyword) => {
     const normalizedKeyword = normalizeText(keyword)
 
-    if (text.includes(normalizedKeyword)) {
-      return total + 1
-    }
-
-    return total
+    return text.includes(normalizedKeyword) ? total + 1 : total
   }, 0)
-}
-
-const detectEmotion = (normalizedText: string): EmotionType => {
-  const scores = emotionKeywordGroups.map((group) => {
-    return {
-      emotion: group.emotion,
-      score: countMatches(normalizedText, group.keywords)
-    }
-  })
-
-  const sortedScores = scores.sort((a, b) => b.score - a.score)
-  const bestMatch = sortedScores[0]
-
-  if (!bestMatch || bestMatch.score === 0) {
-    return "ANSIEDADE"
-  }
-
-  return bestMatch.emotion
 }
 
 const detectTriggers = (normalizedText: string) => {
   return Object.entries(triggerKeywords)
-    .filter(([, keywords]) => countMatches(normalizedText, keywords) > 0)
+    .filter(([, keywords]) => {
+      return countMatches(normalizedText, keywords) > 0
+    })
     .map(([trigger]) => trigger)
 }
 
-const estimateIntensity = (text: string, triggers: string[]) => {
+const estimateIntensity = (
+  text: string,
+  triggers: string[],
+  confidence: number
+) => {
   const normalizedText = normalizeText(text)
 
   const strongWords = [
@@ -200,43 +135,72 @@ const estimateIntensity = (text: string, triggers: string[]) => {
     "desesperado",
     "desesperada",
     "horrivel",
-    "péssimo",
     "pessimo",
     "crise",
-    "panico",
-    "pânico"
+    "panico"
   ]
 
-  let intensity = 2
+  const strongWordCount = countMatches(normalizedText, strongWords)
 
-  if (text.length > 180) {
+  let intensity = 3
+
+  if (text.length > 100) {
     intensity += 1
   }
 
-  if (triggers.length >= 2) {
+  if (text.length > 250) {
     intensity += 1
   }
 
-  if (countMatches(normalizedText, strongWords) >= 1) {
+  if (triggers.length >= 1) {
     intensity += 1
   }
 
-  return Math.min(intensity, 5)
+  if (triggers.length >= 3) {
+    intensity += 1
+  }
+
+  if (strongWordCount >= 1) {
+    intensity += 1
+  }
+
+  if (strongWordCount >= 3) {
+    intensity += 1
+  }
+
+  if (confidence >= 0.9) {
+    intensity += 1
+  }
+
+  return Math.min(intensity, 10)
 }
 
 const createSummary = (
   emotion: EmotionType,
   intensity: number,
-  triggers: string[]
+  triggers: string[],
+  confidenceLevel: ConfidenceLevel
 ) => {
   const emotionText: Record<EmotionType, string> = {
-    ALEGRIA: "O relato indica predominância de emoções positivas.",
-    TRISTEZA:
-      "O relato indica sinais de tristeza, desânimo ou queda de energia emocional.",
-    RAIVA: "O relato indica irritação, frustração ou tensão emocional.",
-    MEDO: "O relato indica insegurança, medo ou sensação de ameaça.",
-    NOJO: "O relato indica rejeição, repulsa ou forte desconforto com alguma situação.",
-    ANSIEDADE: "O relato indica preocupação, tensão ou sobrecarga emocional."
+    ALEGRIA: "O relato apresenta sinais compatíveis com uma emoção positiva.",
+
+    TRISTEZA: "O relato apresenta sinais compatíveis com tristeza ou desânimo.",
+
+    RAIVA:
+      "O relato apresenta sinais compatíveis com irritação, frustração ou raiva.",
+
+    MEDO: "O relato apresenta sinais compatíveis com medo, insegurança ou ameaça.",
+
+    NOJO: "O relato apresenta sinais compatíveis com rejeição, repulsa ou desconforto.",
+
+    ANSIEDADE:
+      "O relato apresenta sinais compatíveis com preocupação, tensão ou ansiedade."
+  }
+
+  const confidenceText: Record<ConfidenceLevel, string> = {
+    HIGH: "A confiança da classificação foi alta.",
+    MEDIUM: "A confiança da classificação foi moderada.",
+    LOW: "A confiança da classificação foi baixa."
   }
 
   const triggerText =
@@ -244,25 +208,235 @@ const createSummary = (
       ? ` Possíveis gatilhos identificados: ${triggers.join(", ")}.`
       : " Nenhum gatilho específico foi identificado com clareza."
 
-  return `${emotionText[emotion]} Intensidade estimada: ${intensity}/5.${triggerText}`
+  return [
+    emotionText[emotion],
+    confidenceText[confidenceLevel],
+    `Intensidade estimada: ${intensity}/10.`,
+    triggerText
+  ].join(" ")
 }
 
-const analyzeTextEmotion = (content: string): TextEmotionAnalysisResult => {
-  const normalizedText = normalizeText(content)
+const isEmotionType = (emotion: string): emotion is EmotionType => {
+  return validEmotions.includes(emotion as EmotionType)
+}
 
-  const emotion = detectEmotion(normalizedText)
+const getConfidenceLevel = (confidence: number): ConfidenceLevel => {
+  if (confidence >= env.EMODIA_NLP_HIGH_CONFIDENCE) {
+    return "HIGH"
+  }
+
+  if (confidence >= env.EMODIA_NLP_MIN_CONFIDENCE) {
+    return "MEDIUM"
+  }
+
+  return "LOW"
+}
+
+const extractJsonFromOutput = (stdout: string) => {
+  const lines = stdout
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean)
+
+  const jsonLine = [...lines]
+    .reverse()
+    .find((line) => line.startsWith("{") && line.endsWith("}"))
+
+  if (!jsonLine) {
+    throw new Error("O classificador BERTimbau não retornou um JSON válido.")
+  }
+
+  return JSON.parse(jsonLine) as unknown
+}
+
+const validatePrediction = (value: unknown): BertimbauPrediction => {
+  if (!value || typeof value !== "object") {
+    throw new Error("O classificador retornou uma resposta inválida.")
+  }
+
+  const prediction = value as Partial<BertimbauPrediction> & {
+    error?: unknown
+  }
+
+  if (typeof prediction.error === "string" && prediction.error.trim()) {
+    throw new Error(prediction.error)
+  }
+
+  if (
+    typeof prediction.emotion !== "string" ||
+    !isEmotionType(prediction.emotion)
+  ) {
+    throw new Error("O classificador retornou uma emoção desconhecida.")
+  }
+
+  if (
+    typeof prediction.confidence !== "number" ||
+    !Number.isFinite(prediction.confidence)
+  ) {
+    throw new Error("O classificador retornou uma confiança inválida.")
+  }
+
+  if (prediction.confidence < 0 || prediction.confidence > 1) {
+    throw new Error(
+      "O classificador retornou uma confiança fora do intervalo esperado."
+    )
+  }
+
+  const confidenceLevel = getConfidenceLevel(prediction.confidence)
+
+  const accepted = prediction.confidence >= env.EMODIA_NLP_MIN_CONFIDENCE
+
+  const mappedEmotion =
+    typeof prediction.emodiaEmotion === "string" &&
+    isEmotionType(prediction.emodiaEmotion)
+      ? prediction.emodiaEmotion
+      : accepted
+        ? prediction.emotion
+        : "INDEFINIDO"
+
+  return {
+    emotion: prediction.emotion,
+    emodiaEmotion: mappedEmotion,
+
+    confidence: prediction.confidence,
+
+    confidencePercent:
+      typeof prediction.confidencePercent === "number"
+        ? prediction.confidencePercent
+        : prediction.confidence * 100,
+
+    confidenceLevel,
+    accepted,
+
+    scores:
+      prediction.scores && typeof prediction.scores === "object"
+        ? prediction.scores
+        : {},
+
+    model:
+      typeof prediction.model === "string"
+        ? prediction.model
+        : "BERTimbau Emodia V2",
+
+    device:
+      typeof prediction.device === "string" ? prediction.device : "unknown",
+
+    maxLength:
+      typeof prediction.maxLength === "number" ? prediction.maxLength : 128,
+
+    warning:
+      typeof prediction.warning === "string"
+        ? prediction.warning
+        : "A classificação emocional é apenas uma estimativa."
+  }
+}
+
+const runBertimbauPrediction = async (
+  content: string
+): Promise<BertimbauPrediction> => {
+  if (!env.EMODIA_NLP_ENABLED) {
+    throw new Error("A análise textual por IA está desabilitada.")
+  }
+
+  const predictorScriptPath = resolveFromWebApp(env.EMODIA_NLP_SCRIPT_PATH)
+
+  const modelPath = resolveFromWebApp(env.EMODIA_NLP_MODEL_PATH)
+
+  try {
+    const { stdout } = await execFileAsync(
+      "conda",
+      [
+        "run",
+        "--no-capture-output",
+        "-n",
+        env.EMODIA_CONDA_ENV,
+        "python",
+        predictorScriptPath,
+        "--model-path",
+        modelPath,
+        "--device",
+        env.EMODIA_NLP_DEVICE,
+        content
+      ],
+      {
+        cwd: PROJECT_ROOT,
+        timeout: env.EMODIA_NLP_TIMEOUT_MS,
+        maxBuffer: 10 * 1024 * 1024,
+
+        env: {
+          ...process.env,
+          HF_HUB_DISABLE_PROGRESS_BARS: "1",
+          TOKENIZERS_PARALLELISM: "false",
+          PYTHONUNBUFFERED: "1"
+        }
+      }
+    )
+
+    const parsedOutput = extractJsonFromOutput(stdout)
+
+    return validatePrediction(parsedOutput)
+  } catch (error) {
+    const message =
+      error instanceof Error
+        ? error.message
+        : "Erro desconhecido ao executar o BERTimbau."
+
+    throw new Error(`Não foi possível analisar a emoção do texto: ${message}`, {
+      cause: error
+    })
+  }
+}
+
+const analyzeTextEmotion = async (
+  content: string
+): Promise<TextEmotionAnalysisResult> => {
+  const trimmedContent = content.trim()
+
+  if (!trimmedContent) {
+    throw new Error("Informe um texto para análise.")
+  }
+
+  const prediction = await runBertimbauPrediction(trimmedContent)
+
+  const normalizedText = normalizeText(trimmedContent)
   const triggers = detectTriggers(normalizedText)
-  const intensity = estimateIntensity(content, triggers)
-  const summary = createSummary(emotion, intensity, triggers)
+
+  const emotion = prediction.emotion
+
+  const intensity = estimateIntensity(
+    trimmedContent,
+    triggers,
+    prediction.confidence
+  )
+
+  const summary = createSummary(
+    emotion,
+    intensity,
+    triggers,
+    prediction.confidenceLevel
+  )
 
   return {
     emotion,
     intensity,
     triggers,
-    summary
+    summary,
+
+    confidence: prediction.confidence,
+    confidenceLevel: prediction.confidenceLevel,
+
+    scores: prediction.scores,
+    model: prediction.model,
+    warning: prediction.warning
   }
 }
 
 export { analyzeTextEmotion }
 
-export type { EmotionType, TextEmotionAnalysisResult }
+export type {
+  BertimbauPrediction,
+  ConfidenceLevel,
+  EmotionType,
+  TextEmotionAnalysisResult,
+  TextEmotionScores
+}
