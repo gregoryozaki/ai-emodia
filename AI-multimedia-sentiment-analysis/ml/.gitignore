@@ -43,6 +43,7 @@ runs/
 datasets/raw/
 datasets/cache/
 datasets/downloads/
+datasets/cv/samples/
 
 # Vídeos, áudios e imagens temporários
 *.wav
