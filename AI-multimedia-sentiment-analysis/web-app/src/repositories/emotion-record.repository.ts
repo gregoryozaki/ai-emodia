@@ -12,18 +12,9 @@ type EmotionInputMode = "TEXT" | "AUDIO" | "VIDEO"
 
 type RiskLevel = "NONE" | "LOW" | "MEDIUM" | "HIGH" | "CRITICAL"
 
-type CreateEmotionRecordData = {
-  userId: string
-  emotion: EmotionType
-  inputMode: EmotionInputMode
-  content?: string
-  transcript?: string
-  intensity?: number
-  trigger?: string
-  riskLevel?: RiskLevel
-  riskMessage?: string
-  riskTerms?: string
-}
+type CreateEmotionRecordData = Parameters<
+  typeof prisma.emotionRecord.create
+>[0]["data"]
 
 type EmotionRecordFilters = {
   userId: string

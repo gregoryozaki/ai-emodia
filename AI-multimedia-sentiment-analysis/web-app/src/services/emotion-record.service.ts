@@ -33,7 +33,6 @@ type VisualAnalysisInput = {
   input?: string
   interpretation?: string
   warning?: string
-  [key: string]: unknown
 }
 
 type CreateTranscriptEmotionRecordInput = {
@@ -186,7 +185,7 @@ const createTextEmotionRecord = async (input: CreateTextEmotionRecordInput) => {
     throw new Error("Informe um texto para análise.")
   }
 
-  const analysis = analyzeTextEmotion(content)
+  const analysis = await analyzeTextEmotion(content)
   const riskAnalysis = analyzeRiskSignals(content)
 
   return createEmotionRecord({
@@ -213,7 +212,7 @@ const createTranscriptEmotionRecord = async (
     throw new Error("Informe uma transcrição para análise.")
   }
 
-  const analysis = analyzeTextEmotion(transcript)
+  const analysis = await analyzeTextEmotion(transcript)
   const riskAnalysis = analyzeRiskSignals(transcript)
 
   return createEmotionRecord({
