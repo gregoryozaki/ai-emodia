@@ -1,8 +1,10 @@
 import express from "express"
+import multer from "multer"
 import morgan from "morgan"
 import session from "express-session"
 import connectPgSimple from "connect-pg-simple"
 import { engine } from "express-handlebars"
+import type { ErrorRequestHandler } from "express"
 
 import { setViewLocals } from "./middlewares/view-locals.middleware.js"
 import { env } from "./config/env.js"
@@ -58,6 +60,41 @@ app.use(
 )
 
 app.use(routes)
+
+const errorHandler: ErrorRequestHandler = (error, req, res, next) => {
+  if (res.headersSent) {
+    next(error)
+    return
+  }
+
+  const isUploadRoute =
+    req.path.startsWith("/analises/audio/") ||
+    req.path.startsWith("/analises/video/")
+
+  if (error instanceof multer.MulterError) {
+    res.status(400).json({
+      message:
+        error.code === "LIMIT_FILE_SIZE"
+          ? "Arquivo muito grande. Envie uma mídia de até 25 MB."
+          : "Não foi possível receber o arquivo enviado."
+    })
+    return
+  }
+
+  if (isUploadRoute) {
+    res.status(400).json({
+      message:
+        error instanceof Error
+          ? error.message
+          : "Erro ao processar o arquivo enviado."
+    })
+    return
+  }
+
+  next(error)
+}
+
+app.use(errorHandler)
 
 app.use((_req, res) => {
   res.status(404).render("error", {

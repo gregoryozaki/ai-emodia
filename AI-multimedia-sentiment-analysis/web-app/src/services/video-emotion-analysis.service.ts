@@ -1,4 +1,5 @@
 import { spawn } from "node:child_process"
+import { fileURLToPath } from "node:url"
 import path from "node:path"
 
 import { env } from "../config/env.js"
@@ -50,7 +51,11 @@ type VisualAnalysisError = {
   error?: string
 }
 
-const WEB_APP_ROOT = process.cwd()
+const currentFilePath = fileURLToPath(import.meta.url)
+const currentDirectory = path.dirname(currentFilePath)
+
+const WEB_APP_ROOT = path.resolve(currentDirectory, "../..")
+const PROJECT_ROOT = path.resolve(WEB_APP_ROOT, "..")
 
 const resolveFromWebApp = (configuredPath: string) => {
   return path.resolve(WEB_APP_ROOT, configuredPath)
@@ -147,7 +152,7 @@ const analyzeVideoEmotion = async (
         String(env.EMODIA_CV_FRAME_INTERVAL_SECONDS)
       ],
       {
-        cwd: WEB_APP_ROOT,
+        cwd: PROJECT_ROOT,
         env: {
           ...process.env,
           PYTHONUNBUFFERED: "1"
@@ -198,7 +203,7 @@ const analyzeVideoEmotion = async (
     child.on("error", (error) => {
       finishWithError(
         new Error(
-          `Não foi possível iniciar a análise visual: ${error.message}`,
+          `Não foi possível iniciar a análise visual. Verifique se o Conda está instalado e se o ambiente ${env.EMODIA_CONDA_ENV} existe: ${error.message}`,
           {
             cause: error
           }

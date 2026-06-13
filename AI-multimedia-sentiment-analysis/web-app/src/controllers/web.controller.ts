@@ -56,7 +56,8 @@ const renderNewAnalysisPage = (_req: Request, res: Response) => {
     title: "Emodia | Nova análise",
     useNewAnalysisTabs: true,
     useAudioRecorder: true,
-    useVideoRecorder: true
+    useVideoRecorder: true,
+    useAnalysisSubmitLoading: true
   })
 }
 

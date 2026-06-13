@@ -4,7 +4,6 @@ import {
   createTextEmotionRecord,
   createTranscriptEmotionRecord
 } from "../services/emotion-record.service.js"
-
 import {
   createTextEmotionRecordSchema,
   createTranscriptEmotionRecordSchema,
@@ -77,6 +76,16 @@ const parseVisualAnalysis = (
   }
 }
 
+const getNewAnalysisViewOptions = () => {
+  return {
+    title: "Emodia | Nova análise",
+    useNewAnalysisTabs: true,
+    useAudioRecorder: true,
+    useVideoRecorder: true,
+    useAnalysisSubmitLoading: true
+  }
+}
+
 const createTextEmotionRecordController = async (
   req: Request,
   res: Response
@@ -92,14 +101,11 @@ const createTextEmotionRecordController = async (
 
   if (!validation.success) {
     res.status(400).render("app/new-analysis", {
-      title: "Emodia | Nova análise",
+      ...getNewAnalysisViewOptions(),
       error: getValidationMessage(validation.error),
       formData: {
         content: typeof req.body.content === "string" ? req.body.content : ""
-      },
-      useNewAnalysisTabs: true,
-      useAudioRecorder: true,
-      useVideoRecorder: true
+      }
     })
     return
   }
@@ -110,20 +116,17 @@ const createTextEmotionRecordController = async (
       content: validation.data.content
     })
 
-    if (record.riskLevel === "HIGH" || record.riskLevel === "CRITICAL") {
-      res.redirect(`/analises/${record.id}?risk=1`)
-      return
-    }
-
-    res.redirect("/dashboard?created=1")
+    res.redirect(`/analises/${record.id}?created=1`)
   } catch (error) {
     const message =
       error instanceof Error ? error.message : "Erro ao registrar emoção."
 
     res.status(400).render("app/new-analysis", {
-      title: "Emodia | Nova análise",
+      ...getNewAnalysisViewOptions(),
       error: message,
-      formData: req.body
+      formData: {
+        content: typeof req.body.content === "string" ? req.body.content : ""
+      }
     })
   }
 }
@@ -143,22 +146,21 @@ const createTranscriptEmotionRecordController = async (
 
   if (!validation.success) {
     res.status(400).render("app/new-analysis", {
-      title: "Emodia | Nova análise",
+      ...getNewAnalysisViewOptions(),
       error: getValidationMessage(validation.error),
       formData: {
         transcript:
           typeof req.body.transcript === "string" ? req.body.transcript : ""
-      },
-      useNewAnalysisTabs: true,
-      useAudioRecorder: true,
-      useVideoRecorder: true
+      }
     })
     return
   }
 
   try {
     const { inputMode, transcript } = validation.data
+
     const visualAnalysis = parseVisualAnalysis(req.body.visualAnalysis)
+
     const record = await createTranscriptEmotionRecord({
       userId,
       inputMode,
@@ -166,23 +168,18 @@ const createTranscriptEmotionRecordController = async (
       ...(inputMode === "VIDEO" && visualAnalysis ? { visualAnalysis } : {})
     })
 
-    if (record.riskLevel === "HIGH" || record.riskLevel === "CRITICAL") {
-      res.redirect(`/analises/${record.id}?risk=1`)
-      return
-    }
-
-    res.redirect("/dashboard?created=1")
+    res.redirect(`/analises/${record.id}?created=1`)
   } catch (error) {
     const message =
       error instanceof Error ? error.message : "Erro ao registrar emoção."
 
     res.status(400).render("app/new-analysis", {
-      title: "Emodia | Nova análise",
+      ...getNewAnalysisViewOptions(),
       error: message,
-      formData: req.body,
-      useNewAnalysisTabs: true,
-      useAudioRecorder: true,
-      useVideoRecorder: true
+      formData: {
+        transcript:
+          typeof req.body.transcript === "string" ? req.body.transcript : ""
+      }
     })
   }
 }

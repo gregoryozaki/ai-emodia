@@ -78,13 +78,11 @@ const buildSeries = (points) => {
 
   points.forEach((point) => {
     if (mode === "emotions") {
-      const key = point.emotion
-
-      if (!series.has(key)) {
-        series.set(key, [])
+      if (!series.has(point.emotion)) {
+        series.set(point.emotion, [])
       }
 
-      series.get(key).push(point)
+      series.get(point.emotion).push(point)
       return
     }
 
@@ -145,39 +143,46 @@ const drawGrid = ({ width, height, padding }) => {
       })
     )
 
-    chart.appendChild(
-      createSvgElement("text", {
-        x: padding.left - 12,
-        y: y + 4,
-        fill: textColor,
-        "font-size": 11,
-        "text-anchor": "end"
-      })
-    ).textContent = value
+    const label = createSvgElement("text", {
+      x: padding.left - 12,
+      y: y + 4,
+      fill: textColor,
+      "font-size": 11,
+      "text-anchor": "end"
+    })
+
+    label.textContent = value
+    chart.appendChild(label)
   }
 
-  chart.appendChild(
-    createSvgElement("text", {
-      x: padding.left,
-      y: 20,
-      fill: textColor,
-      "font-size": 12
-    })
-  ).textContent = "Intensidade emocional"
+  const title = createSvgElement("text", {
+    x: padding.left,
+    y: 20,
+    fill: textColor,
+    "font-size": 12
+  })
+
+  title.textContent = "Intensidade emocional"
+  chart.appendChild(title)
 }
 
 const drawSeries = ({ series, allPoints, width, height, padding }) => {
   const plotWidth = width - padding.left - padding.right
   const plotHeight = height - padding.top - padding.bottom
+
   const maxIndex = Math.max(allPoints.length - 1, 1)
 
   series.forEach((serie) => {
-    const pathPoints = serie.values.map((point) => {
-      const x = padding.left + (point.index / maxIndex) * plotWidth
-      const y = height - padding.bottom - (point.intensity / 10) * plotHeight
+    const pathPoints = serie.values
+      .slice()
+      .sort((a, b) => a.index - b.index)
+      .map((point) => {
+        const x = padding.left + (point.index / maxIndex) * plotWidth
 
-      return { x, y, point }
-    })
+        const y = height - padding.bottom - (point.intensity / 10) * plotHeight
+
+        return { x, y, point }
+      })
 
     if (pathPoints.length > 1) {
       const path = pathPoints
@@ -187,70 +192,115 @@ const drawSeries = ({ series, allPoints, width, height, padding }) => {
           }
 
           const previous = pathPoints[index - 1]
+
           const controlX = (previous.x + item.x) / 2
 
-          return `C ${controlX} ${previous.y}, ${controlX} ${item.y}, ${item.x} ${item.y}`
+          return [
+            `C ${controlX} ${previous.y}`,
+            `${controlX} ${item.y}`,
+            `${item.x} ${item.y}`
+          ].join(" ")
         })
         .join(" ")
 
-      chart.appendChild(
-        createSvgElement("path", {
-          d: path,
-          fill: "none",
-          stroke: serie.color,
-          "stroke-width": 3.5,
-          "stroke-linecap": "round",
-          "stroke-linejoin": "round"
-        })
-      )
+      const pathElement = createSvgElement("path", {
+        d: path,
+        fill: "none",
+        stroke: serie.color,
+        "stroke-width": 3,
+        "stroke-linecap": "round",
+        "stroke-linejoin": "round"
+      })
+
+      chart.appendChild(pathElement)
     }
 
     pathPoints.forEach(({ x, y, point }) => {
-      const group = createSvgElement("g", {
-        class: "temporal-chart-dot-group"
+      const hitArea = createSvgElement("circle", {
+        cx: x,
+        cy: y,
+        r: 9,
+        fill: "transparent",
+        stroke: "none",
+        tabindex: 0,
+        "aria-label": `${serie.name}, ${point.dateTimeLabel}, intensidade ${point.intensity} de 10`
       })
 
-      group.appendChild(
-        createSvgElement("circle", {
-          cx: x,
-          cy: y,
-          r: 5.8,
-          fill: serie.color,
-          stroke: "#ffffff",
-          "stroke-width": 2
-        })
-      )
-
       const title = createSvgElement("title")
-      title.textContent = `${serie.name}
-${point.dateTimeLabel}
-Intensidade: ${point.intensity}/10`
 
-      group.appendChild(title)
-      chart.appendChild(group)
+      title.textContent =
+        `${serie.name}\n` +
+        `${point.dateTimeLabel}\n` +
+        `Intensidade: ${point.intensity}/10`
+
+      hitArea.appendChild(title)
+      chart.appendChild(hitArea)
     })
   })
 }
 
-const drawXAxisLabels = ({ points, width, height, padding }) => {
-  const textColor = "rgba(226, 232, 240, 0.65)"
-  const plotWidth = width - padding.left - padding.right
-  const maxIndex = Math.max(points.length - 1, 1)
+const getDateTicks = (points, maximumTicks = 7) => {
+  const uniqueDates = []
+  const knownDates = new Set()
 
-  const labels = points.filter((_, index) => {
-    if (points.length <= 6) {
-      return true
+  points.forEach((point) => {
+    const dateKey = point.dateLabel || point.date
+
+    if (!dateKey || knownDates.has(dateKey)) {
+      return
     }
 
-    return index === 0 || index === points.length - 1 || index % 2 === 0
+    knownDates.add(dateKey)
+    uniqueDates.push(point)
   })
 
-  labels.forEach((point) => {
+  if (uniqueDates.length <= maximumTicks) {
+    return uniqueDates
+  }
+
+  const ticks = []
+
+  for (let index = 0; index < maximumTicks; index += 1) {
+    const position = Math.round(
+      (index * (uniqueDates.length - 1)) / (maximumTicks - 1)
+    )
+
+    const point = uniqueDates[position]
+
+    if (point && !ticks.some((existing) => existing.index === point.index)) {
+      ticks.push(point)
+    }
+  }
+
+  return ticks
+}
+
+const drawXAxisLabels = ({ points, allPoints, width, height, padding }) => {
+  const textColor = "rgba(226, 232, 240, 0.65)"
+
+  const plotWidth = width - padding.left - padding.right
+
+  const maxIndex = Math.max(allPoints.length - 1, 1)
+
+  const ticks = getDateTicks(points, 7)
+
+  ticks.forEach((point) => {
     const x = padding.left + (point.index / maxIndex) * plotWidth
+
+    chart.appendChild(
+      createSvgElement("line", {
+        x1: x,
+        y1: height - padding.bottom,
+        x2: x,
+        y2: height - padding.bottom + 5,
+        stroke: textColor,
+        "stroke-width": 1
+      })
+    )
 
     const text = createSvgElement("text", {
       x,
-      y: height - 14,
+      y: height - 16,
       fill: textColor,
       "font-size": 11,
       "text-anchor": "middle"
@@ -266,12 +316,15 @@ const drawLegend = (series) => {
 
   series.forEach((serie) => {
     const item = document.createElement("span")
+
     item.className = "temporal-chart-legend-item"
 
     const marker = document.createElement("i")
+
     marker.style.backgroundColor = serie.color
 
     const label = document.createElement("strong")
+
     label.textContent = serie.name
 
     item.appendChild(marker)
@@ -281,10 +334,6 @@ const drawLegend = (series) => {
 }
 
 const renderChart = () => {
-  if (!chart || !chartData || !chartLegend || !chartEmpty) {
-    return
-  }
-
   const allPoints = getPoints()
   const filteredPoints = filterPoints(allPoints)
   const series = buildSeries(filteredPoints)
@@ -304,17 +353,24 @@ const renderChart = () => {
 
   const width = chart.clientWidth || 900
   const height = 360
+
   const padding = {
     top: 42,
     right: 32,
-    bottom: 48,
+    bottom: 58,
     left: 48
   }
 
   chart.setAttribute("viewBox", `0 0 ${width} ${height}`)
+
   chart.setAttribute("preserveAspectRatio", "none")
 
-  drawGrid({ width, height, padding })
+  drawGrid({
+    width,
+    height,
+    padding
+  })
+
   drawSeries({
     series,
     allPoints,
@@ -322,19 +378,33 @@ const renderChart = () => {
     height,
     padding
   })
+
   drawXAxisLabels({
     points: filteredPoints,
+    allPoints,
     width,
     height,
     padding
   })
+
   drawLegend(series)
 }
 
-if (chart) {
+if (
+  chart &&
+  chartData &&
+  chartLegend &&
+  chartEmpty &&
+  modeSelect &&
+  emotionSelect &&
+  triggerSelect
+) {
   modeSelect.addEventListener("change", renderChart)
+
   emotionSelect.addEventListener("change", renderChart)
+
   triggerSelect.addEventListener("change", renderChart)
+
   window.addEventListener("resize", renderChart)
 
   renderChart()

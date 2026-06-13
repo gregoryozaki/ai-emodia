@@ -5,7 +5,6 @@
         <section class="analysis-internal-section">
           <div class="analysis-section-title">
             <span class="page-badge">Nova análise</span>
-
             <h1>
               Registrar novo
               <span class="text-gradient">relato emocional</span>.
@@ -19,7 +18,11 @@
           </div>
 
           {{#if error}}
-            <div class="auth-alert auth-alert-error mb-4" data-flash-message>
+            <div
+              class="auth-alert auth-alert-error mb-4"
+              role="alert"
+              data-flash-message
+            >
               {{error}}
             </div>
           {{/if}}
@@ -67,6 +70,8 @@
                   action="/analises/registros"
                   method="post"
                   class="analysis-form"
+                  data-analysis-submit-form
+                  data-analysis-loading-message="Analisando seu relato emocional..."
                 >
                   <label for="content">
                     Relato emocional
@@ -158,10 +163,10 @@
                     <button
                       type="button"
                       class="btn-emodia-outline"
-                      id="clearAudioRecording"
+                      id="cancelAudioRecording"
                       hidden
                     >
-                      🗑 Limpar áudio
+                      ✕ Cancelar
                     </button>
                   </div>
 
@@ -174,6 +179,8 @@
                   <div
                     class="audio-transcription-status"
                     id="audioTranscriptionStatus"
+                    role="status"
+                    aria-live="polite"
                     hidden
                   >
                     Transcrevendo áudio automaticamente...
@@ -185,6 +192,8 @@
                   method="post"
                   class="analysis-form"
                   id="audioAnalysisForm"
+                  data-analysis-submit-form
+                  data-analysis-loading-message="Analisando a transcrição do áudio..."
                   hidden
                 >
                   <input type="hidden" name="inputMode" value="AUDIO" />
@@ -199,8 +208,13 @@
                     rows="8"
                     minlength="10"
                     maxlength="5000"
+                    placeholder="A transcrição automática aparecerá aqui. Você poderá editar antes de enviar."
                     required
                   >{{formData.transcript}}</textarea>
+
+                  <small>
+                    Use entre 10 e 5.000 caracteres.
+                  </small>
 
                   <div class="analysis-form-warning">
                     O áudio original não será salvo. Apenas a transcrição
@@ -290,10 +304,10 @@
                     <button
                       type="button"
                       class="btn-emodia-outline"
-                      id="clearVideoRecording"
+                      id="cancelVideoRecording"
                       hidden
                     >
-                      🗑 Limpar vídeo
+                      ✕ Cancelar
                     </button>
                   </div>
 
@@ -310,6 +324,8 @@
                   <div
                     class="video-transcription-status"
                     id="videoTranscriptionStatus"
+                    role="status"
+                    aria-live="polite"
                     hidden
                   >
                     Transcrevendo áudio do vídeo automaticamente...
@@ -321,9 +337,12 @@
                   method="post"
                   class="analysis-form"
                   id="videoAnalysisForm"
+                  data-analysis-submit-form
+                  data-analysis-loading-message="Analisando a transcrição e o sinal visual..."
                   hidden
                 >
                   <input type="hidden" name="inputMode" value="VIDEO" />
+
                   <input
                     type="hidden"
                     name="visualAnalysis"
@@ -340,8 +359,13 @@
                     rows="8"
                     minlength="10"
                     maxlength="5000"
+                    placeholder="A transcrição automática do vídeo aparecerá aqui. Você poderá editar antes de enviar."
                     required
                   >{{formData.transcript}}</textarea>
+
+                  <small>
+                    Use entre 10 e 5.000 caracteres.
+                  </small>
 
                   <div class="analysis-form-warning">
                     O vídeo original não será salvo. Apenas a transcrição

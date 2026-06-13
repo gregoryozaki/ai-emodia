@@ -26,7 +26,10 @@ import {
 import { uploadAvatar } from "../middlewares/upload.middleware.js"
 import { exportEmotionReportPdfController } from "../controllers/report.controller.js"
 import { transcribeAudioController } from "../controllers/transcription.controller.js"
-import { audioTranscriptionUpload } from "../middlewares/audio-transcription-upload.middleware.js"
+import {
+  audioTranscriptionUpload,
+  handleMediaUploadError
+} from "../middlewares/audio-transcription-upload.middleware.js"
 import { analyzeVideoEmotionController } from "../controllers/video-emotion-analysis.controller.js"
 
 const webRoutes = Router()
@@ -60,12 +63,14 @@ webRoutes.post(
   "/analises/audio/transcrever",
   ensureAuthenticated,
   audioTranscriptionUpload.single("audio"),
+  handleMediaUploadError,
   transcribeAudioController
 )
 webRoutes.post(
   "/analises/video/analisar-emocao",
   ensureAuthenticated,
   audioTranscriptionUpload.single("video"),
+  handleMediaUploadError,
   analyzeVideoEmotionController
 )
 

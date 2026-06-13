@@ -1,529 +1,803 @@
-const openVideoCameraButton = document.getElementById("openVideoCamera")
-const startVideoButton = document.getElementById("startVideoRecording")
-const stopVideoButton = document.getElementById("stopVideoRecording")
-const clearVideoButton = document.getElementById("clearVideoRecording")
+;(() => {
+  const openVideoCameraButton = document.getElementById("openVideoCamera")
 
-const videoLiveBox = document.getElementById("videoLiveBox")
-const videoLivePreview = document.getElementById("videoLivePreview")
-const videoPreviewBox = document.getElementById("videoPreviewBox")
-const videoRecordingPreview = document.getElementById("videoRecordingPreview")
+  const startVideoButton = document.getElementById("startVideoRecording")
 
-const videoStatus = document.getElementById("videoRecorderStatus")
-const videoHelper = document.getElementById("videoRecorderHelper")
-const videoTimer = document.getElementById("videoRecorderTimer")
-const videoVisual = document.getElementById("videoRecorderVisual")
-const videoTranscriptionStatus = document.getElementById(
-  "videoTranscriptionStatus"
-)
-const videoTranscript = document.getElementById("videoTranscript")
-const videoAnalysisForm = document.getElementById("videoAnalysisForm")
-const videoVisualAnalysisInput = document.getElementById(
-  "videoVisualAnalysisInput"
-)
+  const stopVideoButton = document.getElementById("stopVideoRecording")
 
-let videoStream = null
-let videoRecorder = null
-let videoChunks = []
-let currentVideoBlob = null
-let videoTimerInterval = null
-let videoRecordingSeconds = 0
+  const cancelVideoButton = document.getElementById("cancelVideoRecording")
 
-const formatVideoTime = (seconds) => {
-  const minutes = String(Math.floor(seconds / 60)).padStart(2, "0")
-  const rest = String(seconds % 60).padStart(2, "0")
+  const videoLiveBox = document.getElementById("videoLiveBox")
 
-  return `${minutes}:${rest}`
-}
+  const videoLivePreview = document.getElementById("videoLivePreview")
 
-const setVideoStatus = (status, helper) => {
-  if (videoStatus) {
-    videoStatus.textContent = status
-  }
+  const videoPreviewBox = document.getElementById("videoPreviewBox")
 
-  if (videoHelper) {
-    videoHelper.textContent = helper
-  }
-}
+  const videoRecordingPreview = document.getElementById("videoRecordingPreview")
 
-const showInitialVideoButtons = () => {
-  openVideoCameraButton.hidden = false
-  openVideoCameraButton.disabled = false
+  const videoStatus = document.getElementById("videoRecorderStatus")
 
-  startVideoButton.hidden = true
-  startVideoButton.disabled = true
+  const videoHelper = document.getElementById("videoRecorderHelper")
 
-  stopVideoButton.hidden = true
-  stopVideoButton.disabled = true
+  const videoTimer = document.getElementById("videoRecorderTimer")
 
-  clearVideoButton.hidden = true
-  clearVideoButton.disabled = true
-}
+  const videoVisual = document.getElementById("videoRecorderVisual")
 
-const showCameraReadyButtons = () => {
-  openVideoCameraButton.hidden = true
-  openVideoCameraButton.disabled = true
-
-  startVideoButton.hidden = false
-  startVideoButton.disabled = false
-  startVideoButton.textContent = "🔴 Iniciar gravação"
-
-  stopVideoButton.hidden = true
-  stopVideoButton.disabled = true
-
-  clearVideoButton.hidden = false
-  clearVideoButton.disabled = false
-}
-
-const showVideoRecordingButtons = () => {
-  openVideoCameraButton.hidden = true
-  openVideoCameraButton.disabled = true
-
-  startVideoButton.hidden = false
-  startVideoButton.disabled = true
-
-  stopVideoButton.hidden = false
-  stopVideoButton.disabled = false
-
-  clearVideoButton.hidden = true
-  clearVideoButton.disabled = true
-}
-
-const showVideoProcessingButtons = () => {
-  openVideoCameraButton.hidden = true
-  openVideoCameraButton.disabled = true
-
-  startVideoButton.hidden = false
-  startVideoButton.disabled = true
-
-  stopVideoButton.hidden = true
-  stopVideoButton.disabled = true
-
-  clearVideoButton.hidden = false
-  clearVideoButton.disabled = true
-}
-
-const showVideoFinishedButtons = () => {
-  openVideoCameraButton.hidden = true
-  openVideoCameraButton.disabled = true
-
-  startVideoButton.hidden = false
-  startVideoButton.disabled = false
-  startVideoButton.textContent = "📹 Gravar novamente"
-
-  stopVideoButton.hidden = true
-  stopVideoButton.disabled = true
-
-  clearVideoButton.hidden = false
-  clearVideoButton.disabled = false
-}
-
-const startVideoTimer = () => {
-  videoRecordingSeconds = 0
-
-  if (videoTimer) {
-    videoTimer.textContent = "00:00"
-  }
-
-  videoTimerInterval = setInterval(() => {
-    videoRecordingSeconds += 1
-
-    if (videoTimer) {
-      videoTimer.textContent = formatVideoTime(videoRecordingSeconds)
-    }
-  }, 1000)
-}
-
-const stopVideoTimer = () => {
-  if (videoTimerInterval) {
-    clearInterval(videoTimerInterval)
-    videoTimerInterval = null
-  }
-}
-
-const stopVideoStream = () => {
-  if (!videoStream) {
-    return
-  }
-
-  videoStream.getTracks().forEach((track) => {
-    track.stop()
-  })
-
-  videoStream = null
-}
-
-const setVideoRecordingVisual = (isRecording) => {
-  if (videoVisual) {
-    videoVisual.classList.toggle("is-recording", isRecording)
-  }
-}
-
-const showVideoTranscriptionStatus = (message) => {
-  if (!videoTranscriptionStatus) {
-    return
-  }
-
-  videoTranscriptionStatus.hidden = false
-  videoTranscriptionStatus.textContent = message
-}
-
-const hideVideoTranscriptionStatus = () => {
-  if (!videoTranscriptionStatus) {
-    return
-  }
-
-  videoTranscriptionStatus.hidden = true
-  videoTranscriptionStatus.textContent = ""
-}
-
-const showVideoForm = () => {
-  if (videoAnalysisForm) {
-    videoAnalysisForm.hidden = false
-  }
-}
-
-const hideVideoForm = () => {
-  if (videoAnalysisForm) {
-    videoAnalysisForm.hidden = true
-  }
-}
-
-const resetVideoVisualAnalysis = () => {
-  if (videoVisualAnalysisInput) {
-    videoVisualAnalysisInput.value = ""
-  }
-}
-
-const openVideoCamera = async () => {
-  try {
-    videoStream = await navigator.mediaDevices.getUserMedia({
-      video: true,
-      audio: true
-    })
-
-    if (videoLivePreview) {
-      videoLivePreview.srcObject = videoStream
-    }
-
-    if (videoLiveBox) {
-      videoLiveBox.hidden = false
-    }
-
-    if (videoPreviewBox) {
-      videoPreviewBox.hidden = true
-    }
-
-    resetVideoVisualAnalysis()
-    hideVideoForm()
-    hideVideoTranscriptionStatus()
-    showCameraReadyButtons()
-
-    setVideoStatus(
-      "Câmera ligada",
-      "Quando estiver pronto, clique em iniciar gravação."
-    )
-  } catch {
-    showInitialVideoButtons()
-
-    setVideoStatus(
-      "Câmera ou microfone bloqueado",
-      "Verifique as permissões do navegador para câmera e microfone."
-    )
-  }
-}
-
-const analyzeVideoVisualEmotion = async () => {
-  if (!currentVideoBlob) {
-    return null
-  }
-
-  const formData = new FormData()
-  formData.append("video", currentVideoBlob, "emodia-video.webm")
-
-  const response = await fetch("/analises/video/analisar-emocao", {
-    method: "POST",
-    body: formData
-  })
-
-  const data = await response.json()
-
-  if (!response.ok) {
-    throw new Error(
-      data.message || "Não foi possível analisar a emoção facial."
-    )
-  }
-
-  return data
-}
-
-const transcribeVideoRecording = async () => {
-  if (!currentVideoBlob) {
-    showVideoTranscriptionStatus("Nenhum vídeo disponível para transcrever.")
-    return
-  }
-
-  showVideoProcessingButtons()
-  showVideoForm()
-
-  showVideoTranscriptionStatus(
-    "Transcrevendo o áudio do vídeo automaticamente. Aguarde..."
+  const videoTranscriptionStatus = document.getElementById(
+    "videoTranscriptionStatus"
   )
 
-  if (videoTranscript) {
-    videoTranscript.value = ""
-    videoTranscript.placeholder =
-      "Transcrevendo áudio do vídeo automaticamente..."
+  const videoTranscript = document.getElementById("videoTranscript")
+
+  const videoAnalysisForm = document.getElementById("videoAnalysisForm")
+
+  const videoVisualAnalysisInput = document.getElementById(
+    "videoVisualAnalysisInput"
+  )
+
+  let videoStream = null
+  let videoRecorder = null
+  let videoChunks = []
+  let currentVideoBlob = null
+  let videoTimerInterval = null
+  let videoRecordingSeconds = 0
+  let videoPreviewUrl = null
+  let videoCancelled = false
+  let videoAbortController = null
+
+  const formatVideoTime = (seconds) => {
+    const minutes = String(Math.floor(seconds / 60)).padStart(2, "0")
+
+    const remainingSeconds = String(seconds % 60).padStart(2, "0")
+
+    return `${minutes}:${remainingSeconds}`
   }
 
-  const formData = new FormData()
-  formData.append("audio", currentVideoBlob, "emodia-video.webm")
+  const isVideoAbortError = (error) => {
+    return error instanceof Error && error.name === "AbortError"
+  }
 
-  let transcriptionFinished = false
+  const readResponse = async (response, fallbackMessage) => {
+    const contentType = response.headers.get("content-type") || ""
 
-  try {
-    const response = await fetch("/analises/audio/transcrever", {
-      method: "POST",
-      body: formData
+    if (contentType.includes("application/json")) {
+      return response.json()
+    }
+
+    const responseText = await response.text().catch(() => "")
+
+    return {
+      message: responseText.trim() || fallbackMessage
+    }
+  }
+
+  const setVideoStatus = (status, helper) => {
+    if (videoStatus) {
+      videoStatus.textContent = status
+    }
+
+    if (videoHelper) {
+      videoHelper.textContent = helper
+    }
+  }
+
+  const revokeVideoPreviewUrl = () => {
+    if (!videoPreviewUrl) {
+      return
+    }
+
+    URL.revokeObjectURL(videoPreviewUrl)
+    videoPreviewUrl = null
+  }
+
+  const showInitialVideoButtons = () => {
+    openVideoCameraButton.hidden = false
+    openVideoCameraButton.disabled = false
+
+    startVideoButton.hidden = true
+    startVideoButton.disabled = true
+
+    stopVideoButton.hidden = true
+    stopVideoButton.disabled = true
+
+    cancelVideoButton.hidden = true
+    cancelVideoButton.disabled = true
+  }
+
+  const showCameraReadyButtons = () => {
+    openVideoCameraButton.hidden = true
+    openVideoCameraButton.disabled = true
+
+    startVideoButton.hidden = false
+    startVideoButton.disabled = false
+    startVideoButton.textContent = "🔴 Iniciar gravação"
+
+    stopVideoButton.hidden = true
+    stopVideoButton.disabled = true
+
+    cancelVideoButton.hidden = false
+    cancelVideoButton.disabled = false
+  }
+
+  const showVideoRecordingButtons = () => {
+    openVideoCameraButton.hidden = true
+    openVideoCameraButton.disabled = true
+
+    startVideoButton.hidden = false
+    startVideoButton.disabled = true
+
+    stopVideoButton.hidden = false
+    stopVideoButton.disabled = false
+
+    cancelVideoButton.hidden = false
+    cancelVideoButton.disabled = false
+  }
+
+  const showVideoProcessingButtons = () => {
+    openVideoCameraButton.hidden = true
+    openVideoCameraButton.disabled = true
+
+    startVideoButton.hidden = false
+    startVideoButton.disabled = true
+
+    stopVideoButton.hidden = true
+    stopVideoButton.disabled = true
+
+    cancelVideoButton.hidden = false
+    cancelVideoButton.disabled = false
+  }
+
+  const showVideoFinishedButtons = () => {
+    openVideoCameraButton.hidden = true
+    openVideoCameraButton.disabled = true
+
+    startVideoButton.hidden = false
+    startVideoButton.disabled = false
+    startVideoButton.textContent = "📹 Gravar novamente"
+
+    stopVideoButton.hidden = true
+    stopVideoButton.disabled = true
+
+    cancelVideoButton.hidden = false
+    cancelVideoButton.disabled = false
+  }
+
+  const startVideoTimer = () => {
+    videoRecordingSeconds = 0
+
+    if (videoTimer) {
+      videoTimer.textContent = "00:00"
+    }
+
+    videoTimerInterval = window.setInterval(() => {
+      videoRecordingSeconds += 1
+
+      if (videoTimer) {
+        videoTimer.textContent = formatVideoTime(videoRecordingSeconds)
+      }
+    }, 1000)
+  }
+
+  const stopVideoTimer = () => {
+    if (videoTimerInterval === null) {
+      return
+    }
+
+    window.clearInterval(videoTimerInterval)
+
+    videoTimerInterval = null
+  }
+
+  const stopVideoStream = () => {
+    if (!videoStream) {
+      return
+    }
+
+    videoStream.getTracks().forEach((track) => {
+      track.stop()
     })
 
-    const data = await response.json()
+    videoStream = null
+  }
 
-    if (!response.ok) {
-      throw new Error(data.message || "Erro ao transcrever o áudio do vídeo.")
+  const setVideoRecordingVisual = (isRecording) => {
+    if (videoVisual) {
+      videoVisual.classList.toggle("is-recording", isRecording)
+    }
+  }
+
+  const showVideoTranscriptionStatus = (message) => {
+    if (!videoTranscriptionStatus) {
+      return
     }
 
-    if (videoTranscript) {
-      videoTranscript.value = data.transcript || ""
-      videoTranscript.placeholder =
-        "A transcrição automática do vídeo aparecerá aqui. Você poderá editar antes de enviar."
-      videoTranscript.focus()
+    videoTranscriptionStatus.hidden = false
+    videoTranscriptionStatus.textContent = message
+  }
+
+  const hideVideoTranscriptionStatus = () => {
+    if (!videoTranscriptionStatus) {
+      return
     }
 
-    transcriptionFinished = true
+    videoTranscriptionStatus.hidden = true
+    videoTranscriptionStatus.textContent = ""
+  }
 
-    showVideoTranscriptionStatus(
-      "Transcrição gerada. Analisando expressão facial do vídeo..."
-    )
+  const showVideoForm = () => {
+    if (videoAnalysisForm) {
+      videoAnalysisForm.hidden = false
+    }
+  }
 
-    setVideoStatus(
-      "Transcrição pronta",
-      "Agora o Emodia está analisando o sinal visual complementar."
-    )
-  } catch (error) {
-    const message =
-      error instanceof Error
-        ? error.message
-        : "Erro ao gerar transcrição automática."
+  const hideVideoForm = () => {
+    if (videoAnalysisForm) {
+      videoAnalysisForm.hidden = true
+    }
+  }
 
-    showVideoTranscriptionStatus(
-      `${message} Você pode preencher a transcrição manualmente. Tentando analisar o sinal visual do vídeo...`
-    )
+  const resetVideoVisualAnalysis = () => {
+    if (videoVisualAnalysisInput) {
+      videoVisualAnalysisInput.value = ""
+    }
+  }
 
-    if (videoTranscript) {
-      videoTranscript.placeholder =
-        "Não foi possível gerar a transcrição automática. Digite a transcrição manualmente."
-      videoTranscript.focus()
+  const getSupportedVideoMimeType = () => {
+    if (
+      typeof MediaRecorder === "undefined" ||
+      typeof MediaRecorder.isTypeSupported !== "function"
+    ) {
+      return ""
     }
 
-    setVideoStatus(
-      "Transcrição automática falhou",
-      "Você ainda pode preencher a transcrição manualmente. A análise visual será tentada separadamente."
+    const mimeTypes = [
+      "video/webm;codecs=vp8,opus",
+      "video/webm;codecs=vp9,opus",
+      "video/webm"
+    ]
+
+    return (
+      mimeTypes.find((mimeType) => {
+        return MediaRecorder.isTypeSupported(mimeType)
+      }) || ""
     )
   }
 
-  try {
-    const visualAnalysis = await analyzeVideoVisualEmotion()
-
-    if (videoVisualAnalysisInput && visualAnalysis) {
-      videoVisualAnalysisInput.value = JSON.stringify(visualAnalysis)
+  const createVideoUploadBlob = () => {
+    if (!currentVideoBlob) {
+      return null
     }
 
-    if (visualAnalysis?.confidenceLevel === "LOW") {
-      showVideoTranscriptionStatus(
-        transcriptionFinished
-          ? "Transcrição gerada. Sinal visual analisado com baixa confiança. Revise o texto antes de enviar."
-          : "Sinal visual analisado com baixa confiança. Preencha ou revise a transcrição antes de enviar."
-      )
-
-      setVideoStatus(
-        "Análise visual concluída",
-        "O sinal visual foi salvo como complementar, mas com baixa confiança."
-      )
-    } else {
-      showVideoTranscriptionStatus(
-        transcriptionFinished
-          ? "Transcrição gerada e sinal visual analisado. Revise o texto antes de enviar."
-          : "Sinal visual analisado. Preencha ou revise a transcrição antes de enviar."
-      )
-
-      setVideoStatus(
-        "Análise visual concluída",
-        "Revise a transcrição e clique em enviar."
-      )
-    }
-  } catch (error) {
-    console.warn("Análise visual indisponível:", error)
-
-    showVideoTranscriptionStatus(
-      transcriptionFinished
-        ? "Transcrição gerada. A análise visual não ficou disponível, mas você pode enviar normalmente."
-        : "Não foi possível gerar a transcrição automática nem a análise visual. Preencha a transcrição manualmente."
-    )
-
-    setVideoStatus(
-      transcriptionFinished
-        ? "Transcrição pronta"
-        : "Preenchimento manual necessário",
-      transcriptionFinished
-        ? "A análise visual falhou, mas a análise textual pode ser enviada normalmente."
-        : "Digite a transcrição manualmente para continuar."
-    )
-  } finally {
-    showVideoFinishedButtons()
-  }
-}
-
-const startVideoRecording = async () => {
-  if (!videoStream) {
-    await openVideoCamera()
-  }
-
-  if (!videoStream) {
-    return
-  }
-
-  videoChunks = []
-  currentVideoBlob = null
-  resetVideoVisualAnalysis()
-
-  if (videoTranscript) {
-    videoTranscript.value = ""
-    videoTranscript.placeholder =
-      "A transcrição automática do vídeo aparecerá aqui. Você poderá editar antes de enviar."
-  }
-
-  hideVideoForm()
-  hideVideoTranscriptionStatus()
-
-  videoRecorder = new MediaRecorder(videoStream)
-
-  videoRecorder.addEventListener("dataavailable", (event) => {
-    if (event.data.size > 0) {
-      videoChunks.push(event.data)
-    }
-  })
-
-  videoRecorder.addEventListener("stop", async () => {
-    currentVideoBlob = new Blob(videoChunks, {
+    return new Blob([currentVideoBlob], {
       type: "video/webm"
     })
+  }
 
-    const videoUrl = URL.createObjectURL(currentVideoBlob)
+  const resetVideoRecorder = () => {
+    videoAbortController?.abort()
+    videoAbortController = null
 
-    if (videoRecordingPreview) {
-      videoRecordingPreview.src = videoUrl
+    videoChunks = []
+    currentVideoBlob = null
+    videoRecorder = null
+    videoCancelled = false
+
+    stopVideoStream()
+    stopVideoTimer()
+    setVideoRecordingVisual(false)
+    resetVideoVisualAnalysis()
+    revokeVideoPreviewUrl()
+
+    if (videoLivePreview) {
+      videoLivePreview.pause()
+      videoLivePreview.srcObject = null
     }
 
-    if (videoPreviewBox) {
-      videoPreviewBox.hidden = false
+    if (videoRecordingPreview) {
+      videoRecordingPreview.pause()
+      videoRecordingPreview.removeAttribute("src")
+      videoRecordingPreview.load()
     }
 
     if (videoLiveBox) {
       videoLiveBox.hidden = true
     }
 
-    stopVideoStream()
-    setVideoRecordingVisual(false)
+    if (videoPreviewBox) {
+      videoPreviewBox.hidden = true
+    }
+
+    if (videoTranscript) {
+      videoTranscript.value = ""
+      videoTranscript.placeholder =
+        "A transcrição automática do vídeo aparecerá aqui. Você poderá editar antes de enviar."
+    }
+
+    if (videoTimer) {
+      videoTimer.textContent = "00:00"
+    }
+
+    hideVideoTranscriptionStatus()
+    hideVideoForm()
+    showInitialVideoButtons()
 
     setVideoStatus(
-      "Gravação finalizada",
-      "Assista à prévia enquanto o Emodia gera a transcrição e analisa o sinal visual."
+      "Câmera pronta para iniciar",
+      "Clique em abrir câmera para preparar a gravação."
+    )
+  }
+
+  const openVideoCamera = async () => {
+    try {
+      videoCancelled = false
+
+      stopVideoStream()
+
+      videoStream = await navigator.mediaDevices.getUserMedia({
+        video: {
+          facingMode: "user",
+          width: {
+            ideal: 640,
+            max: 1280
+          },
+          height: {
+            ideal: 480,
+            max: 720
+          },
+          frameRate: {
+            ideal: 30,
+            min: 15,
+            max: 30
+          }
+        },
+        audio: {
+          echoCancellation: true,
+          noiseSuppression: true,
+          autoGainControl: true
+        }
+      })
+
+      const videoTrack = videoStream.getVideoTracks()[0]
+
+      if (videoTrack) {
+        console.log("Configuração real da câmera:", videoTrack.getSettings())
+      }
+
+      if (videoLivePreview) {
+        videoLivePreview.srcObject = videoStream
+
+        videoLivePreview.muted = true
+        videoLivePreview.playsInline = true
+
+        await videoLivePreview.play()
+      }
+
+      if (videoLiveBox) {
+        videoLiveBox.hidden = false
+      }
+
+      if (videoPreviewBox) {
+        videoPreviewBox.hidden = true
+      }
+
+      resetVideoVisualAnalysis()
+      hideVideoForm()
+      hideVideoTranscriptionStatus()
+      showCameraReadyButtons()
+
+      setVideoStatus(
+        "Câmera ligada",
+        "Quando estiver pronto, clique em iniciar gravação."
+      )
+    } catch (error) {
+      console.error("Erro ao abrir câmera:", error)
+
+      resetVideoRecorder()
+
+      const message =
+        error instanceof Error
+          ? error.message
+          : "Não foi possível acessar a câmera."
+
+      setVideoStatus("Câmera ou microfone indisponível", message)
+    }
+  }
+
+  const transcribeVideoAudio = async (signal) => {
+    const uploadBlob = createVideoUploadBlob()
+
+    if (!uploadBlob) {
+      throw new Error("Nenhum vídeo disponível para transcrever.")
+    }
+
+    console.log("Enviando vídeo para transcrição:", {
+      type: uploadBlob.type,
+      size: uploadBlob.size
+    })
+
+    const formData = new FormData()
+
+    formData.append("audio", uploadBlob, "emodia-video.webm")
+
+    const response = await fetch("/analises/audio/transcrever", {
+      method: "POST",
+      body: formData,
+      signal
+    })
+
+    const data = await readResponse(
+      response,
+      "O servidor retornou uma resposta inválida ao transcrever o vídeo."
     )
 
-    await transcribeVideoRecording()
-  })
+    if (!response.ok) {
+      throw new Error(data.message || "Erro ao transcrever o áudio do vídeo.")
+    }
 
-  videoRecorder.start()
-  startVideoTimer()
-  showVideoRecordingButtons()
-  setVideoRecordingVisual(true)
-
-  setVideoStatus(
-    "Gravando vídeo agora...",
-    "Fale naturalmente. Clique em parar quando terminar."
-  )
-}
-
-const stopVideoRecording = () => {
-  if (!videoRecorder || videoRecorder.state === "inactive") {
-    return
+    return data
   }
 
-  videoRecorder.stop()
-  stopVideoTimer()
-  showVideoProcessingButtons()
-  setVideoRecordingVisual(false)
-}
+  const analyzeVideoVisualEmotion = async (signal) => {
+    const uploadBlob = createVideoUploadBlob()
 
-const clearVideoRecording = () => {
-  videoChunks = []
-  currentVideoBlob = null
-  resetVideoVisualAnalysis()
+    if (!uploadBlob) {
+      return null
+    }
 
-  stopVideoStream()
-  stopVideoTimer()
-  setVideoRecordingVisual(false)
+    console.log("Enviando vídeo para análise visual:", {
+      type: uploadBlob.type,
+      size: uploadBlob.size
+    })
 
-  if (videoLivePreview) {
-    videoLivePreview.srcObject = null
+    const formData = new FormData()
+
+    formData.append("video", uploadBlob, "emodia-video.webm")
+
+    const response = await fetch("/analises/video/analisar-emocao", {
+      method: "POST",
+      body: formData,
+      signal
+    })
+
+    const data = await readResponse(
+      response,
+      "O servidor retornou uma resposta inválida ao analisar o vídeo."
+    )
+
+    if (!response.ok) {
+      throw new Error(
+        data.message || "Não foi possível analisar a emoção facial."
+      )
+    }
+
+    return data
   }
 
-  if (videoRecordingPreview) {
-    videoRecordingPreview.removeAttribute("src")
-    videoRecordingPreview.load()
+  const processVideoRecording = async () => {
+    if (!currentVideoBlob || videoCancelled) {
+      return
+    }
+
+    videoAbortController = new AbortController()
+
+    const { signal } = videoAbortController
+
+    showVideoProcessingButtons()
+    showVideoForm()
+
+    showVideoTranscriptionStatus("Transcrevendo o áudio do vídeo. Aguarde...")
+
+    if (videoTranscript) {
+      videoTranscript.value = ""
+      videoTranscript.placeholder = "Transcrevendo áudio do vídeo..."
+    }
+
+    let transcriptionFinished = false
+
+    try {
+      try {
+        const transcription = await transcribeVideoAudio(signal)
+
+        if (videoCancelled) {
+          return
+        }
+
+        if (videoTranscript) {
+          videoTranscript.value = transcription.transcript || ""
+
+          videoTranscript.placeholder =
+            "A transcrição automática do vídeo aparecerá aqui. Você poderá editar antes de enviar."
+
+          videoTranscript.focus()
+        }
+
+        transcriptionFinished = true
+
+        showVideoTranscriptionStatus(
+          "Transcrição pronta. Analisando expressão facial..."
+        )
+
+        setVideoStatus(
+          "Transcrição pronta",
+          "O sinal visual complementar está sendo analisado."
+        )
+      } catch (error) {
+        if (isVideoAbortError(error) || videoCancelled) {
+          throw error
+        }
+
+        const message =
+          error instanceof Error ? error.message : "Erro ao gerar transcrição."
+
+        console.error("Erro na transcrição do vídeo:", error)
+
+        showVideoTranscriptionStatus(
+          `${message} Tentando realizar a análise visual...`
+        )
+
+        if (videoTranscript) {
+          videoTranscript.placeholder = "Digite a transcrição manualmente."
+
+          videoTranscript.focus()
+        }
+      }
+
+      if (videoCancelled) {
+        return
+      }
+
+      try {
+        const visualAnalysis = await analyzeVideoVisualEmotion(signal)
+
+        if (videoVisualAnalysisInput && visualAnalysis) {
+          videoVisualAnalysisInput.value = JSON.stringify(visualAnalysis)
+        }
+
+        if (visualAnalysis?.confidenceLevel === "LOW") {
+          showVideoTranscriptionStatus(
+            transcriptionFinished
+              ? "Transcrição pronta. A análise visual foi concluída com baixa confiança. Revise antes de enviar."
+              : "Análise visual concluída com baixa confiança. Preencha a transcrição antes de enviar."
+          )
+
+          setVideoStatus(
+            "Análise visual concluída",
+            "O sinal visual foi registrado como complementar e possui baixa confiança."
+          )
+        } else {
+          showVideoTranscriptionStatus(
+            transcriptionFinished
+              ? "Transcrição e análise visual concluídas. Revise antes de enviar."
+              : "Análise visual concluída. Preencha a transcrição antes de enviar."
+          )
+
+          setVideoStatus(
+            "Processamento concluído",
+            "Revise a transcrição e clique em enviar."
+          )
+        }
+      } catch (error) {
+        if (isVideoAbortError(error) || videoCancelled) {
+          throw error
+        }
+
+        console.error("Erro na análise visual:", error)
+
+        const message =
+          error instanceof Error
+            ? error.message
+            : "A análise visual não ficou disponível."
+
+        showVideoTranscriptionStatus(
+          transcriptionFinished
+            ? `Transcrição pronta. ${message}`
+            : `Não foi possível gerar a transcrição nem a análise visual. ${message}`
+        )
+
+        setVideoStatus(
+          transcriptionFinished
+            ? "Transcrição pronta"
+            : "Preenchimento manual necessário",
+          "A análise pode continuar sem o sinal visual."
+        )
+      }
+    } catch (error) {
+      if (!isVideoAbortError(error) && !videoCancelled) {
+        console.error("Erro ao processar vídeo:", error)
+      }
+    } finally {
+      videoAbortController = null
+
+      if (!videoCancelled) {
+        showVideoFinishedButtons()
+      }
+    }
   }
 
-  if (videoLiveBox) {
-    videoLiveBox.hidden = true
+  const startVideoRecording = async () => {
+    if (!videoStream) {
+      await openVideoCamera()
+    }
+
+    if (!videoStream) {
+      return
+    }
+
+    videoCancelled = false
+    videoChunks = []
+    currentVideoBlob = null
+
+    resetVideoVisualAnalysis()
+    revokeVideoPreviewUrl()
+
+    if (videoTranscript) {
+      videoTranscript.value = ""
+      videoTranscript.placeholder = "A transcrição automática aparecerá aqui."
+    }
+
+    hideVideoForm()
+    hideVideoTranscriptionStatus()
+
+    const mimeType = getSupportedVideoMimeType()
+
+    const recorderOptions = mimeType
+      ? {
+          mimeType,
+          videoBitsPerSecond: 1_500_000,
+          audioBitsPerSecond: 96_000
+        }
+      : undefined
+
+    try {
+      videoRecorder = new MediaRecorder(videoStream, recorderOptions)
+    } catch (error) {
+      console.error("Erro ao criar o MediaRecorder:", error)
+
+      setVideoStatus(
+        "Gravação indisponível",
+        "O navegador não conseguiu iniciar o gravador de vídeo."
+      )
+
+      return
+    }
+
+    videoRecorder.addEventListener("dataavailable", (event) => {
+      if (event.data.size > 0) {
+        videoChunks.push(event.data)
+      }
+    })
+
+    videoRecorder.addEventListener("stop", async () => {
+      stopVideoTimer()
+      stopVideoStream()
+      setVideoRecordingVisual(false)
+
+      if (videoCancelled) {
+        resetVideoRecorder()
+        return
+      }
+
+      if (videoChunks.length === 0) {
+        resetVideoRecorder()
+
+        setVideoStatus(
+          "Falha na gravação",
+          "Nenhum dado de vídeo foi capturado. Tente novamente."
+        )
+
+        return
+      }
+
+      currentVideoBlob = new Blob(videoChunks, {
+        type: "video/webm"
+      })
+
+      console.log("Vídeo gravado:", {
+        recorderMimeType: videoRecorder?.mimeType,
+        blobType: currentVideoBlob.type,
+        blobSize: currentVideoBlob.size
+      })
+
+      videoPreviewUrl = URL.createObjectURL(currentVideoBlob)
+
+      if (videoRecordingPreview) {
+        videoRecordingPreview.src = videoPreviewUrl
+
+        videoRecordingPreview.playsInline = true
+      }
+
+      if (videoPreviewBox) {
+        videoPreviewBox.hidden = false
+      }
+
+      if (videoLiveBox) {
+        videoLiveBox.hidden = true
+      }
+
+      setVideoStatus(
+        "Gravação finalizada",
+        "O Emodia está processando o vídeo."
+      )
+
+      await processVideoRecording()
+    })
+
+    videoRecorder.addEventListener("error", (event) => {
+      console.error("Erro durante gravação de vídeo:", event)
+
+      resetVideoRecorder()
+
+      setVideoStatus(
+        "Erro na gravação",
+        "Não foi possível concluir a gravação do vídeo."
+      )
+    })
+
+    videoRecorder.start(1000)
+
+    startVideoTimer()
+    showVideoRecordingButtons()
+    setVideoRecordingVisual(true)
+
+    setVideoStatus(
+      "Gravando vídeo agora...",
+      "Clique em parar para analisar ou cancelar para descartar."
+    )
   }
 
-  if (videoPreviewBox) {
-    videoPreviewBox.hidden = true
+  const stopVideoRecording = () => {
+    if (!videoRecorder || videoRecorder.state === "inactive") {
+      return
+    }
+
+    videoCancelled = false
+    videoRecorder.stop()
+
+    stopVideoTimer()
+    showVideoProcessingButtons()
+    setVideoRecordingVisual(false)
   }
 
-  if (videoTranscript) {
-    videoTranscript.value = ""
-    videoTranscript.placeholder =
-      "A transcrição automática do vídeo aparecerá aqui. Você poderá editar antes de enviar."
+  const cancelVideoRecording = () => {
+    videoCancelled = true
+
+    videoAbortController?.abort()
+    videoAbortController = null
+
+    stopVideoTimer()
+    setVideoRecordingVisual(false)
+
+    if (videoRecorder && videoRecorder.state !== "inactive") {
+      videoRecorder.stop()
+      stopVideoStream()
+      return
+    }
+
+    resetVideoRecorder()
   }
 
-  if (videoTimer) {
-    videoTimer.textContent = "00:00"
+  if (
+    openVideoCameraButton &&
+    startVideoButton &&
+    stopVideoButton &&
+    cancelVideoButton &&
+    videoLivePreview &&
+    videoRecordingPreview
+  ) {
+    resetVideoRecorder()
+
+    openVideoCameraButton.addEventListener("click", openVideoCamera)
+
+    startVideoButton.addEventListener("click", startVideoRecording)
+
+    stopVideoButton.addEventListener("click", stopVideoRecording)
+
+    cancelVideoButton.addEventListener("click", cancelVideoRecording)
+
+    window.addEventListener("beforeunload", () => {
+      videoAbortController?.abort()
+      stopVideoStream()
+      revokeVideoPreviewUrl()
+    })
   }
-
-  hideVideoTranscriptionStatus()
-  hideVideoForm()
-  showInitialVideoButtons()
-
-  setVideoStatus(
-    "Câmera pronta para iniciar",
-    "Clique em abrir câmera para preparar a gravação."
-  )
-}
-
-if (
-  openVideoCameraButton &&
-  startVideoButton &&
-  stopVideoButton &&
-  clearVideoButton &&
-  videoLivePreview &&
-  videoRecordingPreview
-) {
-  hideVideoForm()
-  showInitialVideoButtons()
-
-  openVideoCameraButton.addEventListener("click", openVideoCamera)
-  startVideoButton.addEventListener("click", startVideoRecording)
-  stopVideoButton.addEventListener("click", stopVideoRecording)
-  clearVideoButton.addEventListener("click", clearVideoRecording)
-}
+})()

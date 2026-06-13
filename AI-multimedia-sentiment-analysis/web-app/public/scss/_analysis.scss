@@ -2070,3 +2070,60 @@
     padding: 0.8rem 0.6rem;
   }
 }
+
+.dashboard-primary-action {
+  display: flex;
+  margin-top: 1.5rem;
+}
+
+.detail-card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(148, 163, 184, 0.18);
+}
+
+.analysis-submit-progress {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin: 0.5rem 0 1rem;
+  padding: 1rem;
+  border: 1px solid rgba(34, 211, 238, 0.24);
+  border-radius: 0.9rem;
+  background: rgba(34, 211, 238, 0.08);
+}
+
+.analysis-submit-progress strong {
+  color: var(--color-text);
+}
+
+.analysis-submit-progress span {
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+}
+
+.analysis-submit-spinner {
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  border-top-color: currentColor;
+  border-radius: 50%;
+  animation: analysis-submit-spin 0.7s linear infinite;
+}
+
+.analysis-form[aria-busy="true"] button[type="submit"] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  cursor: wait;
+}
+
+@keyframes analysis-submit-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
