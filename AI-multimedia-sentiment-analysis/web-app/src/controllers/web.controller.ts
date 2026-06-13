@@ -8,20 +8,20 @@ import {
 } from "../services/emotion-record.service.js"
 import { getUserProfile } from "../services/user.service.js"
 
-const renderHomePage = (req: Request, res: Response) => {
+const renderHomePage = (_req: Request, res: Response) => {
   res.render("home", {
     title: "Emodia | Início",
     useEmotionGauge: true
   })
 }
 
-const renderAboutPage = (req: Request, res: Response) => {
+const renderAboutPage = (_req: Request, res: Response) => {
   res.render("about", {
     title: "Emodia | Sobre"
   })
 }
 
-const redirectAnalysisPage = (req: Request, res: Response) => {
+const redirectAnalysisPage = (_req: Request, res: Response) => {
   res.redirect("/dashboard")
 }
 
@@ -46,7 +46,7 @@ const renderDashboardPage = async (req: Request, res: Response) => {
   })
 }
 
-const renderNewAnalysisPage = (req: Request, res: Response) => {
+const renderNewAnalysisPage = (_req: Request, res: Response) => {
   res.render("app/new-analysis", {
     title: "Emodia | Nova análise",
     useNewAnalysisTabs: true,

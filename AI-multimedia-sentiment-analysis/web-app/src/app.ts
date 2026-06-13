@@ -52,10 +52,14 @@ app.use("/js", [
   express.static(`${process.cwd()}/public/js`),
   express.static(`${process.cwd()}/node_modules/bootstrap/dist/js`)
 ])
+app.use(
+  "/font",
+  express.static(`${process.cwd()}/node_modules/bootstrap-icons/font`)
+)
 
 app.use(routes)
 
-app.use((req, res) => {
+app.use((_req, res) => {
   res.status(404).render("error", {
     title: "Página não encontrada!",
     message: "A rota acessada não existe."

@@ -16,13 +16,21 @@ export default defineConfig([
       globals: globals.browser
     }
   },
+  {
+    ignores: ["build/**", "node_modules/**", "src/generated/**"]
+  },
 
   tseslint.configs.recommended,
 
   {
     rules: {
-      "@typescript-eslint/no-unused-vars": "off",
-      quotes: "error"
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        {
+          argsIgnorePattern: "^_",
+          varsIgnorePattern: "^_"
+        }
+      ]
     }
   }
 ])

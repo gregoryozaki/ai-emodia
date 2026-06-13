@@ -12,10 +12,10 @@ fs.mkdirSync(temporaryAudioDirectory, {
 })
 
 const storage = multer.diskStorage({
-  destination: (req, file, callback) => {
+  destination: (_req, _file, callback) => {
     callback(null, temporaryAudioDirectory)
   },
-  filename: (req, file, callback) => {
+  filename: (_req, file, callback) => {
     const extension = path.extname(file.originalname) || ".webm"
     const filename = `${crypto.randomUUID()}${extension}`
 
@@ -28,7 +28,7 @@ const audioTranscriptionUpload = multer({
   limits: {
     fileSize: 25 * 1024 * 1024
   },
-  fileFilter: (req, file, callback) => {
+  fileFilter: (_req, file, callback) => {
     const isAudio = file.mimetype.startsWith("audio/")
     const isWebm = file.mimetype === "video/webm"
 

@@ -461,17 +461,6 @@
   color: #bbf7d0;
 }
 
-[data-flash-message] {
-  transition:
-    opacity 220ms ease,
-    transform 220ms ease;
-}
-
-.flash-message-hidden {
-  opacity: 0;
-  transform: translateY(-6px);
-}
-
 .auth-recovery-card {
   align-self: center;
 }

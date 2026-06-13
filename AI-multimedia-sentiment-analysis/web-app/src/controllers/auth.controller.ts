@@ -56,7 +56,7 @@ const renderLoginPage = (req: Request, res: Response) => {
   })
 }
 
-const renderRegisterPage = (req: Request, res: Response) => {
+const renderRegisterPage = (_req: Request, res: Response) => {
   res.render("auth/register", {
     title: "Emodia | Criar conta",
     usePasswordToggle: true,

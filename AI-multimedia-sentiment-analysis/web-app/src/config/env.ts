@@ -41,7 +41,7 @@ export const env = cleanEnv(process.env, {
    * Transcrição
    */
   EMODIA_TRANSCRIPTION_MODE: str({
-    choices: ["local", "remote", "disabled"],
+    choices: ["local", "disabled"],
     default: "local"
   }),
 
@@ -60,10 +60,6 @@ export const env = cleanEnv(process.env, {
   EMODIA_WHISPER_DEVICE: str({
     choices: ["auto", "cuda", "cpu"],
     default: "cpu"
-  }),
-
-  EMODIA_TRANSCRIPTION_REMOTE_URL: str({
-    default: ""
   }),
 
   /*
@@ -125,10 +121,6 @@ export const env = cleanEnv(process.env, {
 
   EMODIA_CV_LABELS_PATH: str({
     default: "../ml/models/cv/convnexttiny_rafdb_v4/labels.json"
-  }),
-
-  EMODIA_CV_FACIAL_SCRIPT_PATH: str({
-    default: "../ml/src/cv/predict_facial_emotion.py"
   }),
 
   EMODIA_CV_VIDEO_SCRIPT_PATH: str({

@@ -1,28 +1,44 @@
-import multer from "multer"
+import fs from "node:fs"
 import path from "node:path"
 
+import multer from "multer"
+
+const AVATAR_DIRECTORY = path.resolve(
+  process.cwd(),
+  "public",
+  "uploads",
+  "avatars"
+)
+
+fs.mkdirSync(AVATAR_DIRECTORY, {
+  recursive: true
+})
+
 const avatarStorage = multer.diskStorage({
-  destination: (req, file, callback) => {
-    callback(null, "public/uploads/avatars")
+  destination: (_req, _file, callback) => {
+    callback(null, AVATAR_DIRECTORY)
   },
 
   filename: (req, file, callback) => {
     const extension = path.extname(file.originalname).toLowerCase()
-    const uniqueName = `${req.session.userId}-${Date.now()}${extension}`
+    const userId = req.session.userId ?? "anonymous"
+    const uniqueName = `${userId}-${Date.now()}${extension}`
 
     callback(null, uniqueName)
   }
 })
 
-const allowedImageTypes = ["image/jpeg", "image/png", "image/webp"]
+const allowedImageTypes = new Set(["image/jpeg", "image/png", "image/webp"])
 
 const uploadAvatar = multer({
   storage: avatarStorage,
+
   limits: {
-    fileSize: 1024 * 1024 * 2
+    fileSize: 2 * 1024 * 1024
   },
-  fileFilter: (req, file, callback) => {
-    if (!allowedImageTypes.includes(file.mimetype)) {
+
+  fileFilter: (_req, file, callback) => {
+    if (!allowedImageTypes.has(file.mimetype)) {
       callback(new Error("Envie uma imagem JPG, PNG ou WEBP de até 2 MB."))
       return
     }
