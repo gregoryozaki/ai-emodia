@@ -17,9 +17,11 @@ export const env = cleanEnv(process.env, {
   SESSION_SECRET: str(),
 
   SMTP_HOST: str(),
+
   SMTP_PORT: port({
     default: 587
   }),
+
   SMTP_USER: str(),
   SMTP_PASS: str(),
   SMTP_FROM: str(),
@@ -41,6 +43,14 @@ export const env = cleanEnv(process.env, {
   EMODIA_TRANSCRIPTION_MODE: str({
     choices: ["local", "remote", "disabled"],
     default: "local"
+  }),
+
+  EMODIA_TRANSCRIPTION_TIMEOUT_MS: num({
+    default: 120000
+  }),
+
+  EMODIA_TRANSCRIPTION_SCRIPT_PATH: str({
+    default: "../ml/src/transcription/transcribe_audio.py"
   }),
 
   EMODIA_WHISPER_MODEL: str({
@@ -112,6 +122,7 @@ export const env = cleanEnv(process.env, {
     default:
       "../ml/models/cv/convnexttiny_rafdb_v4/convnexttiny_rafdb_facecrop.onnx"
   }),
+
   EMODIA_CV_LABELS_PATH: str({
     default: "../ml/models/cv/convnexttiny_rafdb_v4/labels.json"
   }),

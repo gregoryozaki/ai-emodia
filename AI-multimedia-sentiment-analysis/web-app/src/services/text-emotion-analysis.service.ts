@@ -1,8 +1,9 @@
-import { env } from "../config/env.js"
 import { execFile } from "node:child_process"
 import { fileURLToPath } from "node:url"
 import path from "node:path"
 import { promisify } from "node:util"
+
+import { env } from "../config/env.js"
 
 type EmotionType =
   | "ALEGRIA"
@@ -47,15 +48,12 @@ const execFileAsync = promisify(execFile)
 const currentFilePath = fileURLToPath(import.meta.url)
 const currentDirectory = path.dirname(currentFilePath)
 
-const projectRoot = path.resolve(currentDirectory, "../../..")
+const WEB_APP_ROOT = path.resolve(currentDirectory, "../..")
+const PROJECT_ROOT = path.resolve(WEB_APP_ROOT, "..")
 
-const predictorScriptPath = path.join(
-  projectRoot,
-  "ml",
-  "src",
-  "nlp",
-  "predict_text_emotion.py"
-)
+const resolveFromWebApp = (configuredPath: string) => {
+  return path.resolve(WEB_APP_ROOT, configuredPath)
+}
 
 const validEmotions: EmotionType[] = [
   "ALEGRIA",
@@ -68,6 +66,7 @@ const validEmotions: EmotionType[] = [
 
 const triggerKeywords: Record<string, string[]> = {
   trabalho: ["trabalho", "emprego", "chefe", "empresa", "reunião", "demanda"],
+
   estudo: [
     "estudo",
     "faculdade",
@@ -77,7 +76,9 @@ const triggerKeywords: Record<string, string[]> = {
     "nota",
     "tcc"
   ],
+
   família: ["família", "mãe", "pai", "irmão", "irmã", "casa"],
+
   relacionamento: [
     "namoro",
     "namorada",
@@ -85,9 +86,13 @@ const triggerKeywords: Record<string, string[]> = {
     "relacionamento",
     "término"
   ],
+
   sono: ["sono", "dormir", "insônia", "sem dormir", "cansado", "cansada"],
+
   dinheiro: ["dinheiro", "conta", "dívida", "salário", "financeiro"],
+
   saúde: ["saúde", "doença", "dor", "médico", "hospital"],
+
   futuro: ["futuro", "incerteza", "medo do futuro", "não sei o que fazer"]
 }
 
@@ -164,11 +169,16 @@ const createSummary = (
 ) => {
   const emotionText: Record<EmotionType, string> = {
     ALEGRIA: "O relato apresenta sinais compatíveis com uma emoção positiva.",
+
     TRISTEZA: "O relato apresenta sinais compatíveis com tristeza ou desânimo.",
+
     RAIVA:
       "O relato apresenta sinais compatíveis com irritação, frustração ou raiva.",
+
     MEDO: "O relato apresenta sinais compatíveis com medo, insegurança ou ameaça.",
+
     NOJO: "O relato apresenta sinais compatíveis com rejeição, repulsa ou desconforto.",
+
     ANSIEDADE:
       "O relato apresenta sinais compatíveis com preocupação, tensão ou ansiedade."
   }
@@ -194,6 +204,18 @@ const createSummary = (
 
 const isEmotionType = (emotion: string): emotion is EmotionType => {
   return validEmotions.includes(emotion as EmotionType)
+}
+
+const getConfidenceLevel = (confidence: number): ConfidenceLevel => {
+  if (confidence >= env.EMODIA_NLP_HIGH_CONFIDENCE) {
+    return "HIGH"
+  }
+
+  if (confidence >= env.EMODIA_NLP_MIN_CONFIDENCE) {
+    return "MEDIUM"
+  }
+
+  return "LOW"
 }
 
 const extractJsonFromOutput = (stdout: string) => {
@@ -240,41 +262,54 @@ const validatePrediction = (value: unknown): BertimbauPrediction => {
     throw new Error("O classificador retornou uma confiança inválida.")
   }
 
-  if (
-    prediction.confidenceLevel !== "LOW" &&
-    prediction.confidenceLevel !== "MEDIUM" &&
-    prediction.confidenceLevel !== "HIGH"
-  ) {
-    throw new Error("O classificador retornou um nível de confiança inválido.")
+  if (prediction.confidence < 0 || prediction.confidence > 1) {
+    throw new Error(
+      "O classificador retornou uma confiança fora do intervalo esperado."
+    )
   }
+
+  const confidenceLevel = getConfidenceLevel(prediction.confidence)
+
+  const accepted = prediction.confidence >= env.EMODIA_NLP_MIN_CONFIDENCE
+
+  const mappedEmotion =
+    typeof prediction.emodiaEmotion === "string" &&
+    isEmotionType(prediction.emodiaEmotion)
+      ? prediction.emodiaEmotion
+      : accepted
+        ? prediction.emotion
+        : "INDEFINIDO"
 
   return {
     emotion: prediction.emotion,
-    emodiaEmotion:
-      prediction.emodiaEmotion === "INDEFINIDO" ||
-      (typeof prediction.emodiaEmotion === "string" &&
-        isEmotionType(prediction.emodiaEmotion))
-        ? prediction.emodiaEmotion
-        : prediction.emotion,
+    emodiaEmotion: mappedEmotion,
+
     confidence: prediction.confidence,
+
     confidencePercent:
       typeof prediction.confidencePercent === "number"
         ? prediction.confidencePercent
         : prediction.confidence * 100,
-    confidenceLevel: prediction.confidenceLevel,
-    accepted: prediction.accepted === true,
+
+    confidenceLevel,
+    accepted,
+
     scores:
       prediction.scores && typeof prediction.scores === "object"
         ? prediction.scores
         : {},
+
     model:
       typeof prediction.model === "string"
         ? prediction.model
         : "BERTimbau Emodia V2",
+
     device:
       typeof prediction.device === "string" ? prediction.device : "unknown",
+
     maxLength:
       typeof prediction.maxLength === "number" ? prediction.maxLength : 128,
+
     warning:
       typeof prediction.warning === "string"
         ? prediction.warning
@@ -285,6 +320,14 @@ const validatePrediction = (value: unknown): BertimbauPrediction => {
 const runBertimbauPrediction = async (
   content: string
 ): Promise<BertimbauPrediction> => {
+  if (!env.EMODIA_NLP_ENABLED) {
+    throw new Error("A análise textual por IA está desabilitada.")
+  }
+
+  const predictorScriptPath = resolveFromWebApp(env.EMODIA_NLP_SCRIPT_PATH)
+
+  const modelPath = resolveFromWebApp(env.EMODIA_NLP_MODEL_PATH)
+
   try {
     const { stdout } = await execFileAsync(
       "conda",
@@ -292,19 +335,25 @@ const runBertimbauPrediction = async (
         "run",
         "--no-capture-output",
         "-n",
-        "emodia-ml",
+        env.EMODIA_CONDA_ENV,
         "python",
         predictorScriptPath,
+        "--model-path",
+        modelPath,
+        "--device",
+        env.EMODIA_NLP_DEVICE,
         content
       ],
       {
-        cwd: projectRoot,
-        timeout: 120_000,
+        cwd: PROJECT_ROOT,
+        timeout: env.EMODIA_NLP_TIMEOUT_MS,
         maxBuffer: 10 * 1024 * 1024,
+
         env: {
           ...process.env,
           HF_HUB_DISABLE_PROGRESS_BARS: "1",
-          TOKENIZERS_PARALLELISM: "false"
+          TOKENIZERS_PARALLELISM: "false",
+          PYTHONUNBUFFERED: "1"
         }
       }
     )
@@ -358,8 +407,10 @@ const analyzeTextEmotion = async (
     intensity,
     triggers,
     summary,
+
     confidence: prediction.confidence,
     confidenceLevel: prediction.confidenceLevel,
+
     scores: prediction.scores,
     model: prediction.model,
     warning: prediction.warning
@@ -367,3 +418,11 @@ const analyzeTextEmotion = async (
 }
 
 export { analyzeTextEmotion }
+
+export type {
+  BertimbauPrediction,
+  ConfidenceLevel,
+  EmotionType,
+  TextEmotionAnalysisResult,
+  TextEmotionScores
+}
