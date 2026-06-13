@@ -204,6 +204,8 @@
                 class="form-control auth-input"
                 value="{{profile.fullName}}"
                 minlength="3"
+                maxlength="120"
+                autocomplete="name"
                 required
               />
             </div>
@@ -219,6 +221,8 @@
                 name="email"
                 class="form-control auth-input"
                 value="{{profile.email}}"
+                maxlength="254"
+                autocomplete="email"
                 required
               />
             </div>
@@ -298,6 +302,7 @@
                   id="currentPassword"
                   name="currentPassword"
                   class="form-control auth-input"
+                  maxlength="72"
                   autocomplete="current-password"
                   required
                 />
@@ -324,6 +329,8 @@
                   id="newPassword"
                   name="newPassword"
                   class="form-control auth-input"
+                  minlength="8"
+                  maxlength="72"
                   autocomplete="new-password"
                   required
                 />
@@ -339,8 +346,8 @@
               </div>
 
               <small class="profile-help-text">
-                Use pelo menos 8 caracteres, com letra maiúscula, minúscula,
-                número e símbolo.
+                Use entre 8 e 72 caracteres, com letra maiúscula, minúscula,
+                número e caractere especial.
               </small>
             </div>
 
@@ -499,7 +506,12 @@
             type="text"
             name="confirmation"
             class="form-control auth-input"
+            minlength="7"
+            maxlength="7"
+            pattern="EXCLUIR"
+            title="Digite exatamente EXCLUIR."
             placeholder="Digite EXCLUIR"
+            autocomplete="off"
             required
           />
         </div>

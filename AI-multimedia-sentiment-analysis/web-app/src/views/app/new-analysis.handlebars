@@ -76,9 +76,15 @@
                     id="content"
                     name="content"
                     rows="9"
+                    minlength="10"
+                    maxlength="5000"
                     placeholder="Exemplo: Hoje me senti muito ansioso por causa da faculdade..."
                     required
                   >{{formData.content}}</textarea>
+
+                  <small>
+                    Use entre 10 e 5.000 caracteres.
+                  </small>
 
                   <div class="analysis-form-warning">
                     <strong>Importante:</strong>
@@ -191,7 +197,8 @@
                     id="audioTranscript"
                     name="transcript"
                     rows="8"
-                    placeholder="A transcrição automática aparecerá aqui. Você poderá editar antes de enviar."
+                    minlength="10"
+                    maxlength="5000"
                     required
                   >{{formData.transcript}}</textarea>
 
@@ -331,7 +338,8 @@
                     id="videoTranscript"
                     name="transcript"
                     rows="8"
-                    placeholder="A transcrição automática do vídeo aparecerá aqui. Você poderá editar antes de enviar."
+                    minlength="10"
+                    maxlength="5000"
                     required
                   >{{formData.transcript}}</textarea>
 

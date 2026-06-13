@@ -1,13 +1,35 @@
-const isAdult = (dateValue) => {
-  const birthDate = new Date(dateValue)
+const parseBirthDate = (dateValue) => {
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(dateValue)
+
+  if (!match) {
+    return undefined
+  }
+
+  const year = Number(match[1])
+  const month = Number(match[2])
+  const day = Number(match[3])
+  const birthDate = new Date(year, month - 1, day)
+
+  if (
+    birthDate.getFullYear() !== year ||
+    birthDate.getMonth() !== month - 1 ||
+    birthDate.getDate() !== day
+  ) {
+    return undefined
+  }
+
+  return birthDate
+}
+
+const isAdult = (birthDate) => {
   const currentDate = new Date()
 
   let age = currentDate.getFullYear() - birthDate.getFullYear()
-  const monthDiff = currentDate.getMonth() - birthDate.getMonth()
+  const monthDifference = currentDate.getMonth() - birthDate.getMonth()
 
   if (
-    monthDiff < 0 ||
-    (monthDiff === 0 && currentDate.getDate() < birthDate.getDate())
+    monthDifference < 0 ||
+    (monthDifference === 0 && currentDate.getDate() < birthDate.getDate())
   ) {
     age -= 1
   }
@@ -36,36 +58,40 @@ document.addEventListener("DOMContentLoaded", () => {
     return
   }
 
-  const rules = [
+  const passwordRules = [
     {
       elementId: "ruleLength",
-      regex: /.{8,}/
+      validate: (password) => {
+        return password.length >= 8 && password.length <= 72
+      }
     },
     {
       elementId: "ruleUppercase",
-      regex: /[A-Z]/
+      validate: (password) => /[A-Z]/.test(password)
     },
     {
       elementId: "ruleLowercase",
-      regex: /[a-z]/
+      validate: (password) => /[a-z]/.test(password)
     },
     {
       elementId: "ruleNumber",
-      regex: /[0-9]/
+      validate: (password) => /[0-9]/.test(password)
     },
     {
       elementId: "ruleSpecial",
-      regex: /[@#$%&*!?._-]/
+      validate: (password) => /[@#$%&*!?._-]/.test(password)
     }
   ]
 
   const updatePasswordRules = () => {
-    rules.forEach((rule) => {
+    passwordRules.forEach((rule) => {
       const item = document.getElementById(rule.elementId)
 
-      if (!item) return
+      if (!item) {
+        return
+      }
 
-      item.classList.toggle("valid", rule.regex.test(passwordInput.value))
+      item.classList.toggle("valid", rule.validate(passwordInput.value))
     })
   }
 
@@ -80,20 +106,30 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   const openTermsModal = () => {
-    if (!(termsModal instanceof HTMLElement)) return
+    if (!(termsModal instanceof HTMLElement)) {
+      return
+    }
 
     termsModal.classList.add("open")
     termsModal.setAttribute("aria-hidden", "false")
   }
 
   const closeTermsModal = () => {
-    if (!(termsModal instanceof HTMLElement)) return
+    if (!(termsModal instanceof HTMLElement)) {
+      return
+    }
 
     termsModal.classList.remove("open")
     termsModal.setAttribute("aria-hidden", "true")
   }
 
-  passwordInput.addEventListener("input", updatePasswordRules)
+  passwordInput.addEventListener("input", () => {
+    hideFeedback()
+    updatePasswordRules()
+  })
+
+  confirmPasswordInput.addEventListener("input", hideFeedback)
+  birthDateInput.addEventListener("change", hideFeedback)
 
   if (openTermsButton) {
     openTermsButton.addEventListener("click", openTermsModal)
@@ -112,7 +148,15 @@ document.addEventListener("DOMContentLoaded", () => {
   form.addEventListener("submit", (event) => {
     hideFeedback()
 
-    if (!isAdult(birthDateInput.value)) {
+    const birthDate = parseBirthDate(birthDateInput.value)
+
+    if (!birthDate) {
+      event.preventDefault()
+      showFeedback("Informe uma data de nascimento válida.")
+      return
+    }
+
+    if (!isAdult(birthDate)) {
       event.preventDefault()
       showFeedback("Você precisa ter 18 anos ou mais para usar o Emodia.")
       return
@@ -124,13 +168,15 @@ document.addEventListener("DOMContentLoaded", () => {
       return
     }
 
-    const hasInvalidRule = rules.some((rule) => {
-      return !rule.regex.test(passwordInput.value)
+    const hasInvalidPasswordRule = passwordRules.some((rule) => {
+      return !rule.validate(passwordInput.value)
     })
 
-    if (hasInvalidRule) {
+    if (hasInvalidPasswordRule) {
       event.preventDefault()
-      showFeedback("Sua senha não atende todos os requisitos.")
+      showFeedback("Sua senha não atende a todos os requisitos.")
     }
   })
+
+  updatePasswordRules()
 })

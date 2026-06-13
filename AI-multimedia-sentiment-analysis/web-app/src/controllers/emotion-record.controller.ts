@@ -5,6 +5,12 @@ import {
   createTranscriptEmotionRecord
 } from "../services/emotion-record.service.js"
 
+import {
+  createTextEmotionRecordSchema,
+  createTranscriptEmotionRecordSchema,
+  getValidationMessage
+} from "../validations/emotion-record.validation.js"
+
 type VisualConfidenceLevel = "LOW" | "MEDIUM" | "HIGH"
 
 type ParsedVisualAnalysis = {
@@ -82,10 +88,26 @@ const createTextEmotionRecordController = async (
     return
   }
 
+  const validation = createTextEmotionRecordSchema.safeParse(req.body)
+
+  if (!validation.success) {
+    res.status(400).render("app/new-analysis", {
+      title: "Emodia | Nova análise",
+      error: getValidationMessage(validation.error),
+      formData: {
+        content: typeof req.body.content === "string" ? req.body.content : ""
+      },
+      useNewAnalysisTabs: true,
+      useAudioRecorder: true,
+      useVideoRecorder: true
+    })
+    return
+  }
+
   try {
     const record = await createTextEmotionRecord({
       userId,
-      content: req.body.content
+      content: validation.data.content
     })
 
     if (record.riskLevel === "HIGH" || record.riskLevel === "CRITICAL") {
@@ -117,13 +139,30 @@ const createTranscriptEmotionRecordController = async (
     return
   }
 
+  const validation = createTranscriptEmotionRecordSchema.safeParse(req.body)
+
+  if (!validation.success) {
+    res.status(400).render("app/new-analysis", {
+      title: "Emodia | Nova análise",
+      error: getValidationMessage(validation.error),
+      formData: {
+        transcript:
+          typeof req.body.transcript === "string" ? req.body.transcript : ""
+      },
+      useNewAnalysisTabs: true,
+      useAudioRecorder: true,
+      useVideoRecorder: true
+    })
+    return
+  }
+
   try {
-    const inputMode = req.body.inputMode === "VIDEO" ? "VIDEO" : "AUDIO"
+    const { inputMode, transcript } = validation.data
     const visualAnalysis = parseVisualAnalysis(req.body.visualAnalysis)
     const record = await createTranscriptEmotionRecord({
       userId,
       inputMode,
-      transcript: req.body.transcript,
+      transcript,
       ...(inputMode === "VIDEO" && visualAnalysis ? { visualAnalysis } : {})
     })
 

@@ -7,7 +7,11 @@
     <div class="auth-shell auth-shell-register">
       <aside class="auth-aside">
         <div class="auth-logo-wrap auth-logo-aside">
-          <img src="/img/logo-emodia.png" alt="Logo Emodia" class="auth-logo" />
+          <img
+            src="/img/logo-emodia.png"
+            alt="Logo Emodia"
+            class="auth-logo"
+          />
         </div>
 
         <span class="page-badge">Cadastro de usuário</span>
@@ -22,17 +26,24 @@
         <div class="auth-aside-list">
           <div>
             <strong>Uso para maiores de 18 anos</strong>
-            <span>Critério necessário para segurança e conformidade do sistema.</span>
+            <span>
+              Critério necessário para segurança e conformidade do sistema.
+            </span>
           </div>
 
           <div>
             <strong>Consentimento LGPD</strong>
-            <span>O uso depende da aceitação dos termos e política de privacidade.</span>
+            <span>
+              O uso depende da aceitação dos termos e política de privacidade.
+            </span>
           </div>
 
           <div>
             <strong>Não é diagnóstico</strong>
-            <span>O Emodia apoia o autocuidado, mas não substitui ajuda profissional.</span>
+            <span>
+              O Emodia apoia o autocuidado, mas não substitui ajuda
+              profissional.
+            </span>
           </div>
         </div>
       </aside>
@@ -45,37 +56,60 @@
         </p>
 
         {{#if error}}
-          <div class="auth-alert auth-alert-error">
+          <div
+            class="auth-alert auth-alert-error"
+            role="alert"
+            data-flash-message
+          >
             {{error}}
           </div>
         {{/if}}
 
-        <form id="registerForm" class="auth-form" action="/cadastro" method="post" autocomplete="off">
+        <form
+          id="registerForm"
+          class="auth-form"
+          action="/cadastro"
+          method="post"
+        >
           <div class="row g-3">
             <div class="col-12 col-md-6">
               <div class="auth-field">
-                <label for="fullName" class="form-label">Nome completo *</label>
+                <label for="fullName" class="form-label">
+                  Nome completo *
+                </label>
 
                 <input
                   type="text"
                   class="form-control auth-input"
                   id="fullName"
                   name="fullName"
+                  minlength="3"
+                  maxlength="120"
+                  value="{{formData.fullName}}"
                   placeholder="Seu nome completo"
+                  autocomplete="name"
                   required
                 />
+
+                <small class="auth-help-text">
+                  Use entre 3 e 120 caracteres.
+                </small>
               </div>
             </div>
 
             <div class="col-12 col-md-6">
               <div class="auth-field">
-                <label for="birthDate" class="form-label">Data de nascimento *</label>
+                <label for="birthDate" class="form-label">
+                  Data de nascimento *
+                </label>
 
                 <input
                   type="date"
                   class="form-control auth-input"
                   id="birthDate"
                   name="birthDate"
+                  value="{{formData.birthDate}}"
+                  autocomplete="bday"
                   required
                 />
 
@@ -87,22 +121,33 @@
 
             <div class="col-12">
               <div class="auth-field">
-                <label for="registerEmail" class="form-label">E-mail *</label>
+                <label for="registerEmail" class="form-label">
+                  E-mail *
+                </label>
 
                 <input
                   type="email"
                   class="form-control auth-input"
                   id="registerEmail"
                   name="email"
+                  maxlength="254"
+                  value="{{formData.email}}"
                   placeholder="seuemail@gmail.com"
+                  autocomplete="email"
                   required
                 />
+
+                <small class="auth-help-text">
+                  Use um endereço de e-mail válido.
+                </small>
               </div>
             </div>
 
             <div class="col-12 col-md-6">
               <div class="auth-field">
-                <label for="registerPassword" class="form-label">Senha *</label>
+                <label for="registerPassword" class="form-label">
+                  Senha *
+                </label>
 
                 <div class="password-field">
                   <input
@@ -110,7 +155,11 @@
                     class="form-control auth-input"
                     id="registerPassword"
                     name="password"
+                    minlength="8"
+                    maxlength="72"
                     placeholder="Sua senha"
+                    autocomplete="new-password"
+                    aria-describedby="passwordRules"
                     required
                   />
 
@@ -128,7 +177,9 @@
 
             <div class="col-12 col-md-6">
               <div class="auth-field">
-                <label for="confirmPassword" class="form-label">Confirmar senha *</label>
+                <label for="confirmPassword" class="form-label">
+                  Confirmar senha *
+                </label>
 
                 <div class="password-field">
                   <input
@@ -136,7 +187,10 @@
                     class="form-control auth-input"
                     id="confirmPassword"
                     name="confirmPassword"
+                    minlength="8"
+                    maxlength="72"
                     placeholder="Repita sua senha"
+                    autocomplete="new-password"
                     required
                   />
 
@@ -153,22 +207,32 @@
             </div>
 
             <div class="col-12">
-              <div class="password-rules">
+              <div class="password-rules" id="passwordRules">
                 <p>A senha deve conter:</p>
 
                 <div class="row g-2">
                   <div class="col-12 col-sm-6">
                     <ul>
-                      <li id="ruleLength">Mínimo 8 caracteres</li>
-                      <li id="ruleUppercase">Uma letra maiúscula</li>
-                      <li id="ruleLowercase">Uma letra minúscula</li>
+                      <li id="ruleLength">
+                        Entre 8 e 72 caracteres
+                      </li>
+                      <li id="ruleUppercase">
+                        Uma letra maiúscula
+                      </li>
+                      <li id="ruleLowercase">
+                        Uma letra minúscula
+                      </li>
                     </ul>
                   </div>
 
                   <div class="col-12 col-sm-6">
                     <ul>
-                      <li id="ruleNumber">Um número</li>
-                      <li id="ruleSpecial">Um caractere especial</li>
+                      <li id="ruleNumber">
+                        Um número
+                      </li>
+                      <li id="ruleSpecial">
+                        Um caractere especial permitido
+                      </li>
                     </ul>
                   </div>
                 </div>
@@ -183,14 +247,21 @@
                     id="consentTerm"
                     name="consentTerm"
                     value="true"
+                    {{#if formData.consentTerm}}checked{{/if}}
                     required
                   />
 
                   <span>
                     Eu li e aceito os
-                    <button type="button" id="openTerms" class="terms-button">
+
+                    <button
+                      type="button"
+                      id="openTerms"
+                      class="terms-button"
+                    >
                       Termos de Uso e Política de Privacidade — LGPD
                     </button>
+
                     *
                   </span>
                 </label>
@@ -198,7 +269,11 @@
             </div>
           </div>
 
-          <div id="registerFeedback" class="auth-alert auth-alert-error d-none"></div>
+          <div
+            id="registerFeedback"
+            class="auth-alert auth-alert-error d-none"
+            role="alert"
+          ></div>
 
           <button type="submit" class="btn-emodia-primary w-100 mt-3">
             Criar conta
@@ -216,11 +291,21 @@
   <div id="termsModal" class="auth-modal" aria-hidden="true">
     <div class="auth-modal-backdrop" data-close-terms></div>
 
-    <div class="auth-modal-content" role="dialog" aria-modal="true" aria-labelledby="termsModalTitle">
+    <div
+      class="auth-modal-content"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="termsModalTitle"
+    >
       <div class="auth-modal-header">
         <h2 id="termsModalTitle">Termos de Uso e LGPD</h2>
 
-        <button type="button" class="auth-modal-close" data-close-terms aria-label="Fechar modal">
+        <button
+          type="button"
+          class="auth-modal-close"
+          data-close-terms
+          aria-label="Fechar modal"
+        >
           ×
         </button>
       </div>
@@ -230,7 +315,11 @@
       </div>
 
       <div class="auth-modal-footer">
-        <button type="button" class="btn-emodia-primary w-100" data-close-terms>
+        <button
+          type="button"
+          class="btn-emodia-primary w-100"
+          data-close-terms
+        >
           Entendi
         </button>
       </div>

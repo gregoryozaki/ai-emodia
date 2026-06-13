@@ -11,6 +11,10 @@ import {
 } from "../repositories/emotion-record.repository.js"
 import { analyzeRiskSignals } from "./risk-analysis.service.js"
 import { analyzeTextEmotion } from "./text-emotion-analysis.service.js"
+import {
+  parseEmotionContent,
+  parseEmotionTranscript
+} from "../validations/emotion-record.validation.js"
 
 type CreateTextEmotionRecordInput = {
   userId: string
@@ -227,11 +231,7 @@ const sanitizeVisualAnalysis = (analysis: VisualAnalysisInput) => {
 }
 
 const createTextEmotionRecord = async (input: CreateTextEmotionRecordInput) => {
-  const content = input.content.trim()
-
-  if (!content) {
-    throw new Error("Informe um texto para análise.")
-  }
+  const content = parseEmotionContent(input.content)
 
   const analysis = await analyzeTextEmotion(content)
   const riskAnalysis = analyzeRiskSignals(content)
@@ -254,11 +254,7 @@ const createTextEmotionRecord = async (input: CreateTextEmotionRecordInput) => {
 const createTranscriptEmotionRecord = async (
   input: CreateTranscriptEmotionRecordInput
 ) => {
-  const transcript = input.transcript.trim()
-
-  if (!transcript) {
-    throw new Error("Informe uma transcrição para análise.")
-  }
+  const transcript = parseEmotionTranscript(input.transcript)
 
   const analysis = await analyzeTextEmotion(transcript)
   const riskAnalysis = analyzeRiskSignals(transcript)
