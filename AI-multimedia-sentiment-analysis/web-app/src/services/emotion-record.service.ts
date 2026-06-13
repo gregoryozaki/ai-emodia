@@ -23,16 +23,41 @@ type VisualAnalysisInput = {
   emotion: string
   emodiaEmotion: string
   confidence: number
+  confidencePercent?: number
   confidenceLevel: VisualConfidenceLevel
   topGap?: number
   averageScores?: Record<string, number>
   emotionCounts?: Record<string, number>
+  sampledFrames?: number
   framesAnalyzed?: number
+  framesWithoutFace?: number
   frameIntervalSeconds?: number
+  fps?: number
+  totalFrames?: number
+  durationSeconds?: number
   model?: string
+  modelPath?: string
+  labelsPath?: string
+  device?: string
   input?: string
   interpretation?: string
   warning?: string
+  frameResults?: Array<{
+    frameIndex: number
+    timeSeconds: number
+    emotion: string
+    emodiaEmotion: string
+    confidence: number
+    confidenceLevel: VisualConfidenceLevel
+    topGap: number
+    faceBox?: {
+      x: number
+      y: number
+      width: number
+      height: number
+    }
+    scores: Record<string, number>
+  }>
 }
 
 type CreateTranscriptEmotionRecordInput = {
@@ -171,11 +196,34 @@ const splitTriggers = (trigger?: string | null) => {
   if (!trigger) {
     return []
   }
-
   return trigger
     .split(",")
     .map((item) => item.trim())
     .filter(Boolean)
+}
+
+const sanitizeVisualAnalysis = (analysis: VisualAnalysisInput) => {
+  return {
+    emotion: analysis.emotion,
+    emodiaEmotion: analysis.emodiaEmotion,
+    confidence: analysis.confidence,
+    confidencePercent: analysis.confidencePercent,
+    confidenceLevel: analysis.confidenceLevel,
+    topGap: analysis.topGap,
+    averageScores: analysis.averageScores,
+    emotionCounts: analysis.emotionCounts,
+    sampledFrames: analysis.sampledFrames,
+    framesAnalyzed: analysis.framesAnalyzed,
+    framesWithoutFace: analysis.framesWithoutFace,
+    frameIntervalSeconds: analysis.frameIntervalSeconds,
+    fps: analysis.fps,
+    totalFrames: analysis.totalFrames,
+    durationSeconds: analysis.durationSeconds,
+    model: analysis.model,
+    device: analysis.device,
+    interpretation: analysis.interpretation,
+    warning: analysis.warning
+  }
 }
 
 const createTextEmotionRecord = async (input: CreateTextEmotionRecordInput) => {
@@ -215,6 +263,10 @@ const createTranscriptEmotionRecord = async (
   const analysis = await analyzeTextEmotion(transcript)
   const riskAnalysis = analyzeRiskSignals(transcript)
 
+  const visualAnalysis = input.visualAnalysis
+    ? sanitizeVisualAnalysis(input.visualAnalysis)
+    : undefined
+
   return createEmotionRecord({
     userId: input.userId,
     emotion: analysis.emotion,
@@ -224,17 +276,20 @@ const createTranscriptEmotionRecord = async (
     intensity: analysis.intensity,
     trigger: analysis.triggers.join(", "),
     riskLevel: riskAnalysis.riskLevel,
+
     ...(riskAnalysis.riskMessage
       ? { riskMessage: riskAnalysis.riskMessage }
       : {}),
+
     ...(riskAnalysis.riskTerms ? { riskTerms: riskAnalysis.riskTerms } : {}),
-    ...(input.visualAnalysis
+
+    ...(visualAnalysis
       ? {
-          visualEmotion: input.visualAnalysis.emotion,
-          visualEmodiaEmotion: input.visualAnalysis.emodiaEmotion,
-          visualConfidence: input.visualAnalysis.confidence,
-          visualConfidenceLevel: input.visualAnalysis.confidenceLevel,
-          visualAnalysis: input.visualAnalysis
+          visualEmotion: visualAnalysis.emotion,
+          visualEmodiaEmotion: visualAnalysis.emodiaEmotion,
+          visualConfidence: visualAnalysis.confidence,
+          visualConfidenceLevel: visualAnalysis.confidenceLevel,
+          visualAnalysis
         }
       : {})
   })

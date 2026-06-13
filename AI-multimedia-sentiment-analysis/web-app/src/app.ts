@@ -40,27 +40,6 @@ app.use(
   })
 )
 
-app.use(
-  session({
-    name: "emodia.sid",
-    secret: env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false,
-
-    store: new PgSession({
-      conString: env.DATABASE_URL,
-      createTableIfMissing: true
-    }),
-
-    cookie: {
-      httpOnly: true,
-      sameSite: "lax",
-      secure: env.NODE_ENV === "production",
-      maxAge: 1000 * 60 * 60 * 24 * 7
-    }
-  })
-)
-
 app.use(setViewLocals)
 
 app.use("/img", express.static(`${process.cwd()}/public/img`))

@@ -140,17 +140,31 @@ const estimateIntensity = (
     "panico"
   ]
 
-  let intensity = 2
+  const strongWordCount = countMatches(normalizedText, strongWords)
 
-  if (text.length > 180) {
+  let intensity = 3
+
+  if (text.length > 100) {
     intensity += 1
   }
 
-  if (triggers.length >= 2) {
+  if (text.length > 250) {
     intensity += 1
   }
 
-  if (countMatches(normalizedText, strongWords) >= 1) {
+  if (triggers.length >= 1) {
+    intensity += 1
+  }
+
+  if (triggers.length >= 3) {
+    intensity += 1
+  }
+
+  if (strongWordCount >= 1) {
+    intensity += 1
+  }
+
+  if (strongWordCount >= 3) {
     intensity += 1
   }
 
@@ -158,7 +172,7 @@ const estimateIntensity = (
     intensity += 1
   }
 
-  return Math.min(intensity, 5)
+  return Math.min(intensity, 10)
 }
 
 const createSummary = (
@@ -197,7 +211,7 @@ const createSummary = (
   return [
     emotionText[emotion],
     confidenceText[confidenceLevel],
-    `Intensidade estimada: ${intensity}/5.`,
+    `Intensidade estimada: ${intensity}/10.`,
     triggerText
   ].join(" ")
 }

@@ -5,6 +5,72 @@ import {
   createTranscriptEmotionRecord
 } from "../services/emotion-record.service.js"
 
+type VisualConfidenceLevel = "LOW" | "MEDIUM" | "HIGH"
+
+type ParsedVisualAnalysis = {
+  emotion: string
+  emodiaEmotion: string
+  confidence: number
+  confidenceLevel: VisualConfidenceLevel
+  topGap?: number
+  averageScores?: Record<string, number>
+  emotionCounts?: Record<string, number>
+  sampledFrames?: number
+  framesAnalyzed?: number
+  framesWithoutFace?: number
+  frameIntervalSeconds?: number
+  fps?: number
+  totalFrames?: number
+  durationSeconds?: number
+  model?: string
+  device?: string
+  interpretation?: string
+  warning?: string
+}
+
+const isRecord = (value: unknown): value is Record<string, unknown> => {
+  return typeof value === "object" && value !== null
+}
+
+const parseVisualAnalysis = (
+  value: unknown
+): ParsedVisualAnalysis | undefined => {
+  if (typeof value !== "string" || !value.trim()) {
+    return undefined
+  }
+
+  try {
+    const parsed: unknown = JSON.parse(value)
+
+    if (!isRecord(parsed)) {
+      return undefined
+    }
+
+    if (
+      typeof parsed.emotion !== "string" ||
+      typeof parsed.emodiaEmotion !== "string" ||
+      typeof parsed.confidence !== "number" ||
+      !Number.isFinite(parsed.confidence) ||
+      parsed.confidence < 0 ||
+      parsed.confidence > 1
+    ) {
+      return undefined
+    }
+
+    if (
+      parsed.confidenceLevel !== "LOW" &&
+      parsed.confidenceLevel !== "MEDIUM" &&
+      parsed.confidenceLevel !== "HIGH"
+    ) {
+      return undefined
+    }
+
+    return parsed as ParsedVisualAnalysis
+  } catch {
+    return undefined
+  }
+}
+
 const createTextEmotionRecordController = async (
   req: Request,
   res: Response
@@ -53,19 +119,7 @@ const createTranscriptEmotionRecordController = async (
 
   try {
     const inputMode = req.body.inputMode === "VIDEO" ? "VIDEO" : "AUDIO"
-
-    const visualAnalysisRaw = req.body.visualAnalysis
-
-    let visualAnalysis
-
-    if (visualAnalysisRaw && typeof visualAnalysisRaw === "string") {
-      try {
-        visualAnalysis = JSON.parse(visualAnalysisRaw)
-      } catch {
-        visualAnalysis = undefined
-      }
-    }
-
+    const visualAnalysis = parseVisualAnalysis(req.body.visualAnalysis)
     const record = await createTranscriptEmotionRecord({
       userId,
       inputMode,
