@@ -30,7 +30,7 @@ RUN npm ci --include=dev
 
 COPY web-app /app/web-app
 
-RUN npx prisma generate && npx sass public/scss/main.scss public/css/main.css --no-source-map && npm run build && mkdir -p build/generated && cp -R src/generated/prisma build/generated/
+RUN DATABASE_URL="postgresql://usuario:senha@localhost:5432/emodia" npx prisma generate && npx sass public/scss/main.scss public/css/main.css --no-source-map && npm run build && mkdir -p build/generated && cp -R src/generated/prisma build/generated/
 
 EXPOSE 8080
 
