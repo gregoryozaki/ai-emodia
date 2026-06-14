@@ -1,5 +1,6 @@
 faster-whisper
-torch
 transformers
 safetensors
 onnxruntime
+opencv-python-headless
+numpy
