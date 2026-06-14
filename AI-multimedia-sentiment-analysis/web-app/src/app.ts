@@ -1,4 +1,5 @@
 import express from "express"
+app.set("trust proxy", 1)
 import multer from "multer"
 import morgan from "morgan"
 import session from "express-session"
