@@ -10,7 +10,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates
 
 RUN curl -fsSL https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -o /tmp/miniconda.sh && bash /tmp/miniconda.sh -b -p /opt/conda && rm /tmp/miniconda.sh && conda clean --all --yes
 
-RUN conda create --yes --name emodia-ml python=3.11 pip && conda clean --all --yes
+RUN conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/main && conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/r && conda create --yes --name emodia-ml python=3.11 pip && conda clean --all --yes
 
 WORKDIR /app
 
