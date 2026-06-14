@@ -1,5 +1,4 @@
 import express from "express"
-app.set("trust proxy", 1)
 import multer from "multer"
 import morgan from "morgan"
 import session from "express-session"
@@ -12,6 +11,9 @@ import { env } from "./config/env.js"
 import routes from "./routes/index.routes.js"
 
 const app = express()
+
+app.set("trust proxy", 1)
+
 const PgSession = connectPgSimple(session)
 
 app.engine("handlebars", engine({}))
