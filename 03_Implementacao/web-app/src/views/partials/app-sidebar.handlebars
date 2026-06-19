@@ -1,0 +1,70 @@
+<aside
+  class="offcanvas offcanvas-start app-sidebar-drawer"
+  tabindex="-1"
+  id="appSidebar"
+  aria-labelledby="appSidebarLabel"
+>
+  <div class="app-sidebar-header">
+    <div>
+      <span class="page-badge">Área logada</span>
+
+      <h2 id="appSidebarLabel">
+        Emodia
+      </h2>
+
+      {{#if currentUser}}
+        <p>
+          Olá,
+          {{currentUser.firstName}}.
+        </p>
+      {{else}}
+        <p>
+          Acompanhamento emocional inteligente.
+        </p>
+      {{/if}}
+    </div>
+
+    <button
+      type="button"
+      class="app-sidebar-close"
+      data-bs-dismiss="offcanvas"
+      aria-label="Fechar menu"
+    >
+      ×
+    </button>
+  </div>
+
+  <nav class="app-sidebar-nav" aria-label="Navegação interna">
+    <a href="/dashboard" class="app-sidebar-link">
+      <span>📊</span>
+      Dashboard
+    </a>
+
+    <a href="/analises/nova" class="app-sidebar-link">
+      <span>➕</span>
+      Nova análise
+    </a>
+
+    <a href="/historico" class="app-sidebar-link">
+      <span>🧾</span>
+      Histórico
+    </a>
+
+    <a href="/relatorios" class="app-sidebar-link">
+      <span>📅</span>
+      Relatórios
+    </a>
+
+    <a href="/perfil" class="app-sidebar-link">
+      <span>👤</span>
+      Perfil
+    </a>
+
+    <form action="/logout" method="post" class="app-sidebar-logout-form">
+      <button type="submit" class="app-sidebar-link app-sidebar-logout-button">
+        <span>⏻</span>
+        Sair
+      </button>
+    </form>
+  </nav>
+</aside>

@@ -1,0 +1,6 @@
+faster-whisper
+transformers
+safetensors
+onnxruntime
+opencv-python-headless
+numpy

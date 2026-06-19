@@ -1,0 +1,145 @@
+.about-page {
+  padding: 4.5rem 0 5rem;
+}
+
+.about-hero,
+.about-highlight-card,
+.about-block,
+.about-flow-card,
+.repository-card,
+.about-info-card {
+  padding: 1.6rem;
+}
+
+.about-section {
+  margin-top: 3rem;
+}
+
+.page-description {
+  color: var(--color-text-muted);
+  line-height: 1.75;
+  margin-bottom: 1rem;
+}
+
+.about-hero h1 {
+  font-size: clamp(2.3rem, 5vw, 4.4rem);
+  line-height: 0.98;
+  letter-spacing: -0.07em;
+  font-weight: 900;
+  margin-bottom: 1.25rem;
+}
+
+.about-highlight-card h2,
+.about-block h2,
+.repository-card h2 {
+  font-size: 1.35rem;
+  margin-bottom: 1rem;
+}
+
+.about-highlight-card p,
+.about-block p,
+.repository-card p,
+.about-info-card p {
+  color: var(--color-text-muted);
+  line-height: 1.7;
+  margin: 0;
+}
+
+.about-info-card {
+  height: 100%;
+  transition:
+    transform 180ms ease,
+    border-color 180ms ease,
+    background-color 180ms ease;
+
+  &:hover {
+    transform: translateY(-4px);
+    border-color: rgba(255, 255, 255, 0.24);
+    background: rgba(21, 31, 58, 0.88);
+  }
+
+  h3 {
+    font-size: 1.1rem;
+    margin-bottom: 0.65rem;
+  }
+}
+
+.about-block {
+  height: 100%;
+}
+
+.about-list {
+  margin: 1rem 0 0;
+  padding-left: 1.25rem;
+  color: var(--color-text-muted);
+
+  li {
+    margin-bottom: 0.6rem;
+    line-height: 1.6;
+  }
+}
+
+.about-flow-card {
+  overflow: hidden;
+}
+
+.about-flow-image {
+  width: 100%;
+  display: block;
+  border-radius: 1rem;
+}
+
+.repository-card {
+  padding: 1.6rem;
+}
+
+.developer-card {
+  height: 100%;
+  border: 1px solid var(--color-border);
+  border-radius: 1.15rem;
+  padding: 1.15rem;
+  background: rgba(255, 255, 255, 0.03);
+  transition:
+    transform 180ms ease,
+    border-color 180ms ease,
+    background-color 180ms ease;
+
+  &:hover {
+    transform: translateY(-4px);
+    border-color: rgba(255, 255, 255, 0.24);
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  h3 {
+    margin-top: 1rem;
+    margin-bottom: 0.35rem;
+    font-size: 1.05rem;
+  }
+
+  p {
+    color: var(--color-text-muted);
+    margin-bottom: 0.9rem;
+  }
+}
+
+.developer-photo {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: 1rem;
+}
+
+.developer-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+
+  a {
+    font-size: 0.92rem;
+    color: var(--color-secondary);
+
+    &:hover {
+      color: var(--color-text);
+    }
+  }
+}

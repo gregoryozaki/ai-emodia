@@ -1,0 +1,105 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id           String   @id @default(uuid())
+  fullName     String
+  birthDate    DateTime
+  email        String   @unique
+  passwordHash String
+  consentTerm  Boolean  @default(false)
+  avatarPath   String?
+
+  emotionRecords      EmotionRecord[]
+  passwordResetTokens PasswordResetToken[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}
+
+enum EmotionType {
+  ALEGRIA
+  TRISTEZA
+  RAIVA
+  MEDO
+  NOJO
+  ANSIEDADE
+}
+
+enum EmotionInputMode {
+  TEXT
+  AUDIO
+  VIDEO
+}
+
+enum RiskLevel {
+  NONE
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+model EmotionRecord {
+  id     String @id @default(uuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  emotion   EmotionType
+  inputMode EmotionInputMode @default(TEXT)
+
+  content    String?
+  transcript String?
+
+  intensity Int?
+  trigger   String?
+
+  riskLevel   RiskLevel @default(NONE)
+  riskMessage String?
+  riskTerms   String?
+
+  visualEmotion         String?
+  visualEmodiaEmotion   String?
+  visualConfidence      Float?
+  visualConfidenceLevel String?
+  visualAnalysis        Json?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId, createdAt])
+  @@map("emotion_records")
+}
+
+model Session {
+  sid    String   @id @db.VarChar
+  sess   Json
+  expire DateTime @db.Timestamp(6)
+
+  @@index([expire], map: "IDX_session_expire")
+  @@map("session")
+}
+
+model PasswordResetToken {
+  id     String @id @default(uuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  tokenHash String
+  expiresAt DateTime
+  usedAt    DateTime?
+
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([tokenHash])
+  @@map("password_reset_tokens")
+}

@@ -1,0 +1,101 @@
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  background:
+    radial-gradient(
+      circle at top left,
+      rgba(124, 58, 237, 0.22),
+      transparent 35%
+    ),
+    radial-gradient(
+      circle at top right,
+      rgba(6, 182, 212, 0.16),
+      transparent 30%
+    ),
+    var(--color-bg);
+  color: var(--color-text);
+  font-family:
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img,
+svg {
+  max-width: 100%;
+}
+
+.container-page {
+  width: min(100% - 2rem, var(--container-width));
+  margin-inline: auto;
+}
+
+.section-padding {
+  padding: 5rem 0;
+}
+
+.section-header {
+  max-width: 720px;
+  margin: 0 auto 3rem;
+  text-align: center;
+
+  h2 {
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 850;
+    letter-spacing: -0.06em;
+    margin-bottom: 1rem;
+  }
+
+  p {
+    color: var(--color-text-muted);
+    line-height: 1.7;
+    margin: 0;
+  }
+}
+
+.text-gradient {
+  background: linear-gradient(
+    135deg,
+    var(--color-secondary),
+    var(--color-accent)
+  );
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.surface-card {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface-soft);
+  box-shadow: var(--shadow-card);
+}
+
+select {
+  color-scheme: dark;
+}
+
+select option {
+  background: #0f172a;
+  color: #f8fafc;
+}
+
+select option:checked,
+select option:hover {
+  background: #334155;
+  color: #ffffff;
+}

@@ -1,0 +1,25 @@
+.app-footer {
+  border-top: 1px solid var(--color-border);
+  padding: 2.8rem 0;
+  background: rgba(7, 10, 24, 0.85);
+
+  .footer-box {
+    text-align: center;
+  }
+
+  .footer-tagline {
+    color: var(--color-text);
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+  }
+
+  .footer-copy,
+  .footer-help {
+    color: var(--color-text-muted);
+    margin-bottom: 0.4rem;
+  }
+
+  .footer-help {
+    font-size: 0.95rem;
+  }
+}

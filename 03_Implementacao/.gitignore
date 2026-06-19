@@ -1,0 +1,29 @@
+# Sistema operacional
+.DS_Store
+Thumbs.db
+
+# IDEs
+.vscode/
+.idea/
+
+# Logs
+*.log
+logs/
+
+# Arquivos temporários
+*.tmp
+*.temp
+*.swp
+*.swo
+
+# Cobertura
+coverage/
+.nyc_output/
+
+# Segredos, independentemente da pasta
+.env
+.env.*
+!.env.example
+
+# Cache geral
+.cache/
