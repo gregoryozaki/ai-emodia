@@ -1,0 +1,61 @@
+<html lang="pt">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/css/main.css" />
+    <link rel="stylesheet" href="/font/bootstrap-icons.min.css" />
+    <title>{{title}}</title>
+  </head>
+  <body>
+    {{> navbar}}
+    {{#if isAuthenticated}}
+      {{> app-sidebar}}
+    {{/if}}
+
+    <main>
+      {{{body}}}
+    </main>
+
+    {{> footer}}
+
+    <script src="/js/bootstrap.bundle.min.js"></script>
+
+    {{#if useEmotionGauge}}
+      <script src="/js/emotion-gauge.js"></script>
+    {{/if}}
+
+    {{#if useEmotionTemporalChart}}
+      <script src="/js/emotion-temporal-chart.js"></script>
+    {{/if}}
+
+    {{#if usePasswordToggle}}
+      <script src="/js/auth-password-toggle.js"></script>
+    {{/if}}
+
+    {{#if useRegisterValidation}}
+      <script src="/js/register-validation.js"></script>
+    {{/if}}
+    
+    <script src="/js/flash-message.js"></script>
+    {{#if useAvatarPreview}}
+      <script src="/js/avatar-preview.js"></script>
+    {{/if}}
+    
+    {{#if useNewAnalysisTabs}}
+      <script src="/js/new-analysis-tabs.js"></script>
+    {{/if}}
+
+    {{#if useAudioRecorder}}
+      <script src="/js/audio-recorder.js"></script>
+    {{/if}}
+
+    {{#if useVideoRecorder}}
+      <script src="/js/video-recorder.js"></script>
+    {{/if}}
+
+    {{#if useAnalysisSubmitLoading}}
+      <script src="/js/analysis-submit-loading.js"></script>
+    {{/if}}
+  </body>
+</html>

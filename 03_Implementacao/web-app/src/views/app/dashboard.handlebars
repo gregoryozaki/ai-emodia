@@ -1,0 +1,317 @@
+<section class="analysis-page dashboard-page">
+  <div class="container-page">
+    <div class="analysis-app-layout">
+      <main class="analysis-main-content">
+        <section class="analysis-internal-section">
+          <div class="analysis-section-title">
+            <span class="page-badge">Dashboard</span>
+
+            <h1>
+              Visão geral do seu
+              <span class="text-gradient">estado emocional</span>.
+            </h1>
+
+            <p>
+              Acompanhe emoções predominantes, intensidade média, gatilhos
+              recorrentes e registros recentes analisados pelo sistema.
+            </p>
+            <br>
+            <div class="dashboard-primary-action text-end">
+              <a href="/analises/nova" class="btn-emodia-primary">
+                Registrar nova emoção
+              </a>
+            </div>
+          </div>
+
+          {{#if success}}
+            <div class="auth-alert auth-alert-success mb-4" data-flash-message>
+              {{success}}
+            </div>
+          {{/if}}
+
+          <div class="dashboard-metrics-grid">
+            <article class="dashboard-metric-card surface-card">
+              <span>Total de relatos</span>
+
+              <strong>
+                {{dashboard.totalRecords}}
+              </strong>
+
+              <p>
+                Registros emocionais analisados.
+              </p>
+            </article>
+
+            <article class="dashboard-metric-card surface-card">
+              <span>Emoção mais frequente</span>
+
+              <strong>
+                {{dashboard.mostFrequentEmotion}}
+              </strong>
+
+              <p>
+                Predominância nos relatos salvos.
+              </p>
+            </article>
+
+            <article class="dashboard-metric-card surface-card">
+              <span>Intensidade média</span>
+
+              <strong>
+                {{dashboard.averageIntensity}}/10
+              </strong>
+
+              <p>
+                Média estimada pelo sistema.
+              </p>
+            </article>
+
+            <article class="dashboard-metric-card surface-card">
+              <span>Gatilhos recorrentes</span>
+
+              {{#if dashboard.mainTriggers.length}}
+                <strong>
+                  {{#each dashboard.mainTriggers}}
+                    {{this}}{{#unless @last}}, {{/unless}}
+                  {{/each}}
+                </strong>
+              {{else}}
+                <strong>
+                  Sem dados
+                </strong>
+              {{/if}}
+
+              <p>
+                Possíveis padrões detectados.
+              </p>
+            </article>
+          </div>
+
+          <div class="dashboard-content-grid">
+            <article class="dashboard-chart-card surface-card">
+              <h2>Frequência emocional</h2>
+
+              <p>
+                Distribuição das emoções predominantes detectadas nos seus
+                relatos.
+              </p>
+
+              {{#if dashboard.emotionChart.length}}
+                <div class="emotion-chart-list mt-4">
+                  {{#each dashboard.emotionChart}}
+                    <div class="emotion-chart-item">
+                      <div class="emotion-chart-header">
+                        <span>{{label}}</span>
+                        <span>{{count}} registro(s)</span>
+                      </div>
+
+                      <div class="emotion-chart-bar">
+                        <div
+                          class="emotion-chart-fill"
+                          style="width: {{percentage}}%;"
+                        ></div>
+                      </div>
+                    </div>
+                  {{/each}}
+                </div>
+              {{else}}
+                <div class="empty-state-card mt-4">
+                  <h3>Nenhuma emoção registrada ainda</h3>
+
+                  <p>
+                    Faça uma nova análise para visualizar a frequência
+                    emocional.
+                  </p>
+                </div>
+              {{/if}}
+            </article>
+
+            <article class="dashboard-chart-card surface-card">
+              <h2>Gatilhos recorrentes</h2>
+
+              <p>
+                Termos e temas que aparecem com maior frequência nos relatos
+                analisados.
+              </p>
+
+              {{#if dashboard.triggerChart.length}}
+                <div class="trigger-chart-list mt-4">
+                  {{#each dashboard.triggerChart}}
+                    <div class="trigger-chart-item">
+                      <div class="trigger-chart-header">
+                        <span>{{trigger}}</span>
+                        <span>{{count}} ocorrência(s)</span>
+                      </div>
+
+                      <div class="trigger-chart-bar">
+                        <div
+                          class="trigger-chart-fill"
+                          style="width: {{percentage}}%;"
+                        ></div>
+                      </div>
+                    </div>
+                  {{/each}}
+                </div>
+              {{else}}
+                <div class="empty-state-card mt-4">
+                  <h3>Nenhum gatilho detectado</h3>
+
+                  <p>
+                    Os gatilhos aparecerão conforme seus relatos forem
+                    analisados.
+                  </p>
+                </div>
+              {{/if}}
+            </article>
+
+            <article class="dashboard-temporal-card surface-card">
+              <div class="temporal-chart-header-content">
+                <div>
+                  <h2>Evolução temporal emocional</h2>
+
+                  <p>
+                    Acompanhe como emoções, gatilhos e intensidade aparecem ao
+                    longo dos registros.
+                  </p>
+                </div>
+
+                <div class="temporal-chart-controls">
+                  <label>
+                    Visualizar
+                    <select id="temporalChartMode">
+                      <option value="emotions">Emoções</option>
+                      <option value="triggers">Gatilhos</option>
+                      <option value="combined">Emoções + gatilhos</option>
+                    </select>
+                  </label>
+
+                  <label>
+                    Emoção
+                    <select id="temporalChartEmotion">
+                      <option value="all">Todas</option>
+                      {{#each dashboard.temporalChart.emotionOptions}}
+                        <option value="{{value}}">{{label}}</option>
+                      {{/each}}
+                    </select>
+                  </label>
+
+                  <label>
+                    Gatilho
+                    <select id="temporalChartTrigger">
+                      <option value="all">Todos</option>
+                      {{#each dashboard.temporalChart.triggerOptions}}
+                        <option value="{{value}}">{{label}}</option>
+                      {{/each}}
+                    </select>
+                  </label>
+                </div>
+              </div>
+
+              {{#if dashboard.temporalChart.records.length}}
+                <div class="temporal-chart-shell">
+                  <svg
+                    id="emotionTemporalChart"
+                    class="emotion-temporal-chart"
+                    role="img"
+                    aria-label="Gráfico temporal de emoções e gatilhos"
+                  ></svg>
+                </div>
+
+                <div
+                  id="temporalChartLegend"
+                  class="temporal-chart-legend"
+                ></div>
+
+                <div
+                  id="temporalChartEmpty"
+                  class="empty-state-card temporal-chart-empty d-none"
+                >
+                  <h3>Nenhum dado encontrado</h3>
+                  <p>
+                    Altere os filtros para visualizar outros registros
+                    emocionais.
+                  </p>
+                </div>
+
+                <div id="temporalChartData" hidden>
+                  {{#each dashboard.temporalChart.records}}
+                    <div
+                      class="temporal-chart-point"
+                      data-date="{{date}}"
+                      data-date-label="{{dateLabel}}"
+                      data-date-time-label="{{dateTimeLabel}}"
+                      data-emotion="{{emotionLabel}}"
+                      data-intensity="{{intensity}}"
+                      data-triggers="{{#each triggers}}{{this}}{{#unless @last}}|{{/unless}}{{/each}}"
+                    ></div>
+                  {{/each}}
+                </div>
+              {{else}}
+                <div class="empty-state-card mt-4">
+                  <h3>Nenhum dado temporal ainda</h3>
+                  <p>
+                    Registre novos relatos para visualizar a evolução das
+                    emoções ao longo do tempo.
+                  </p>
+                </div>
+              {{/if}}
+            </article>
+
+            <article class="dashboard-recent-card surface-card">
+              <h2>Registros recentes</h2>
+
+              <p>
+                Últimos relatos com análise emocional estimada.
+              </p>
+
+              {{#if dashboard.recentRecords.length}}
+                <div class="recent-records-list mt-4">
+                  {{#each dashboard.recentRecords}}
+                    <a href="/analises/{{id}}" class="recent-record-item">
+                      <header>
+                        <span class="record-emotion-badge">
+                          {{emotionLabel}}
+                        </span>
+
+                        <time>
+                          {{createdAt}}
+                        </time>
+                      </header>
+
+                      <p>
+                        {{content}}
+                      </p>
+
+                      <div class="history-item-meta mt-3">
+                        <strong>
+                          Intensidade
+                          {{intensity}}/10
+                        </strong>
+
+                        {{#if trigger}}
+                          <span>
+                            Gatilhos:
+                            {{trigger}}
+                          </span>
+                        {{/if}}
+                      </div>
+                    </a>
+                  {{/each}}
+                </div>
+              {{else}}
+                <div class="empty-state-card mt-4">
+                  <h3>Nenhum relato analisado</h3>
+
+                  <p>
+                    Quando você escrever um relato, o resultado da análise
+                    emocional será exibido aqui.
+                  </p>
+                </div>
+              {{/if}}
+            </article>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+</section>

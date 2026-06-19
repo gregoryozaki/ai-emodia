@@ -1,0 +1,112 @@
+<section class="auth-page">
+  <div class="container-page">
+    <a href="/" class="auth-back-link">
+      ← Voltar
+    </a>
+
+    <div class="auth-shell">
+      <aside class="auth-aside">
+        <div class="auth-logo-wrap auth-logo-aside">
+          <img src="/img/logo-emodia.png" alt="Logo Emodia" class="auth-logo" />
+        </div>
+
+        <span class="page-badge">Acesso seguro</span>
+
+        <h1>Bem-vindo de volta</h1>
+
+        <p>
+          Entre para acessar seus registros emocionais, relatórios e gráficos de
+          acompanhamento.
+        </p>
+
+        <div class="auth-aside-list">
+          <div>
+            <strong>Histórico emocional</strong>
+            <span>Acompanhe registros diários, semanais e mensais.</span>
+          </div>
+
+          <div>
+            <strong>Dados protegidos</strong>
+            <span>Seus registros ficam vinculados apenas à sua conta.</span>
+          </div>
+
+          <div>
+            <strong>Apoio ao autocuidado</strong>
+            <span>Use os dados como ferramenta de reflexão, não diagnóstico.</span>
+          </div>
+        </div>
+      </aside>
+
+      <article class="auth-card auth-form-card">
+        <h2>Entrar na conta</h2>
+
+        <p class="auth-subtitle">
+          Informe seu e-mail e senha para continuar.
+        </p>
+
+        {{#if error}}
+          <div class="auth-alert auth-alert-error">
+            {{error}}
+          </div>
+        {{/if}}
+
+        <form
+          class="auth-form"
+          action="/login"
+          method="post"
+          autocomplete="off"
+        >
+          <div class="auth-field">
+            <label for="email" class="form-label">E-mail</label>
+            <input
+              type="email"
+              class="form-control auth-input"
+              id="email"
+              name="email"
+              placeholder="seu@email.com"
+              value="{{formData.email}}"
+              required
+            />
+          </div>
+
+          <div class="auth-field">
+            <label for="password" class="form-label">Senha</label>
+
+            <div class="password-field">
+              <input
+                type="password"
+                class="form-control auth-input"
+                id="password"
+                name="password"
+                placeholder="Sua senha"
+                required
+              />
+
+              <button
+                type="button"
+                class="password-toggle"
+                data-toggle-password="password"
+                aria-label="Mostrar ou esconder senha"
+              >
+                👁
+              </button>
+            </div>
+          </div>
+
+          <button type="submit" class="btn-emodia-primary w-100">
+            Entrar
+          </button>
+        </form>
+
+        <a href="/recuperar-senha" class="auth-link auth-forgot-link">
+          Esqueceu a senha?
+        </a>
+
+        <p class="auth-bottom-text">
+          Não tem conta?
+          <a href="/cadastro" class="auth-link">Criar conta</a>
+        </p>
+      </article>
+    </div>
+  </div>
+</section>
